@@ -1,0 +1,35 @@
+{
+  "name": "portkey-bingo-game",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "NEXT_PUBLIC_APP_ENV=development next dev",
+    "build": "next build",
+    "start": "APP_ENV=production next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@portkey/did-ui-react": "^0.0.1-alpha.3.3",
+    "@types/node": "18.14.6",
+    "@types/react": "18.0.28",
+    "@types/react-dom": "18.0.11",
+    "clipboard": "^2.0.11",
+    "eslint": "8.35.0",
+    "eslint-config-next": "13.2.3",
+    "next": "13.2.3",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-qrcode-logo": "^2.9.0",
+    "typescript": "4.9.5"
+  },
+  "devDependencies": {
+    "@types/uuid": "^9.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.54.1",
+    "eslint-config-prettier": "^8.7.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-tsdoc": "^0.2.17",
+    "next-transpile-modules": "^10.0.0",
+    "prettier": "^2.8.4",
+    "vconsole": "^3.15.0"
+  }
+}
