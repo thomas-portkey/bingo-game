@@ -102,8 +102,21 @@ const useBingo = (Toast: any) => {
     console.log('init success', aelf, chainInfo);
   };
 
-  const login = () => {
-    setIsLogin(true);
+  const login = async (wallet) => {
+    if (wallet.chainId !== CHAIN_ID) {
+      const caInfo = await did.didWallet.getHolderInfoByContract({
+        caHash: wallet.caInfo.caHash,
+        chainId: CHAIN_ID,
+      });
+      wallet.caInfo = {
+        caAddress: caInfo.caAddress,
+        caHash: caInfo.caHash,
+      };
+    }
+    setLoading(true);
+    setWallet(wallet);
+    did.save(wallet.pin, KEY_NAME);
+    return true;
   };
 
   const getBalance = async () => {
@@ -168,6 +181,8 @@ const useBingo = (Toast: any) => {
       args: null,
     });
 
+    console.log('register: result', registerResult);
+
     // already registered or success
     if (!registerResult.error || registerResult.error.message?.includes('already registered')) {
       walletRef.current = {
@@ -176,7 +191,6 @@ const useBingo = (Toast: any) => {
       };
       return true;
     }
-    console.log('register: result', registerResult);
     await delay();
     console.log('Congratulations on your successful registration！Please approve');
     getBalance();
@@ -201,6 +215,8 @@ const useBingo = (Toast: any) => {
   useIntervalAsync(async () => {
     const multiTokenContract = multiTokenContractRef.current;
     const wallet = walletRef.current;
+    console.log('---', wallet);
+
     if (!multiTokenContract || !wallet) return;
 
     if (Date.now() - requestTimeRef.current < 5000) {
@@ -217,13 +233,25 @@ const useBingo = (Toast: any) => {
     setBalanceValue(balance.toString());
   }, 5000);
 
-  const unLock = async (wallet) => {
-    walletRef.current = {
-      caInfo: { ...wallet.didWallet.caInfo[CHAIN_ID] },
+  const unLock = async (localWallet) => {
+    let caInfo = localWallet.didWallet.caInfo[CHAIN_ID];
+    if (!caInfo) {
+      const key = Object.keys(localWallet.didWallet.caInfo)[0];
+      let caHash = localWallet.didWallet.caInfo[key].caHash;
+
+      caInfo = await did.didWallet.getHolderInfoByContract({
+        caHash: caHash,
+        chainId: CHAIN_ID,
+      });
+    }
+
+    const wallet = {
+      caInfo,
       pin: '',
       chainId: CHAIN_ID,
-      walletInfo: wallet.didWallet.managementAccount,
+      walletInfo: localWallet.didWallet.managementAccount,
     };
+    setWallet(wallet);
     initContract();
   };
 
@@ -279,12 +307,12 @@ const useBingo = (Toast: any) => {
     setCaAddress(wallet.caInfo.caAddress);
   };
 
-  const setWallet = (wallet: any) => {
-    walletRef.current = wallet;
-  };
-
   const setBalanceInputValue = (value: string) => {
     balanceInputValueRef.current = value;
+  };
+
+  const setWallet = (wallet) => {
+    walletRef.current = wallet;
   };
 
   const showInfo = (message: string) => {
@@ -382,7 +410,7 @@ const useBingo = (Toast: any) => {
         args: txId,
       });
 
-      console.log(bingoResult);
+      // console.log(bingoResult);
 
       const bingoContract = await getContractBasic({
         contractAddress: bingoAddress,
@@ -390,23 +418,23 @@ const useBingo = (Toast: any) => {
         rpcUrl: chainInfoRef.current?.endPoint,
       });
 
-      const rewardResult = await bingoContract.callViewMethod('GetPlayerInformation', caAddress);
       try {
+        const rewardResult = await bingoContract.callViewMethod('GetBoutInformation', {
+          address: caAddress,
+          playId: txId,
+        });
         // eslint-disable-next-line
-        const { randomNumber, award } = rewardResult.data?.bouts?.pop();
-        console.log('Bingo: result', bingoResult);
-
+        const { randomNumber, award } = rewardResult.data;
         const isWin = Number(award) > 0;
         setIsWin(isWin);
         setResult(randomNumber);
         setDifference(Number(award) / 10 ** 8);
         getBalance();
+        setHasFinishBet(true);
       } catch (error) {
         console.error(error);
         showError(error.message);
       }
-
-      setHasFinishBet(true);
       setLoading(false);
     } catch (err) {
       console.log(err);
@@ -479,6 +507,7 @@ const useBingo = (Toast: any) => {
     caAddress,
     balanceValue,
     setBalanceValue,
+    setWallet,
     balanceInputValue: balanceInputValueRef.current,
     step,
     getBalance,
@@ -496,7 +525,6 @@ const useBingo = (Toast: any) => {
     result,
     hasFinishBet,
     time,
-    setWallet,
     accountAddress,
     chainId: chainInfoRef.current?.chainId,
     tokenContractAddress: tokenContractAddressRef.current,

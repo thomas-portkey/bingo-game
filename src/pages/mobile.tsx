@@ -1,5 +1,5 @@
 import React, { MouseEventHandler, useRef, useState, useEffect } from 'react';
-import { SignIn, did, PortkeyLoading, Unlock } from '@portkey/did-ui-react';
+import { SignIn, did, PortkeyLoading, Unlock, DIDWalletInfo } from '@portkey/did-ui-react';
 import { CenterPopup, Toast, Input } from 'antd-mobile';
 import { QRCode } from 'react-qrcode-logo';
 
@@ -43,6 +43,8 @@ const MBingoGame = () => {
   const [passwordValue, setPasswordValue] = useState<string>('');
 
   const [showUnlock, setShowUnlock] = useState<boolean>(false);
+  const [showLogin, setShowLogin] = useState<boolean>(false);
+
   const [isWrongPassWord, setIsWrongPassWord] = useState<boolean>(false);
 
   const copyBtnRef = useRef(null);
@@ -62,6 +64,7 @@ const MBingoGame = () => {
     balanceValue,
     getBalance,
     setBalanceInputValue,
+    setWallet,
     isLogin,
     showQrCode,
     isWin,
@@ -75,7 +78,6 @@ const MBingoGame = () => {
     setIsLogin,
     loading,
     time,
-    setWallet,
     tokenContractAddress,
     accountAddress,
   } = useBingo(Toast);
@@ -123,7 +125,12 @@ const MBingoGame = () => {
 
         {step === StepStatus.LOGIN && (
           <>
-            <Button className={styles.defaultBtn} type={ButtonType.ORIANGE} onClick={login}>
+            <Button
+              className={styles.defaultBtn}
+              type={ButtonType.ORIANGE}
+              onClick={() => {
+                setShowLogin(true);
+              }}>
               <p className={styles.artWord}>PLAY NOW</p>
             </Button>
             <div className={styles.initTip}>
@@ -463,32 +470,20 @@ const MBingoGame = () => {
       <PortkeyLoading loading={loading} />
       {renderSence()}
       <SignIn
-        open={isLogin}
+        open={showLogin}
         sandboxId="portkey-ui-sandbox"
         defaultChainId={CHAIN_ID}
         isShowScan
         onFinish={async (wallet) => {
-          if (wallet.chainId !== CHAIN_ID) {
-            const caInfo = await did.didWallet.getHolderInfoByContract({
-              caHash: wallet.caInfo.caHash,
-              chainId: CHAIN_ID,
-            });
-            wallet.caInfo = {
-              caAddress: caInfo.caAddress,
-              caHash: caInfo.caHash,
-            };
-          }
-          setLoading(true);
-          setIsLogin(false);
-          setWallet(wallet);
-          did.save(wallet.pin, KEY_NAME);
+          await login(wallet);
+          setShowLogin(false);
           initContract();
         }}
         onError={(err) => {
           console.error(err, 'onError==');
         }}
         onCancel={() => {
-          setIsLogin(false);
+          setShowLogin(false);
         }}
       />
 
@@ -503,15 +498,16 @@ const MBingoGame = () => {
           setShowUnlock(false);
         }}
         onUnlock={async () => {
-          const wallet = await did.load(passwordValue, KEY_NAME);
-          if (!wallet.didWallet.accountInfo.loginAccount) {
+          const localWallet = await did.load(passwordValue, KEY_NAME);
+          if (!localWallet.didWallet.accountInfo.loginAccount) {
             setIsWrongPassWord(true);
             return;
           }
+
+          await unLock(localWallet);
           setIsWrongPassWord(false);
           setPasswordValue('');
           setShowUnlock(false);
-          unLock(wallet);
         }}
       />
     </div>
