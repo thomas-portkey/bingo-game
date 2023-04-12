@@ -1,17 +1,16 @@
 import React, { MouseEventHandler, useRef, useState, useEffect } from 'react';
-import { SignIn, did, PortkeyLoading } from '@portkey/did-ui-react';
+import { SignIn, did, PortkeyLoading, Unlock } from '@portkey/did-ui-react';
 import { CenterPopup, Toast, Input } from 'antd-mobile';
-// import Input from './components/input';
 import { QRCode } from 'react-qrcode-logo';
 
-import { shrinkSendQrData } from '../../utils/common';
-import useBingo, { SettingPage, StepStatus, KEY_NAME } from '../../hooks/useBingo';
+import { shrinkSendQrData } from '../utils/common';
+import useBingo, { SettingPage, StepStatus, KEY_NAME } from '../hooks/useBingo';
 
-import { CHAIN_ID } from '../../constants/network';
+import { CHAIN_ID } from '../constants/network';
 
 import Clipboard from 'clipboard';
 
-import styles from './style_mobile.module.css';
+import styles from './mobile.module.css';
 
 enum ButtonType {
   BLUE,
@@ -41,6 +40,11 @@ const Button = (props: {
 const MBingoGame = () => {
   const [inputValue, setInputValue] = useState('1');
 
+  const [passwordValue, setPasswordValue] = useState<string>('');
+
+  const [showUnlock, setShowUnlock] = useState<boolean>(false);
+  const [isWrongPassWord, setIsWrongPassWord] = useState<boolean>(false);
+
   const copyBtnRef = useRef(null);
   const copyBoard = useRef(null);
 
@@ -57,7 +61,6 @@ const MBingoGame = () => {
     settingPage,
     balanceValue,
     getBalance,
-    balanceInputValue,
     setBalanceInputValue,
     isLogin,
     showQrCode,
@@ -67,8 +70,6 @@ const MBingoGame = () => {
     result,
     hasFinishBet,
     setSettingPage,
-    caAddress,
-    setCaAddress,
     setLoading,
     initContract,
     setIsLogin,
@@ -77,7 +78,7 @@ const MBingoGame = () => {
     setWallet,
     tokenContractAddress,
     accountAddress,
-  } = useBingo();
+  } = useBingo(Toast);
 
   useEffect(() => {
     if (copyBtnRef.current && !copyBoard.current) {
@@ -106,14 +107,14 @@ const MBingoGame = () => {
   const renderDefault = () => {
     return (
       <div className={styles.defaultWrapper}>
-        <img className={styles.logo} src={require('../../../public/bingo.png').default.src} />
+        <img className={styles.logo} src={require('../../public/bingo.png').default.src} />
         {step === StepStatus.LOCK && (
           <>
             <Button
               className={styles.defaultBtn}
               type={ButtonType.BLUE}
               onClick={() => {
-                unLock();
+                setShowUnlock(true);
               }}>
               <p className={styles.artWord}>UNLOCK</p>
             </Button>
@@ -126,7 +127,7 @@ const MBingoGame = () => {
               <p className={styles.artWord}>PLAY NOW</p>
             </Button>
             <div className={styles.initTip}>
-              <img src={require('../../../public/warn.svg').default.src} />
+              <img src={require('../../public/warn.svg').default.src} />
               <span>This is a demo on the Testnet.</span>
             </div>
           </>
@@ -303,9 +304,9 @@ const MBingoGame = () => {
             <>
               <div className={styles.bingoTips}>
                 {isWin ? (
-                  <img src={require('../../../public/congratulation.png').default.src} />
+                  <img src={require('../../public/congratulation.png').default.src} />
                 ) : (
-                  <img src={require('../../../public/lose.png').default.src} />
+                  <img src={require('../../public/lose.png').default.src} />
                 )}
                 <div className={styles.bingoText}>
                   <span>{text}</span>
@@ -410,6 +411,10 @@ const MBingoGame = () => {
                 <Button className={styles.settingContent__logout__btn} type={ButtonType.BLUE} onClick={logOut}>
                   <p className={styles.artWord}>Logout</p>
                 </Button>
+
+                <Button className={styles.settingContent__logout__btn} type={ButtonType.BLUE} onClick={lock}>
+                  <img src={require('../../public/lock_small.png').default.src} />
+                </Button>
               </div>
             </div>
           )}
@@ -484,6 +489,29 @@ const MBingoGame = () => {
         }}
         onCancel={() => {
           setIsLogin(false);
+        }}
+      />
+
+      <Unlock
+        open={showUnlock}
+        value={passwordValue}
+        isWrongPassWord={isWrongPassWord}
+        onChange={(passwordVal) => {
+          setPasswordValue(passwordVal);
+        }}
+        onCancel={() => {
+          setShowUnlock(false);
+        }}
+        onUnlock={async () => {
+          const wallet = await did.load(passwordValue, KEY_NAME);
+          if (!wallet.didWallet.accountInfo.loginAccount) {
+            setIsWrongPassWord(true);
+            return;
+          }
+          setIsWrongPassWord(false);
+          setPasswordValue('');
+          setShowUnlock(false);
+          unLock(wallet);
         }}
       />
     </div>

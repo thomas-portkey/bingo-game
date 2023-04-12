@@ -6,19 +6,19 @@
 }
 
 .blueBtn {
-  background-image: url('../../../public/btn_var2.png');
+  background-image: url('../../public/btn_var2.png');
   background-size: 100% 100%;
 }
 .oriangeBtn {
-  background-image: url('../../../public/btn_var1.png');
+  background-image: url('../../public/btn_var1.png');
   background-size: 100% 100%;
 }
 
 .blueBtn__pc {
-  background-image: url('../../../public/btn_pc_var2.png');
+  background-image: url('../../public/btn_pc_var2.png');
   background-size: 100% 100%;
 }
 .oriangeBtn__pc {
-  background-image: url('../../../public/btn_pc_var1.png');
+  background-image: url('../../public/btn_pc_var1.png');
   background-size: 100% 100%;
 }
