@@ -228,7 +228,7 @@ const MBingoGame = () => {
                 className={styles.playContent__betBtn}
                 type={ButtonType.ORIANGE}
                 onClick={async () => {
-                  onPlay(true);
+                  onPlay(1);
                 }}>
                 <span className={styles.playContent__betBtn_p}>
                   <p className={styles.artWord}>BIG</p>
@@ -239,7 +239,7 @@ const MBingoGame = () => {
                 className={styles.playContent__betBtn}
                 type={ButtonType.BLUE}
                 onClick={() => {
-                  onPlay(false);
+                  onPlay(0);
                 }}>
                 <span className={styles.playContent__betBtn_p}>
                   <p className={styles.artWord}>SMALL</p>

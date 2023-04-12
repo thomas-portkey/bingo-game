@@ -11,6 +11,7 @@ import { useDelay } from './useDelay';
 import { bingoAddress, CHAIN_ID } from '../constants/network';
 
 import useIntervalAsync from './useInterValAsync';
+import { type } from 'os';
 
 export enum StepStatus {
   INIT,
@@ -33,6 +34,8 @@ export enum ButtonType {
   BLUE,
   ORIANGE,
 }
+
+type SmallOrBig = 0 | 1; // 0: small, 1: big
 
 export const KEY_NAME = 'BINGO_GAME';
 const { sha256 } = AElf.utils;
@@ -67,7 +70,6 @@ const useBingo = (Toast: any) => {
   const multiTokenContractRef = useRef<ContractBasic>();
   const aelfRef = useRef<any>();
   const txIdRef = useRef('');
-  const smallOrBigRef = useRef(false); // true: big, false: small;
   const tokenContractAddressRef = useRef('');
   const balanceInputValueRef = useRef<string>('1');
   const requestTimeRef = useRef(0);
@@ -301,7 +303,7 @@ const useBingo = (Toast: any) => {
     }
   };
 
-  const onPlay = async (smallOrBig: boolean) => {
+  const onPlay = async (betResult: SmallOrBig) => {
     const caContract = caContractRef.current;
     const wallet = walletRef.current;
     if (!caContract || !wallet) return;
@@ -342,7 +344,7 @@ const useBingo = (Toast: any) => {
         methodName: 'Play',
         args: {
           amount: value * 10 ** 8,
-          type: smallOrBig,
+          type: betResult,
         },
       });
 
@@ -354,7 +356,6 @@ const useBingo = (Toast: any) => {
 
       console.log('Play result: ', playResult);
       txIdRef.current = playResult.data?.TransactionId || '';
-      smallOrBigRef.current = smallOrBig;
       setLoading(false);
       setStep(StepStatus.CUTDOWN);
       await cutDown();
