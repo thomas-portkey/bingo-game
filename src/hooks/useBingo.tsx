@@ -419,12 +419,15 @@ const useBingo = (Toast: any) => {
       });
 
       try {
-        const rewardResult = await bingoContract.callViewMethod('GetBoutInformation', {
-          address: caAddress,
-          playId: txId,
-        });
+        const rewardResult = await bingoContract.callViewMethod('GetPlayerInformation', caAddress);
+        const { randomNumber, award } = rewardResult.data?.bouts?.pop();
+
+        // const rewardResult = await bingoContract.callViewMethod('GetBoutInformation', {
+        //   address: caAddress,
+        //   playId: txId,
+        // });
         // eslint-disable-next-line
-        const { randomNumber, award } = rewardResult.data;
+        // const { randomNumber, award } = rewardResult.data;
         const isWin = Number(award) > 0;
         setIsWin(isWin);
         setResult(randomNumber);
