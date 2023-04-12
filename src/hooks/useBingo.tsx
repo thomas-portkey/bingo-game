@@ -2,10 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { DIDWalletInfo, did } from '@portkey/did-ui-react';
 import { ChainInfo } from '@portkey/services';
 import { getContractBasic, ContractBasic } from '@portkey/contracts';
-import AElf from 'aelf-sdk';
-import { Toast } from 'antd-mobile';
 
-import { useDelay } from './common';
+import AElf from 'aelf-sdk';
+import { isMobile } from '../utils/common';
+
+import { useDelay } from './useDelay';
 
 import { bingoAddress, CHAIN_ID } from '../constants/network';
 
@@ -37,15 +38,13 @@ export const KEY_NAME = 'BINGO_GAME';
 const { sha256 } = AElf.utils;
 const COUNT = 3;
 
-const useBingo = () => {
+const useBingo = (Toast: any) => {
   const [step, setStep] = useState(StepStatus.INIT);
   const [settingPage, setSettingPage] = useState(SettingPage.NULL);
   const [isLogin, setIsLogin] = useState(false);
   const [showQrCode, setShowQrCode] = useState(false);
   const [isWin, setIsWin] = useState(false);
   const [enablePlay, setEnablePlay] = useState(false);
-
-  const [passwordValue, setPasswordValue] = useState('');
 
   const [balanceValue, setBalanceValue] = useState('0');
   const [difference, setDifference] = useState(0);
@@ -72,27 +71,9 @@ const useBingo = () => {
   const tokenContractAddressRef = useRef('');
   const balanceInputValueRef = useRef<string>('1');
   const requestTimeRef = useRef(0);
+  const ToastRef = useRef(null);
 
   const accountAddress = `ELF_${caAddress}_${chainInfoRef.current?.chainId}`;
-
-  useIntervalAsync(async () => {
-    const multiTokenContract = multiTokenContractRef.current;
-    const wallet = walletRef.current;
-    if (!multiTokenContract || !wallet) return;
-
-    if (Date.now() - requestTimeRef.current < 5000) {
-      return;
-    }
-
-    const result = await multiTokenContract.callViewMethod('GetBalance', {
-      symbol: 'ELF',
-      owner: wallet.caInfo.caAddress,
-    });
-
-    console.log('useIntervalAsync setBalance: result', result);
-    const balance = result.data.balance / 10 ** 8;
-    setBalanceValue(balance.toString());
-  }, 5000);
 
   /**
    *  logic function
@@ -105,9 +86,7 @@ const useBingo = () => {
 
     const chainInfo = chainsInfo.find((chain) => chain.chainId === CHAIN_ID);
     if (!chainInfo) {
-      Toast.show({
-        content: 'chain is not running',
-      });
+      showError('chain is not running');
       return;
     }
     chainInfoRef.current = chainInfo;
@@ -115,9 +94,7 @@ const useBingo = () => {
     const aelf = new AElf(new AElf.providers.HttpProvider(chainInfo.endPoint));
     aelfRef.current = aelf;
     if (!aelf.isConnected()) {
-      Toast.show({
-        content: 'Blockchain Node is not running.',
-      });
+      showError('Blockchain Node is not running.');
       return;
     }
     console.log('init success', aelf, chainInfo);
@@ -218,12 +195,27 @@ const useBingo = () => {
     });
   };
 
-  const unLock = async () => {
-    const wallet = await did.load('', KEY_NAME);
-    if (!wallet.didWallet.accountInfo.loginAccount) {
-      //   setIsErrorTipShow(true);
+  // timed task
+  useIntervalAsync(async () => {
+    const multiTokenContract = multiTokenContractRef.current;
+    const wallet = walletRef.current;
+    if (!multiTokenContract || !wallet) return;
+
+    if (Date.now() - requestTimeRef.current < 5000) {
       return;
     }
+
+    const result = await multiTokenContract.callViewMethod('GetBalance', {
+      symbol: 'ELF',
+      owner: wallet.caInfo.caAddress,
+    });
+
+    console.log('useIntervalAsync setBalance: result', result);
+    const balance = result.data.balance / 10 ** 8;
+    setBalanceValue(balance.toString());
+  }, 5000);
+
+  const unLock = async (wallet) => {
     walletRef.current = {
       caInfo: { ...wallet.didWallet.caInfo[CHAIN_ID] },
       pin: '',
@@ -293,30 +285,46 @@ const useBingo = () => {
     balanceInputValueRef.current = value;
   };
 
+  const showInfo = (message: string) => {
+    if (isMobile(navigator.userAgent)) {
+      ToastRef.current?.show(message);
+    } else {
+      ToastRef.current?.info(message);
+    }
+  };
+
+  const showError = (message: string) => {
+    if (isMobile(navigator.userAgent)) {
+      ToastRef.current?.error(message);
+    } else {
+      ToastRef.current?.error(message);
+    }
+  };
+
   const onPlay = async (smallOrBig: boolean) => {
     const caContract = caContractRef.current;
     const wallet = walletRef.current;
     if (!caContract || !wallet) return;
 
-    // const reg = /^[1-9]\d*$/;
-    // const value = parseInt(balanceInputValueRef.current, 10);
     const value = Number(balanceInputValueRef.current);
 
     if (value <= 0) {
-      Toast.show('Insufficient funds');
+      showError('Insufficient funds');
+      // Toast.show('Insufficient funds');
       return;
     }
 
     if (value < 1) {
-      return Toast.show('A minimum bet of 1 ELF!');
+      showError('A minimum bet of 1 ELF!');
+      return;
     }
 
     if (value > Number(balanceValue)) {
-      Toast.show('Please enter a number less than the number of ELF you own!');
+      showError('Please enter a number less than the number of ELF you own!');
       return;
     }
     if (value > 100) {
-      Toast.show('Please enter a number less than 100 ELF!');
+      showError('Please enter a number less than 100 ELF!');
       return;
     }
 
@@ -324,7 +332,7 @@ const useBingo = () => {
     try {
       if (!wallet.registered) {
         const registered = await register();
-        if (!registered) return Toast.show('Synchronizing on-chain account information...');
+        if (!registered) return showError('Synchronizing on-chain account information...');
       }
       if (!wallet.approved) await approve();
 
@@ -340,7 +348,7 @@ const useBingo = () => {
 
       if (playResult.error || playResult.data.Error) {
         setLoading(false);
-        Toast.show('Insufficient funds');
+        showError('Insufficient funds');
         return;
       }
 
@@ -394,9 +402,7 @@ const useBingo = () => {
         getBalance();
       } catch (error) {
         console.error(error);
-        Toast.show({
-          content: error.message,
-        });
+        showError(error.message);
       }
 
       setHasFinishBet(true);
@@ -430,31 +436,33 @@ const useBingo = () => {
   };
 
   const lock = async () => {
-    setPasswordValue('');
     setStep(StepStatus.LOCK);
     setSettingPage(SettingPage.NULL);
+    did.reset();
   };
 
   useEffect(() => {
     setLoading(true);
     init();
-    // if (typeof window !== undefined && window.localStorage.getItem(KEY_NAME)) {
-    //   //   walletRef.current = JSON.parse(window.localStorage.getItem('testWallet') || '{}' as any);
-    //   setTimeout(() => {
-    //     unLock();
-    //   }, 2000);
-    //   //   setIsLogoutShow(true);
-    //   setStep(StepStatus.LOCK);
-    // } else {
-    //   setEnablePlay(true);
-    //   setStep(StepStatus.LOGIN);
-    // }
+    if (typeof window !== undefined && window.localStorage.getItem(KEY_NAME)) {
+      setEnablePlay(true);
+      setStep(StepStatus.LOCK);
+    } else {
+      setEnablePlay(true);
+      setStep(StepStatus.LOGIN);
+    }
 
-    setEnablePlay(true);
-    setStep(StepStatus.LOGIN);
+    // setEnablePlay(true);
+    // setStep(StepStatus.LOGIN);
 
     setLoading(false);
   }, []);
+
+  useEffect(() => {
+    if (!ToastRef.current) {
+      ToastRef.current = Toast;
+    }
+  }, [Toast]);
 
   return {
     onBet,
