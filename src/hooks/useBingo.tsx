@@ -411,7 +411,6 @@ const useBingo = (Toast: any) => {
       });
 
       // console.log(bingoResult);
-
       const bingoContract = await getContractBasic({
         contractAddress: bingoAddress,
         account: wallet.walletInfo.wallet,
@@ -419,15 +418,16 @@ const useBingo = (Toast: any) => {
       });
 
       try {
-        const rewardResult = await bingoContract.callViewMethod('GetPlayerInformation', caAddress);
-        const { randomNumber, award } = rewardResult.data?.bouts?.pop();
+        // const rewardResult = await bingoContract.callViewMethod('GetPlayerInformation', caAddress);
+        // const { randomNumber, award } = rewardResult.data?.bouts?.pop();
 
-        // const rewardResult = await bingoContract.callViewMethod('GetBoutInformation', {
-        //   address: caAddress,
-        //   playId: txId,
-        // });
+        const rewardResult = await bingoContract.callViewMethod('GetBoutInformation', {
+          address: caAddress,
+          playId: txId,
+        });
         // eslint-disable-next-line
-        // const { randomNumber, award } = rewardResult.data;
+        const { randomNumber, award } = rewardResult.data;
+
         const isWin = Number(award) > 0;
         setIsWin(isWin);
         setResult(randomNumber);
@@ -451,6 +451,17 @@ const useBingo = (Toast: any) => {
   };
 
   const logOut = async () => {
+    const caContract = caContractRef.current;
+    const wallet = walletRef.current;
+    if (!caContract || !wallet) return;
+
+    const quitRes = await caContract.callSendMethod('ManagerForwardCall', wallet.walletInfo.wallet.address, {
+      caHash: wallet.caInfo.caHash,
+      contractAddress: bingoAddress,
+      methodName: 'Quit',
+      args: {},
+    });
+
     setLoading(true);
     const result = await caContractRef.current?.callSendMethod('RemoveManagerInfo', caAddress, {
       caHash: walletRef.current.caInfo.caHash,
