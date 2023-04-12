@@ -237,7 +237,7 @@ const useBingo = (Toast: any) => {
     let caInfo = localWallet.didWallet.caInfo[CHAIN_ID];
     if (!caInfo) {
       const key = Object.keys(localWallet.didWallet.caInfo)[0];
-      let caHash = localWallet.didWallet.caInfo[key].caHash;
+      const caHash = localWallet.didWallet.caInfo[key].caHash;
 
       caInfo = await did.didWallet.getHolderInfoByContract({
         caHash: caHash,
