@@ -1,6 +1,6 @@
 import { ChainId } from '@portkey/types';
 
-let bingoAddress = 'CuHsvBBBEtV3vManBWUsCmwWs7ANag3Mk8UUbPN7s1waFVa8G';
+let bingoAddress = '2CrjkQeeWYTnH9zFHmpuMtxv8ZTBDmHi31zzdo9SUNjmpxJ82T';
 let CHAIN_ID = 'tDVW' as ChainId;
 
 if (process.env.NEXT_PUBLIC_APP_ENV === 'development') {
