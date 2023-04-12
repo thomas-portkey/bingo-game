@@ -10,6 +10,8 @@ import { QRCode } from 'react-qrcode-logo';
 import { CHAIN_ID } from '../constants/network';
 import Clipboard from 'clipboard';
 
+import copy from 'copy-to-clipboard';
+
 import styles from './pc.module.css';
 import { shrinkSendQrData } from '../utils/common';
 
@@ -18,6 +20,8 @@ const PCBingoGame = () => {
   const [passwordValue, setPasswordValue] = useState<string>('');
 
   const [showUnlock, setShowUnlock] = useState<boolean>(false);
+  const [showLogin, setShowLogin] = useState<boolean>(false);
+
   const [isWrongPassWord, setIsWrongPassWord] = useState<boolean>(false);
 
   const copyBtnRef = useRef(null);
@@ -34,6 +38,7 @@ const PCBingoGame = () => {
     step,
     balanceValue,
     setBalanceInputValue,
+    setWallet,
     getBalance,
     isLogin,
     isWin,
@@ -45,27 +50,26 @@ const PCBingoGame = () => {
     setIsLogin,
     loading,
     time,
-    setWallet,
     tokenContractAddress,
     accountAddress,
   } = useBingo(message);
 
-  useEffect(() => {
-    if (copyBtnRef.current && !copyBoard.current) {
-      const clipboard = new Clipboard(copyBtnRef.current, {
-        text: () => {
-          return accountAddress;
-        },
-      });
-      clipboard.on('success', () => {
-        message.success('Copied!');
-      });
-      clipboard.on('error', () => {
-        message.error('Copied!');
-      });
-      copyBoard.current = clipboard;
-    }
-  });
+  // useEffect(() => {
+  //   if (copyBtnRef.current && !copyBoard.current) {
+  //     const clipboard = new Clipboard(copyBtnRef.current, {
+  //       text: () => {
+  //         return accountAddress;
+  //       },
+  //     });
+  //     clipboard.on('success', () => {
+  //       message.success('Copied!');
+  //     });
+  //     clipboard.on('error', () => {
+  //       message.error('Copied!');
+  //     });
+  //     copyBoard.current = clipboard;
+  //   }
+  // });
 
   const getQrInfo = () => {
     const info = shrinkSendQrData({
@@ -330,10 +334,14 @@ const PCBingoGame = () => {
                     : accountAddress}
                 </div>
                 <button
-                  ref={(ref) => {
-                    copyBtnRef.current = ref;
-                  }}
+                  // ref={(ref) => {
+                  //   copyBtnRef.current = ref;
+                  // }}
                   className={styles.setting__account__content__copy}
+                  onClick={() => {
+                    copy(accountAddress);
+                    message.success('Copied!');
+                  }}
                 />
 
                 <Popover
@@ -368,32 +376,36 @@ const PCBingoGame = () => {
         {step === StepStatus.CUTDOWN && renderCutDown()}
 
         <SignIn
-          open={isLogin}
+          open={showLogin}
           sandboxId="portkey-ui-sandbox"
           defaultChainId={CHAIN_ID}
           isShowScan
           onFinish={async (wallet) => {
-            if (wallet.chainId !== CHAIN_ID) {
-              const caInfo = await did.didWallet.getHolderInfoByContract({
-                caHash: wallet.caInfo.caHash,
-                chainId: CHAIN_ID,
-              });
-              wallet.caInfo = {
-                caAddress: caInfo.caAddress,
-                caHash: caInfo.caHash,
-              };
-            }
-            setLoading(true);
-            setIsLogin(false);
-            setWallet(wallet);
-            did.save(wallet.pin, KEY_NAME);
+            await login(wallet);
+            setShowLogin(false);
             initContract();
+
+            // if (wallet.chainId !== CHAIN_ID) {
+            //   const caInfo = await did.didWallet.getHolderInfoByContract({
+            //     caHash: wallet.caInfo.caHash,
+            //     chainId: CHAIN_ID,
+            //   });
+            //   wallet.caInfo = {
+            //     caAddress: caInfo.caAddress,
+            //     caHash: caInfo.caHash,
+            //   };
+            // }
+            // setLoading(true);
+            // setIsLogin(false);
+            // setWallet(wallet);
+            // did.save(wallet.pin, KEY_NAME);
+            // initContract();
           }}
           onError={(err) => {
             console.error(err, 'onError==');
           }}
           onCancel={() => {
-            setIsLogin(false);
+            setShowLogin(false);
           }}
         />
         <Unlock
@@ -407,15 +419,16 @@ const PCBingoGame = () => {
             setShowUnlock(false);
           }}
           onUnlock={async () => {
-            const wallet = await did.load(passwordValue, KEY_NAME);
-            if (!wallet.didWallet.accountInfo.loginAccount) {
+            const localWallet = await did.load(passwordValue, KEY_NAME);
+            if (!localWallet.didWallet.accountInfo.loginAccount) {
               setIsWrongPassWord(true);
               return;
             }
+
+            await unLock(localWallet);
             setIsWrongPassWord(false);
             setPasswordValue('');
             setShowUnlock(false);
-            unLock(wallet);
           }}
         />
       </div>
