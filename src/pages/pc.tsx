@@ -92,14 +92,17 @@ const PCBingoGame = () => {
   };
 
   const renderLoginAndUnlock = () => {
-    console.log(step);
-
     return (
       <div>
         <div className={styles.defaultWrapper}>
           <img className={styles.logo} src={require('../../public/bingo.png').default.src} />
           {step === StepStatus.LOGIN && (
-            <Button className={styles.defaultBtn__origin} type={ButtonType.ORIANGE} onClick={login}>
+            <Button
+              className={styles.defaultBtn__origin}
+              type={ButtonType.ORIANGE}
+              onClick={() => {
+                setShowLogin(true);
+              }}>
               <p className={styles.artWord}>PLAY NOW</p>
             </Button>
           )}

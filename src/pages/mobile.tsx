@@ -133,12 +133,12 @@ const MBingoGame = () => {
               }}>
               <p className={styles.artWord}>PLAY NOW</p>
             </Button>
-            <div className={styles.initTip}>
-              <img src={require('../../public/warn.svg').default.src} />
-              <span>This is a demo on the Testnet.</span>
-            </div>
           </>
         )}
+        <div className={styles.initTip}>
+          <img src={require('../../public/warn.svg').default.src} />
+          <span>This is a demo on the Testnet.</span>
+        </div>
       </div>
     );
   };
