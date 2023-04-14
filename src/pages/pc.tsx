@@ -8,7 +8,6 @@ import { InputNumber, message, Popover } from 'antd';
 import { Button, ButtonType } from '../page-components/Button';
 import { QRCode } from 'react-qrcode-logo';
 import { CHAIN_ID } from '../constants/network';
-import Clipboard from 'clipboard';
 
 import copy from 'copy-to-clipboard';
 

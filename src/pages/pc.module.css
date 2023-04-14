@@ -21,7 +21,7 @@
   background-size: 100% 100%;
   display: flex;
   justify-self: center;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .defaultWrapper {
