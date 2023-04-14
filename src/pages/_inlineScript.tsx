@@ -4,7 +4,7 @@ export default function InlineScript() {
   return (
     <>
       <Script async src="https://www.googletagmanager.com/gtag/js?id=G-LEHZKJQ2F5"></Script>
-      <Script strategy="afterInteractive">
+      <Script id="googletagmanager" strategy="afterInteractive">
         {`  window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
