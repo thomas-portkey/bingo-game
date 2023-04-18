@@ -1,26 +1,21 @@
 import React, { useState } from 'react';
-
+import { INITIAL_INPUT_VALUE, MAX_BET_VALUE, defaultCountryCodeConfig } from '../constants/global';
 import useBingo, { StepStatus, KEY_NAME, BetType } from '../hooks/useBingo';
-
 import { SignIn, did, PortkeyLoading, Unlock } from '@portkey/did-ui-react';
 import { InputNumber, message, Popover } from 'antd';
-
 import { Button, ButtonType } from '../page-components/Button';
+import { shrinkSendQrData } from '../utils/common';
 import { QRCode } from 'react-qrcode-logo';
 import { CHAIN_ID } from '../constants/network';
-
 import copy from 'copy-to-clipboard';
-
 import styles from '../styles/pc.module.css';
-import { shrinkSendQrData } from '../utils/common';
-import { INITIAL_INPUT_VALUE, MAX_BET_VALUE } from '../constants/global';
 
 const PCBingoGame = () => {
   const [inputValue, setInputValue] = useState<string>(INITIAL_INPUT_VALUE);
   const [passwordValue, setPasswordValue] = useState<string>('');
   const [showUnlock, setShowUnlock] = useState<boolean>(false);
   const [showLogin, setShowLogin] = useState<boolean>(false);
-  const [isWrongPassWord, setIsWrongPassWord] = useState<boolean>(false);
+  const [isWrongPassword, setIsWrongPassword] = useState<boolean>(false);
 
   const {
     onBet,
@@ -354,6 +349,8 @@ const PCBingoGame = () => {
           open={showLogin}
           sandboxId="portkey-ui-sandbox"
           defaultChainId={CHAIN_ID}
+          phoneCountry={defaultCountryCodeConfig}
+          uiType="Modal"
           isShowScan
           onFinish={async (wallet) => {
             await login(wallet);
@@ -361,7 +358,7 @@ const PCBingoGame = () => {
             initContract();
           }}
           onError={(err) => {
-            console.error(err, 'onError==');
+            console.error('onError==', err);
           }}
           onCancel={() => {
             setShowLogin(false);
@@ -370,7 +367,7 @@ const PCBingoGame = () => {
         <Unlock
           open={showUnlock}
           value={passwordValue}
-          isWrongPassWord={isWrongPassWord}
+          isWrongPassword={isWrongPassword}
           onChange={(passwordVal) => {
             setPasswordValue(passwordVal);
           }}
@@ -380,12 +377,12 @@ const PCBingoGame = () => {
           onUnlock={async () => {
             const localWallet = await did.load(passwordValue, KEY_NAME);
             if (!localWallet.didWallet.accountInfo.loginAccount) {
-              setIsWrongPassWord(true);
+              setIsWrongPassword(true);
               return;
             }
 
             await unLock(localWallet);
-            setIsWrongPassWord(false);
+            setIsWrongPassword(false);
             setPasswordValue('');
             setShowUnlock(false);
           }}

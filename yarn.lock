@@ -295,46 +295,37 @@
     "@portkey/utils" "^0.0.1-alpha.1.4"
     aelf-sdk "^3.2.44"
 
-"@portkey/did-ui-react@^0.0.1-alpha.3.5":
-  version "0.0.1-alpha.3.5"
-  resolved "https://registry.yarnpkg.com/@portkey/did-ui-react/-/did-ui-react-0.0.1-alpha.3.5.tgz#b8ee78aa734c9d420e87312d4dc59848fca6a1ce"
-  integrity sha512-fq0BSZyzjxCR0x2RXCdkMMUx+sIMWeQsbFcQtzv6dyofZVOnU19NfJ/wiKmgmxP9U9gOipX8Mq5WPTOTsIDZ4g==
+"@portkey/did-ui-react@^0.0.1-alpha.4.0":
+  version "0.0.1-alpha.4.0"
+  resolved "https://registry.yarnpkg.com/@portkey/did-ui-react/-/did-ui-react-0.0.1-alpha.4.0.tgz#f18dd4746b16161d45a8bd75cb1cfeb8ca7f1a34"
+  integrity sha512-709iUAgy85nfnmLM1NXt4IisKKU0KUctEddkdWsHxvx9bXx4d65hZuVQixMR8mwu0VpfbEmdydvCPEYEUzZPPQ==
   dependencies:
-    "@portkey/did" "^0.0.1-alpha.2.7"
+    "@portkey/did" "^0.0.1-alpha.2.8"
     aelf-sdk "^3.2.40"
     antd "4.24.4"
     antd-mobile "5.26.0"
     bignumber.js "^9.1.0"
     clsx "^1.2.1"
-    qrcode.react "^3.1.0"
     react-i18next "^11.18.6"
+    react-qrcode-logo "2.9.0"
     react-use "^17.4.0"
+    reactjs-social-login "^2.6.2"
     uuid "^8.3.2"
 
-"@portkey/did@^0.0.1-alpha.2.7":
-  version "0.0.1-alpha.2.7"
-  resolved "https://registry.npmjs.org/@portkey/did/-/did-0.0.1-alpha.2.7.tgz"
-  integrity sha512-QlotIlrbcIN/LgF9QS/j8kbh6rxt93nv8De+ZCJBq6Uuoj7YGkJyfxVSwM4Pcqq2MWdXYr2k4/MlHEb26wIysQ==
+"@portkey/did@^0.0.1-alpha.2.8":
+  version "0.0.1-alpha.2.8"
+  resolved "https://registry.yarnpkg.com/@portkey/did/-/did-0.0.1-alpha.2.8.tgz#e8f73e77a46ffb14344572916ad5dc3d676988ab"
+  integrity sha512-MoXVNS89jw6fJXnZy7PNubAMsePIdMXM1nMKrjpsVF2iFnyYVsNxzOjOl432TKb5jaNspYSbEUYeEJbcbqhkpg==
   dependencies:
     "@portkey/accounts" "^0.0.1-alpha.1.4"
     "@portkey/contracts" "^0.0.1-alpha.1.6"
     "@portkey/graphql" "^0.0.1-alpha.1.6"
     "@portkey/request" "^0.0.1-alpha.1.5"
-    "@portkey/services" "^0.0.1-alpha.1.7"
+    "@portkey/services" "^0.0.1-alpha.1.9"
     "@portkey/types" "^0.0.1-alpha.1.5"
     "@portkey/utils" "^0.0.1-alpha.1.7"
     aelf-sdk "^3.2.44"
     react "^18.2.0"
-
-"@portkey/graphql@^0.0.1-alpha.1.5":
-  version "0.0.1-alpha.1.5"
-  resolved "https://registry.npmjs.org/@portkey/graphql/-/graphql-0.0.1-alpha.1.5.tgz"
-  integrity sha512-VVXn4kpVK53sw22tpu3PnwsgjeP4YPdJIjKvkpsmiweRbTvctrscW8wtJlaPJDfd1OEL/gA2Kjq89cGUQVBcYg==
-  dependencies:
-    "@apollo/client" "^3.7.3"
-    "@portkey/types" "^0.0.1-alpha.1.4"
-    graphql "^16.6.0"
-    subscriptions-transport-ws "^0.11.0"
 
 "@portkey/graphql@^0.0.1-alpha.1.6":
   version "0.0.1-alpha.1.6"
@@ -354,12 +345,12 @@
     "@portkey/types" "^0.0.1-alpha.1.4"
     query-string "^6.14.1"
 
-"@portkey/services@^0.0.1-alpha.1.7":
-  version "0.0.1-alpha.1.7"
-  resolved "https://registry.npmjs.org/@portkey/services/-/services-0.0.1-alpha.1.7.tgz"
-  integrity sha512-S8W0jKHGi1fyfH6KeTZ4gINsqWRxg1vz2y3CR6+PKcvht9Soq+yMfPsYr1tL1yhjidcz9RJiU22jCaHuYcXp6w==
+"@portkey/services@^0.0.1-alpha.1.9":
+  version "0.0.1-alpha.1.9"
+  resolved "https://registry.yarnpkg.com/@portkey/services/-/services-0.0.1-alpha.1.9.tgz#ed358aecf19c3727ccbb06d4012d4926ad9c3196"
+  integrity sha512-oNB6wAXy2vJjOZ5j7M3y472KXE5LJthDO/jpTCDJTHrDEoSCUKeBmEeOVLAKW1a6zAaLb7g0sR1Aa6+rVZbboA==
   dependencies:
-    "@portkey/graphql" "^0.0.1-alpha.1.5"
+    "@portkey/graphql" "^0.0.1-alpha.1.6"
     "@portkey/request" "^0.0.1-alpha.1.4"
     "@portkey/types" "^0.0.1-alpha.1.4"
     aelf-sdk "^3.2.44"
@@ -3131,11 +3122,6 @@ qrcode-generator@^1.4.1:
   resolved "https://registry.npmjs.org/qrcode-generator/-/qrcode-generator-1.4.4.tgz"
   integrity sha512-HM7yY8O2ilqhmULxGMpcHSF1EhJJ9yBj8gvDEuZ6M+KGJ0YY2hKpnXvRD+hZPLrDVck3ExIGhmPtSdcjC+guuw==
 
-qrcode.react@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.npmjs.org/qrcode.react/-/qrcode.react-3.1.0.tgz"
-  integrity sha512-oyF+Urr3oAMUG/OiOuONL3HXM+53wvuH3mtIWQrYmsXoAq0DkvZp2RYUWFSMFtbdOpuS++9v+WAkzNVkMlNW6Q==
-
 query-string@5.1.1:
   version "5.1.1"
   resolved "https://registry.npmjs.org/query-string/-/query-string-5.1.1.tgz"
@@ -3564,9 +3550,9 @@ react-is@^17.0.2:
   resolved "https://registry.npmjs.org/react-is/-/react-is-17.0.2.tgz"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
-react-qrcode-logo@^2.9.0:
+react-qrcode-logo@2.9.0, react-qrcode-logo@^2.9.0:
   version "2.9.0"
-  resolved "https://registry.npmjs.org/react-qrcode-logo/-/react-qrcode-logo-2.9.0.tgz"
+  resolved "https://registry.yarnpkg.com/react-qrcode-logo/-/react-qrcode-logo-2.9.0.tgz#34270d563b4a15396b5e7e7656ea2d079673adad"
   integrity sha512-x9uctB/8kuQ+x7p4V/BRv6qbQV4xYopLcitBuQT3925U/zVFb3bbDUsUZsi7hEKuAX/wRsfhs331FhlPSYCO9Q==
   dependencies:
     lodash.isequal "^4.5.0"
@@ -3603,6 +3589,11 @@ react@18.2.0, react@^18.2.0:
   integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==
   dependencies:
     loose-envify "^1.1.0"
+
+reactjs-social-login@^2.6.2:
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/reactjs-social-login/-/reactjs-social-login-2.6.2.tgz#fffa8a8d216bcb373433322e1fe7328318c80177"
+  integrity sha512-7ngl3qMbnRkXJznsdd/fwCXLwE1wBpeLhaAZJlZF0Wki7tl9nwFL191t+uopZkSBnWuHRCBhmOGgT/y9KVSJAg==
 
 readable-stream@^3.6.0:
   version "3.6.1"

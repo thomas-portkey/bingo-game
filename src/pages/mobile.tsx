@@ -1,17 +1,13 @@
 import React, { MouseEventHandler, useRef, useState, useEffect } from 'react';
+import { INITIAL_INPUT_VALUE, MAX_BET_VALUE, defaultCountryCodeConfig } from '../constants/global';
+import useBingo, { SettingPage, StepStatus, KEY_NAME, BetType } from '../hooks/useBingo';
 import { SignIn, did, PortkeyLoading, Unlock } from '@portkey/did-ui-react';
 import { CenterPopup, Toast, Input } from 'antd-mobile';
 import { QRCode } from 'react-qrcode-logo';
-
 import { shrinkSendQrData } from '../utils/common';
-import useBingo, { SettingPage, StepStatus, KEY_NAME, BetType } from '../hooks/useBingo';
-
 import { CHAIN_ID } from '../constants/network';
-
 import Clipboard from 'clipboard';
-
 import styles from '../styles/mobile.module.css';
-import { INITIAL_INPUT_VALUE, MAX_BET_VALUE, MIN_BET_VALUE } from '../constants/global';
 
 enum ButtonType {
   BLUE,
@@ -41,7 +37,7 @@ const MBingoGame = () => {
   const [passwordValue, setPasswordValue] = useState<string>('');
   const [showUnlock, setShowUnlock] = useState<boolean>(false);
   const [showLogin, setShowLogin] = useState<boolean>(false);
-  const [isWrongPassWord, setIsWrongPassWord] = useState<boolean>(false);
+  const [isWrongPassword, setIsWrongPassword] = useState<boolean>(false);
   const copyBtnRef = useRef<Element>(null);
   const copyBoard = useRef<Clipboard>(null);
 
@@ -463,6 +459,8 @@ const MBingoGame = () => {
       {renderSence()}
       <SignIn
         open={showLogin}
+        uiType="Modal"
+        phoneCountry={defaultCountryCodeConfig}
         sandboxId="portkey-ui-sandbox"
         defaultChainId={CHAIN_ID}
         isShowScan
@@ -472,7 +470,7 @@ const MBingoGame = () => {
           initContract();
         }}
         onError={(err) => {
-          console.error(err, 'onError==');
+          console.error('onError==', err);
         }}
         onCancel={() => {
           setShowLogin(false);
@@ -482,7 +480,7 @@ const MBingoGame = () => {
       <Unlock
         open={showUnlock}
         value={passwordValue}
-        isWrongPassWord={isWrongPassWord}
+        isWrongPassword={isWrongPassword}
         onChange={(passwordVal) => {
           setPasswordValue(passwordVal);
         }}
@@ -492,12 +490,11 @@ const MBingoGame = () => {
         onUnlock={async () => {
           const localWallet = await did.load(passwordValue, KEY_NAME);
           if (!localWallet.didWallet.accountInfo.loginAccount) {
-            setIsWrongPassWord(true);
+            setIsWrongPassword(true);
             return;
           }
-
           await unLock(localWallet);
-          setIsWrongPassWord(false);
+          setIsWrongPassword(false);
           setPasswordValue('');
           setShowUnlock(false);
         }}
