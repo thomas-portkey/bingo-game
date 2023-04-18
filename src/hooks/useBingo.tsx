@@ -10,7 +10,7 @@ import { useDelay } from './useDelay';
 
 import { bingoAddress, CHAIN_ID } from '../constants/network';
 
-import useIntervalAsync from './useIntervalAsync';
+import useIntervalAsync from './useIntervalTool';
 import { INITIAL_INPUT_VALUE, MAX_BET_VALUE, MIN_BET_VALUE } from '../constants/global';
 
 export enum StepStatus {
