@@ -11,6 +11,15 @@ import PCBingoGame from './pc';
 ConfigProvider.setGlobalConfig({
   storageMethod: new Store(),
   graphQLUrl: '/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql',
+  socialLogin: {
+    Apple: {
+      clientId: 'did.portkey',
+      redirectURI: 'https://localtest-applesign.portkey.finance/api/app/appleAuth/bingoReceive',
+    },
+    Google: {
+      clientId: '176147744733-a2ks681uuqrmb8ajqrpu17te42gst6lq.apps.googleusercontent.com',
+    },
+  },
   network: {
     defaultNetwork: 'TESTNET',
     networkList: [
