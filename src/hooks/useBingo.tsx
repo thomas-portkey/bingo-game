@@ -4,7 +4,7 @@ import { ChainInfo } from '@portkey/services';
 import { getContractBasic, ContractBasic } from '@portkey/contracts';
 
 import AElf from 'aelf-sdk';
-import { isMobile } from '../utils/common';
+import { isMobile, shrinkSendQrData } from '../utils/common';
 
 import { useDelay } from './useDelay';
 
@@ -28,6 +28,7 @@ export enum SettingPage {
   ACCOUNT,
   BALANCE,
   LOGOUT,
+  QRCODE,
 }
 
 export enum ButtonType {
@@ -159,6 +160,26 @@ const useBingo = (Toast: any) => {
       return true;
     }
     getBalance();
+  };
+
+  const getQrInfo = () => {
+    const info = shrinkSendQrData({
+      type: 'send',
+      netWorkType: 'TESTNET',
+      chainType: 'aelf',
+      toInfo: {
+        address: accountAddress,
+        name: '',
+      },
+      assetInfo: {
+        symbol: 'ELF',
+        chainId: chainInfoRef.current?.chainId,
+        tokenContractAddress: tokenContractAddressRef.current,
+        decimals: '8',
+      },
+      address: accountAddress,
+    });
+    return info;
   };
 
   const register = async () => {
@@ -478,6 +499,7 @@ const useBingo = (Toast: any) => {
     isWin,
     enablePlay,
     setShowQrCode,
+    getQrInfo,
     difference,
     result,
     hasFinishBet,

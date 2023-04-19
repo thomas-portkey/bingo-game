@@ -1,13 +1,13 @@
-import React, { MouseEventHandler, useRef, useState, useEffect } from 'react';
-import { INITIAL_INPUT_VALUE, MAX_BET_VALUE, defaultCountryCodeConfig } from '../constants/global';
+import React, { MouseEventHandler, useState } from 'react';
+import { INITIAL_INPUT_VALUE, MAX_BET_VALUE, TOKEN_UNIT, defaultCountryCodeConfig } from '../constants/global';
 import useBingo, { SettingPage, StepStatus, KEY_NAME, BetType } from '../hooks/useBingo';
 import { SignIn, did, PortkeyLoading, Unlock } from '@portkey/did-ui-react';
-import { CenterPopup, Toast, Input } from 'antd-mobile';
+import { message, InputNumber, Modal, Popover } from 'antd';
 import { QRCode } from 'react-qrcode-logo';
 import { shrinkSendQrData } from '../utils/common';
-import { CHAIN_ID } from '../constants/network';
-import Clipboard from 'clipboard';
+import { CHAIN_ID, networkType } from '../constants/network';
 import styles from '../styles/mobile.module.css';
+import copy from 'copy-to-clipboard';
 
 enum ButtonType {
   BLUE,
@@ -38,8 +38,7 @@ const MBingoGame = () => {
   const [showUnlock, setShowUnlock] = useState<boolean>(false);
   const [showLogin, setShowLogin] = useState<boolean>(false);
   const [isWrongPassword, setIsWrongPassword] = useState<boolean>(false);
-  const copyBtnRef = useRef<Element>(null);
-  const copyBoard = useRef<Clipboard>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const {
     onBet,
@@ -57,6 +56,7 @@ const MBingoGame = () => {
     setBalanceInputValue,
     showQrCode,
     isWin,
+    getQrInfo,
     setShowQrCode,
     difference,
     result,
@@ -68,28 +68,24 @@ const MBingoGame = () => {
     time,
     tokenContractAddress,
     accountAddress,
-  } = useBingo(Toast);
+  } = useBingo(message);
 
-  useEffect(() => {
-    if (copyBtnRef.current && !copyBoard.current) {
-      const clipboard = new Clipboard(copyBtnRef.current, {
-        text: () => {
-          return accountAddress;
-        },
-      });
-      clipboard.on('success', () => {
-        Toast.show({
-          content: 'Copied!',
-        });
-      });
-      clipboard.on('error', () => {
-        Toast.show({
-          content: 'Copy failed!',
-        });
-      });
-      copyBoard.current = clipboard;
-    }
-  });
+  const onCopy = () => {
+    copy(accountAddress);
+    message.success('Copied!');
+  };
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   /**
    *  render function
@@ -131,138 +127,139 @@ const MBingoGame = () => {
     );
   };
 
-  useEffect(() => {
-    if (settingPage === SettingPage.ACCOUNT) {
-      copyBtnRef.current = null;
-      copyBoard.current = null;
-    }
-  }, [settingPage]);
-
-  const PlayWrapper = (props: { children: any; show?: boolean }) => {
-    const { children, show = true } = props;
+  const PlayWrapper = (props: { children: any }) => {
+    const { children } = props;
     return (
-      <CenterPopup visible={show} className={styles.centerPopup}>
-        <div className={styles.playWrapper}>
-          <div className={styles.playContent}>{children}</div>
-        </div>
+      <div className={styles.container}>
         <div className={styles.settingBtnGroups}>
           <button
             onClick={() => {
+              showModal();
               setSettingPage(SettingPage.ACCOUNT);
             }}
             className={[styles.settingBtn, styles.button].join(' ')}></button>
-          <button
-            onClick={() => {
-              getBalance();
-              setSettingPage(SettingPage.BALANCE);
-            }}
-            className={[styles.settingBtn, styles.button].join(' ')}></button>
-          <button
-            onClick={() => {
-              setSettingPage(SettingPage.LOGOUT);
-            }}
-            className={[styles.settingBtn, styles.button].join(' ')}></button>
+          <button onClick={onCopy} className={[styles.accountBtn, styles.button].join(' ')}>
+            <div className={styles.buttonText}>{dealWithAccountAddressDisplay(accountAddress)}</div>
+            <div className={styles.copyIcon} />
+          </button>
+          <button className={[styles.balanceBtn, styles.button].join(' ')}>
+            <div className={styles.tokenIcon} />
+            <div className={styles.buttonText}>
+              {balanceValue} {TOKEN_UNIT}
+            </div>
+          </button>
         </div>
-      </CenterPopup>
+        <div className={styles.centerPopup}>
+          <div className={styles.playWrapper}>
+            <div className={styles.playContent}>{children}</div>
+          </div>
+        </div>
+      </div>
     );
+  };
+
+  const dealWithAccountAddressDisplay = (address: string): string => {
+    const maxShow = 18;
+    return address.length > maxShow
+      ? address.slice(0, maxShow / 2) + '...' + address.slice(address.length - maxShow / 2, address.length)
+      : address;
   };
 
   const renderPlay = () => {
     return (
-      <CenterPopup visible className={styles.centerPopup}>
-        <div className={styles.playWrapper}>
-          <div className={styles.playContent}>
-            <div style={{ fontSize: '96px' }} className={[styles.boardWrapper, styles.artWord].join(' ')}>
-              ?
-            </div>
-            <div className={styles.playContent__input}>
-              <Input
-                key="amount-input"
-                placeholder="0"
-                type="number"
-                value={inputValue}
-                onBlur={() => {
-                  const fixedString = Number(inputValue).toFixed(2);
-                  setInputValue(fixedString);
-                  setBalanceInputValue(fixedString);
-                }}
-                onChange={(val) => {
-                  setBalanceInputValue(val);
-                  setInputValue(val);
-                }}
-              />
-              <span style={{ paddingRight: '8px' }}>BET</span>
-              <span>ELF</span>
-            </div>
-            <div className={styles.playContent__btnGroups}>
-              <button
-                onClick={() => {
-                  setBalanceInputValue(INITIAL_INPUT_VALUE);
-                  setInputValue(INITIAL_INPUT_VALUE);
-                }}
-                className={[styles.playContent__btn, styles.button].join(' ')}>
-                MIN
-              </button>
-              <button
-                onClick={() => {
-                  try {
-                    const balance = Math.min(Number(balanceValue), MAX_BET_VALUE);
-                    setBalanceInputValue(`${Math.floor(balance)}`);
-                    setInputValue(`${Math.floor(balance)}`);
-                  } catch (error) {
-                    console.error('error', error);
-                  }
-                }}
-                className={[styles.playContent__btn, styles.button].join(' ')}>
-                MAX
-                <span style={{ fontSize: '10px', paddingLeft: '4px' }}>{`(${MAX_BET_VALUE})`}</span>
-              </button>
-            </div>
-            <div className={styles.playContent__betBtnGroups}>
-              <Button
-                className={styles.playContent__betBtn}
-                type={ButtonType.ORIANGE}
-                onClick={async () => {
-                  onPlay(BetType.BIG);
-                }}>
-                <span className={styles.playContent__betBtn_p}>
-                  <p className={styles.artWord}>BIG</p>
-                  <p>(128 - 255)</p>
-                </span>
-              </Button>
-              <Button
-                className={styles.playContent__betBtn}
-                type={ButtonType.BLUE}
-                onClick={() => {
-                  onPlay(BetType.SMALL);
-                }}>
-                <span className={styles.playContent__betBtn_p}>
-                  <p className={styles.artWord}>SMALL</p>
-                  <p>(0 - 127)</p>
-                </span>
-              </Button>
-            </div>
-          </div>
-        </div>
+      <div className={styles.container}>
         <div className={styles.settingBtnGroups}>
           <button
             onClick={() => {
+              showModal();
               setSettingPage(SettingPage.ACCOUNT);
             }}
             className={[styles.settingBtn, styles.button].join(' ')}></button>
-          <button
-            onClick={() => {
-              getBalance();
-              setSettingPage(SettingPage.BALANCE);
-            }}
-            className={[styles.settingBtn, styles.button].join(' ')}></button>
-          <button
-            onClick={() => {
-              setSettingPage(SettingPage.LOGOUT);
-            }}
-            className={[styles.settingBtn, styles.button].join(' ')}></button>
+          <button onClick={onCopy} className={[styles.accountBtn, styles.button].join(' ')}>
+            <div className={styles.buttonText}>{dealWithAccountAddressDisplay(accountAddress)}</div>
+            <div className={styles.copyIcon} />
+          </button>
+          <button className={[styles.balanceBtn, styles.button].join(' ')}>
+            <div className={styles.tokenIcon} />
+            <div className={styles.buttonText}>
+              {balanceValue} {TOKEN_UNIT}
+            </div>
+          </button>
         </div>
-      </CenterPopup>
+        <div className={styles.centerPopup}>
+          <div className={styles.playWrapper}>
+            <div className={styles.playContent}>
+              <div style={{ fontSize: '96px' }} className={[styles.boardWrapper, styles.artWord].join(' ')}>
+                ?
+              </div>
+              <div className={styles.playContent__input}>
+                <InputNumber
+                  value={inputValue}
+                  bordered={false}
+                  precision={2}
+                  min={'0'}
+                  max={`${MAX_BET_VALUE}`}
+                  controls={false}
+                  onChange={(val) => {
+                    setBalanceInputValue(val);
+                    setInputValue(val);
+                  }}
+                />
+                <span style={{ paddingRight: '8px' }}>BET</span>
+                <span>ELF</span>
+              </div>
+              <div className={styles.playContent__btnGroups}>
+                <button
+                  onClick={() => {
+                    setBalanceInputValue(INITIAL_INPUT_VALUE);
+                    setInputValue(INITIAL_INPUT_VALUE);
+                  }}
+                  className={[styles.playContent__btn, styles.button].join(' ')}>
+                  MIN
+                </button>
+                <button
+                  onClick={() => {
+                    try {
+                      const balance = Math.min(Number(balanceValue), MAX_BET_VALUE);
+                      setBalanceInputValue(`${Math.floor(balance)}`);
+                      setInputValue(`${Math.floor(balance)}`);
+                    } catch (error) {
+                      console.error('error', error);
+                    }
+                  }}
+                  className={[styles.playContent__btn, styles.button].join(' ')}>
+                  MAX
+                  <span style={{ fontSize: '10px', paddingLeft: '4px' }}>{`(${MAX_BET_VALUE})`}</span>
+                </button>
+              </div>
+              <div className={styles.playContent__betBtnGroups}>
+                <Button
+                  className={styles.playContent__betBtn}
+                  type={ButtonType.ORIANGE}
+                  onClick={async () => {
+                    onPlay(BetType.BIG);
+                  }}>
+                  <span className={styles.playContent__betBtn_p}>
+                    <p className={styles.artWord}>BIG</p>
+                    <p>(128 - 255)</p>
+                  </span>
+                </Button>
+                <Button
+                  className={styles.playContent__betBtn}
+                  type={ButtonType.BLUE}
+                  onClick={() => {
+                    onPlay(BetType.SMALL);
+                  }}>
+                  <span className={styles.playContent__betBtn_p}>
+                    <p className={styles.artWord}>SMALL</p>
+                    <p>(0 - 127)</p>
+                  </span>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     );
   };
 
@@ -337,106 +334,90 @@ const MBingoGame = () => {
     );
   };
 
-  const renderSettingPage = () => {
-    const info = shrinkSendQrData({
-      type: 'send',
-      netWorkType: 'TESTNET',
-      chainType: 'aelf',
-      toInfo: {
-        address: accountAddress,
-        name: '',
-      },
-      assetInfo: {
-        symbol: 'ELF',
-        chainId: chainId,
-        tokenContractAddress: tokenContractAddress,
-        decimals: '8',
-      },
-      address: accountAddress,
-    });
-
+  const renderDefaultSettingPage = () => {
     return (
-      <PlayWrapper>
-        <div className={styles.settingContent}>
-          {settingPage === SettingPage.ACCOUNT && (
-            <div className={styles.settingContent__account}>
-              <h1>Account</h1>
-              {!showQrCode ? (
-                <p className={styles.settingContent__account__text}>{accountAddress}</p>
-              ) : (
+      <div className={styles.setting__content}>
+        <div className={styles.setting__account__module}>
+          <div className={styles.setting__account__module__text}>{dealWithAccountAddressDisplay(accountAddress)}</div>
+          <div className={styles.setting__account__module__copy} onClick={onCopy} />
+          <Popover
+            trigger={'click'}
+            placement={'bottomLeft'}
+            arrowPointAtCenter={false}
+            content={() => (
+              <div>
                 <QRCode
-                  value={JSON.stringify(info)}
-                  size={200}
+                  value={JSON.stringify(getQrInfo())}
+                  size={175}
                   quietZone={0}
                   qrStyle={'squares'}
                   eyeRadius={{ outer: 7, inner: 4 }}
                   ecLevel={'L'}
                 />
-              )}
-              <div>
-                <button
-                  ref={(ref) => {
-                    copyBtnRef.current = ref;
-                  }}
-                  className={[styles.settingBtn__copy, styles.button].join(' ')}></button>
-                <button
-                  onClick={() => {
-                    setShowQrCode(true);
-                  }}
-                  className={[styles.settingBtn__qrcode, styles.button].join(' ')}></button>
+                <div className={styles.etting__qrcode__address}>{accountAddress}</div>
               </div>
-            </div>
-          )}
-          {settingPage === SettingPage.BALANCE && (
-            <div className={styles.settingContent__balance}>
-              <h1>Balance</h1>
-              <div className={styles.settingContent__balance__text}>{Number(balanceValue).toFixed(4)} ELF</div>
-              <button
-                className={styles.settingContent__balance__reload}
-                onClick={async () => {
-                  setLoading(true);
-                  await getBalance();
-                  setLoading(false);
-                }}></button>
-            </div>
-          )}
-          {settingPage === SettingPage.LOGOUT && (
-            <div className={styles.settingContent__logout}>
-              <div>
-                <Button className={styles.settingContent__logout__btn} type={ButtonType.BLUE} onClick={logOut}>
-                  <p className={styles.artWord}>Logout</p>
-                </Button>
-
-                <Button className={styles.settingContent__logout__btn} type={ButtonType.BLUE} onClick={lock}>
-                  <img src={require('../../public/lock_small.png').default.src} />
-                </Button>
-              </div>
-            </div>
-          )}
-
-          <Button
-            className={styles.playContent__betBtn}
-            type={ButtonType.ORIANGE}
-            onClick={() => {
-              setSettingPage(SettingPage.NULL);
-              setShowQrCode(false);
-            }}>
-            <span className={styles.playContent__betBtn_p}>
-              <p style={{ fontSize: '24px' }} className={styles.artWord}>
-                CLOSE
-              </p>
-            </span>
-          </Button>
+            )}>
+            <div className={styles.setting__account__module__qrcode} />
+          </Popover>
         </div>
-      </PlayWrapper>
+        <div className={styles.setting__balance__module}>
+          <div className={styles.setting__balance__row}>
+            <div className={styles.setting__balance__token__icon} />
+            <div className={styles.setting__balance__tag__wrapper}>
+              <div className={styles.setting__balance__tag__text}>Current</div>
+            </div>
+            <div className={styles.setting__balance__content}>
+              <div className={styles.setting__balance__content__title}>ELF</div>
+              <div className={styles.setting__balance__content__subtitle}>{networkType}</div>
+            </div>
+            <div className={styles.setting__balance__current__wrapper}>
+              <div className={styles.setting__balance__current__value}>{balanceValue}</div>
+            </div>
+          </div>
+        </div>
+        <div
+          className={styles.setting__logout}
+          onClick={() => {
+            logOut();
+            handleCancel();
+          }}>
+          <div className={styles.setting__logout__text}>Logout</div>
+        </div>
+        <div
+          className={styles.setting__lock}
+          onClick={() => {
+            lock();
+            handleCancel();
+          }}
+        />
+      </div>
+    );
+  };
+
+  const renderSettingModal = () => {
+    return (
+      <Modal
+        open={isModalOpen}
+        onCancel={handleCancel}
+        onOk={handleOk}
+        className={styles.ant__modal__body}
+        closable={false}
+        bodyStyle={{
+          backgroundColor: 'transparent',
+        }}
+        footer={null}>
+        <div className={styles.settingWrapper}>
+          {renderDefaultSettingPage()}
+          <img className={styles.settingBg} src={require('../../public/frame_no_icon.png').default.src} />
+          <div className={styles.modalClose} onClick={handleCancel}>
+            <img className={styles.closeIcon} src={require('../../public/close.png').default.src} />
+          </div>
+        </div>
+      </Modal>
     );
   };
 
   const renderSence = () => {
-    if (settingPage !== SettingPage.NULL) {
-      return renderSettingPage();
-    }
-
     switch (step) {
       case StepStatus.INIT:
       case StepStatus.LOCK:
@@ -476,7 +457,7 @@ const MBingoGame = () => {
           setShowLogin(false);
         }}
       />
-
+      {renderSettingModal()}
       <Unlock
         open={showUnlock}
         value={passwordValue}
