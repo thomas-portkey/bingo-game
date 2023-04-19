@@ -172,76 +172,89 @@ const MBingoGame = () => {
       <CenterPopup visible className={styles.centerPopup}>
         <div className={styles.playWrapper}>
           <div className={styles.playContent}>
-            <div style={{ fontSize: '96px' }} className={[styles.boardWrapper, styles.artWord].join(' ')}>
-              ?
-            </div>
-            <div className={styles.playContent__input}>
-              <Input
-                key="amount-input"
-                placeholder="0"
-                type="number"
-                value={inputValue}
-                onBlur={() => {
-                  const fixedString = Number(inputValue).toFixed(2);
-                  setInputValue(fixedString);
-                  setBalanceInputValue(fixedString);
-                }}
-                onChange={(val) => {
-                  setBalanceInputValue(val);
-                  setInputValue(val);
-                }}
-              />
-              <span style={{ paddingRight: '8px' }}>BET</span>
-              <span>ELF</span>
-            </div>
-            <div className={styles.playContent__btnGroups}>
-              <button
-                onClick={() => {
-                  setBalanceInputValue(INITIAL_INPUT_VALUE);
-                  setInputValue(INITIAL_INPUT_VALUE);
-                }}
-                className={[styles.playContent__btn, styles.button].join(' ')}>
-                MIN
-              </button>
-              <button
-                onClick={() => {
-                  try {
-                    const balance = Math.min(Number(balanceValue), MAX_BET_VALUE);
-                    setBalanceInputValue(`${Math.floor(balance)}`);
-                    setInputValue(`${Math.floor(balance)}`);
-                  } catch (error) {
-                    console.error('error', error);
-                  }
-                }}
-                className={[styles.playContent__btn, styles.button].join(' ')}>
-                MAX
-                <span style={{ fontSize: '10px', paddingLeft: '4px' }}>{`(${MAX_BET_VALUE})`}</span>
-              </button>
-            </div>
-            <div className={styles.playContent__betBtnGroups}>
-              <Button
-                className={styles.playContent__betBtn}
-                type={ButtonType.ORIANGE}
-                onClick={async () => {
-                  onPlay(BetType.BIG);
-                }}>
-                <span className={styles.playContent__betBtn_p}>
-                  <p className={styles.artWord}>BIG</p>
-                  <p>(128 - 255)</p>
-                </span>
-              </Button>
-              <Button
-                className={styles.playContent__betBtn}
-                type={ButtonType.BLUE}
-                onClick={() => {
-                  onPlay(BetType.SMALL);
-                }}>
-                <span className={styles.playContent__betBtn_p}>
-                  <p className={styles.artWord}>SMALL</p>
-                  <p>(0 - 127)</p>
-                </span>
-              </Button>
-            </div>
+            {step === StepStatus.CUTDOWN ? (
+              <div>
+                <div className={styles.playContent__cutDown}>
+                  <div className={styles.playContent__cutDown_time}>{time}</div>
+                  <img style={{ width: '15rem' }} src={require('../../public/sand_clock.png').default.src} />
+                </div>
+              </div>
+            ) : (
+              <>
+                <div style={{ fontSize: '96px' }} className={[styles.boardWrapper, styles.artWord].join(' ')}>
+                  ?
+                </div>
+                <div className={styles.playContent__input}>
+                  <Input
+                    key="amount-input"
+                    placeholder="0"
+                    type="number"
+                    value={inputValue}
+                    onBlur={() => {
+                      const fixedString = Number(inputValue).toFixed(2);
+                      setInputValue(fixedString);
+                      setBalanceInputValue(fixedString);
+                    }}
+                    onChange={(val) => {
+                      setBalanceInputValue(val);
+                      setInputValue(val);
+                    }}
+                  />
+                  <span style={{ paddingRight: '8px' }}>BET</span>
+                  <span>ELF</span>
+                </div>
+
+                <div className={styles.playContent__btnGroups}>
+                  <button
+                    onClick={() => {
+                      setBalanceInputValue(INITIAL_INPUT_VALUE);
+                      setInputValue(INITIAL_INPUT_VALUE);
+                    }}
+                    className={[styles.playContent__btn, styles.button].join(' ')}>
+                    MIN
+                  </button>
+                  <button
+                    onClick={() => {
+                      try {
+                        const balance = Math.min(Number(balanceValue), MAX_BET_VALUE);
+                        setBalanceInputValue(`${Math.floor(balance)}`);
+                        setInputValue(`${Math.floor(balance)}`);
+                      } catch (error) {
+                        console.error('error', error);
+                      }
+                    }}
+                    className={[styles.playContent__btn, styles.button].join(' ')}>
+                    MAX
+                    <span style={{ fontSize: '10px', paddingLeft: '4px' }}>{`(${MAX_BET_VALUE})`}</span>
+                  </button>
+                </div>
+
+                <div className={styles.playContent__betBtnGroups}>
+                  <Button
+                    className={styles.playContent__betBtn}
+                    type={ButtonType.ORIANGE}
+                    onClick={async () => {
+                      onPlay(BetType.BIG);
+                    }}>
+                    <span className={styles.playContent__betBtn_p}>
+                      <p className={styles.artWord}>BIG</p>
+                      <p>(128 - 255)</p>
+                    </span>
+                  </Button>
+                  <Button
+                    className={styles.playContent__betBtn}
+                    type={ButtonType.BLUE}
+                    onClick={() => {
+                      onPlay(BetType.SMALL);
+                    }}>
+                    <span className={styles.playContent__betBtn_p}>
+                      <p className={styles.artWord}>SMALL</p>
+                      <p>(0 - 127)</p>
+                    </span>
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
         </div>
         <div className={styles.settingBtnGroups}>
@@ -443,9 +456,9 @@ const MBingoGame = () => {
       case StepStatus.LOGIN:
         return renderDefault();
       case StepStatus.PLAY:
-        return renderPlay();
       case StepStatus.CUTDOWN:
-        return renderCutDown();
+        return renderPlay();
+      // return renderCutDown();
       case StepStatus.BINGO:
         return renderBingo();
       default:
