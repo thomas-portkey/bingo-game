@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { INITIAL_INPUT_VALUE, MAX_BET_VALUE, defaultCountryCodeConfig } from '../constants/global';
 import useBingo, { StepStatus, KEY_NAME, BetType } from '../hooks/useBingo';
 import { SignIn, did, PortkeyLoading, Unlock } from '@portkey/did-ui-react';
-import { InputNumber, message, Popover } from 'antd';
+import { InputNumber, message, Popover, Modal } from 'antd';
 import { Button, ButtonType } from '../page-components/Button';
 import { shrinkSendQrData } from '../utils/common';
 import { QRCode } from 'react-qrcode-logo';
@@ -15,6 +15,8 @@ const PCBingoGame = () => {
   const [passwordValue, setPasswordValue] = useState<string>('');
   const [showUnlock, setShowUnlock] = useState<boolean>(false);
   const [showLogin, setShowLogin] = useState<boolean>(false);
+  const [showMenuPop, setShowMenuPop] = useState<boolean>(false);
+
   const [isWrongPassword, setIsWrongPassword] = useState<boolean>(false);
 
   const {
@@ -81,72 +83,81 @@ const PCBingoGame = () => {
         <div className={styles.contentWrapper}>
           <div className={styles.content__bg}>
             <div className={styles.content__wrapper}>
-              <img src={require('../../public/question.png').default.src} />
-              <div className={styles.content__right}>
-                <div className={styles.content__inputWrapper}>
-                  <InputNumber
-                    value={inputValue}
-                    bordered={false}
-                    precision={2}
-                    min={'0'}
-                    max={`${MAX_BET_VALUE}`}
-                    className={styles.content__input}
-                    onChange={(val) => {
-                      setBalanceInputValue(val);
-                      setInputValue(val);
-                    }}
-                    controls={false}></InputNumber>
-                  <span>BET ELF</span>
+              {step === StepStatus.CUTDOWN ? (
+                <div className={styles.content__cutDown}>
+                  <div className={styles.content__cutDown_time}>{time}</div>
+                  <img src={require('../../public/sand_clock.png').default.src} />
                 </div>
-                <div className={styles.playContent__btnGroups}>
-                  <button
-                    onClick={() => {
-                      setBalanceInputValue(INITIAL_INPUT_VALUE);
-                      setInputValue(INITIAL_INPUT_VALUE);
-                    }}
-                    className={[styles.playContent__btn, styles.button].join(' ')}>
-                    MIN
-                  </button>
-                  <button
-                    onClick={() => {
-                      try {
-                        const balance = Math.min(Number(balanceValue), MAX_BET_VALUE);
-                        setBalanceInputValue(`${Math.floor(balance)}`);
-                        setInputValue(`${Math.floor(balance)}`);
-                      } catch (error) {
-                        console.error('error', error);
-                      }
-                    }}
-                    className={[styles.playContent__btn, styles.button].join(' ')}>
-                    MAX
-                    <span style={{ fontSize: '16px', paddingLeft: '4px' }}>{`(${MAX_BET_VALUE})`}</span>
-                  </button>
-                </div>
-                <div className={styles.playContent__betBtnGroups}>
-                  <Button
-                    className={styles.playContent__betBtn}
-                    type={ButtonType.ORIANGE}
-                    onClick={async () => {
-                      onPlay(BetType.BIG);
-                    }}>
-                    <span className={styles.playContent__betBtn_p}>
-                      <p className={styles.artWord}>BIG</p>
-                      <p>(128 - 255)</p>
-                    </span>
-                  </Button>
-                  <Button
-                    className={styles.playContent__betBtn}
-                    type={ButtonType.BLUE}
-                    onClick={() => {
-                      onPlay(BetType.SMALL);
-                    }}>
-                    <span className={styles.playContent__betBtn_p}>
-                      <p className={styles.artWord}>SMALL</p>
-                      <p>(0 - 127)</p>
-                    </span>
-                  </Button>
-                </div>
-              </div>
+              ) : (
+                <>
+                  <img src={require('../../public/question.png').default.src} />
+                  <div className={styles.content__right}>
+                    <div className={styles.content__inputWrapper}>
+                      <InputNumber
+                        value={inputValue}
+                        bordered={false}
+                        precision={2}
+                        min={'0'}
+                        max={`${MAX_BET_VALUE}`}
+                        className={styles.content__input}
+                        onChange={(val) => {
+                          setBalanceInputValue(val);
+                          setInputValue(val);
+                        }}
+                        controls={false}></InputNumber>
+                      <span>BET ELF</span>
+                    </div>
+                    <div className={styles.playContent__btnGroups}>
+                      <button
+                        onClick={() => {
+                          setBalanceInputValue(INITIAL_INPUT_VALUE);
+                          setInputValue(INITIAL_INPUT_VALUE);
+                        }}
+                        className={[styles.playContent__btn, styles.button].join(' ')}>
+                        MIN
+                      </button>
+                      <button
+                        onClick={() => {
+                          try {
+                            const balance = Math.min(Number(balanceValue), MAX_BET_VALUE);
+                            setBalanceInputValue(`${Math.floor(balance)}`);
+                            setInputValue(`${Math.floor(balance)}`);
+                          } catch (error) {
+                            console.error('error', error);
+                          }
+                        }}
+                        className={[styles.playContent__btn, styles.button].join(' ')}>
+                        MAX
+                        <span style={{ fontSize: '16px', paddingLeft: '4px' }}>{`(${MAX_BET_VALUE})`}</span>
+                      </button>
+                    </div>
+                    <div className={styles.playContent__betBtnGroups}>
+                      <Button
+                        className={styles.playContent__betBtn}
+                        type={ButtonType.ORIANGE}
+                        onClick={async () => {
+                          onPlay(BetType.BIG);
+                        }}>
+                        <span className={styles.playContent__betBtn_p}>
+                          <p className={styles.artWord}>BIG</p>
+                          <p>(128 - 255)</p>
+                        </span>
+                      </Button>
+                      <Button
+                        className={styles.playContent__betBtn}
+                        type={ButtonType.BLUE}
+                        onClick={() => {
+                          onPlay(BetType.SMALL);
+                        }}>
+                        <span className={styles.playContent__betBtn_p}>
+                          <p className={styles.artWord}>SMALL</p>
+                          <p>(0 - 127)</p>
+                        </span>
+                      </Button>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -260,12 +271,16 @@ const PCBingoGame = () => {
         <PortkeyLoading loading={loading} />
         {![StepStatus.INIT, StepStatus.LOCK, StepStatus.LOGIN, StepStatus.END].includes(step) && (
           <div className={styles.settingHeader}>
+            <img
+              className={[styles.setting__menu, styles.btn].join(' ')}
+              src={require('../../public/menu_pc.png').default.src}
+              onClick={() => {
+                setShowMenuPop(true);
+              }}
+            />
             <div className={styles.setting__balance}>
               <div className={styles.setting__balance__content}>
-                <div>Balance</div>
-                <div style={{ width: '166px', fontSize: `${balanceValue.length > 9 ? '18px' : '24px'}` }}>
-                  {Number(balanceValue).toFixed(4)} ELF
-                </div>
+                <div style={{ width: '100%', fontSize: '24px' }}>{Number(balanceValue).toFixed(4)} ELF</div>
                 <button
                   className={styles.btn}
                   onClick={() => {
@@ -321,8 +336,68 @@ const PCBingoGame = () => {
           </div>
         )}
         {renderSence()}
+        {/* {step === StepStatus.CUTDOWN && renderCutDown()} */}
 
-        {step === StepStatus.CUTDOWN && renderCutDown()}
+        <Modal
+          className={styles.menuPop}
+          centered
+          open={showMenuPop}
+          onOk={() => setShowMenuPop(false)}
+          onCancel={() => setShowMenuPop(false)}
+          width={1000}
+          closeIcon={<img style={{ width: '6.4rem' }} src={require('../../public/close.png').default.src} />}
+          // bodyStyle={{ margin: '62px' }}
+          footer={null}>
+          <div className={styles.menuPop__wrapper}>
+            <div className={styles.menuPop__wrapper_content}>
+              <div className={[styles.setting__account, styles.menuPop__wrapper_account].join(' ')}>
+                <div className={styles.setting__account__content}>
+                  <div>Account</div>
+                  <div style={{ width: '400px', overflow: 'hidden' }}>
+                    {accountAddress.length > 30
+                      ? `${accountAddress.slice(0, 15)}...${accountAddress.slice(
+                          accountAddress.length - 10,
+                          accountAddress.length,
+                        )}`
+                      : accountAddress}
+                  </div>
+                  <button
+                    className={styles.setting__account__content__copy}
+                    onClick={() => {
+                      copy(accountAddress);
+                      message.success('Copied!');
+                    }}
+                  />
+
+                  <Popover
+                    content={() => (
+                      <QRCode
+                        value={JSON.stringify(getQrInfo())}
+                        size={200}
+                        quietZone={0}
+                        qrStyle={'squares'}
+                        eyeRadius={{ outer: 7, inner: 4 }}
+                        ecLevel={'L'}
+                      />
+                    )}>
+                    <div className={styles.setting__account__content__qrcode} />
+                  </Popover>
+                </div>
+              </div>
+              <div className={styles.menuPop__wrapper_content_textContent}>
+                <img src={require('../../public/bitcoin.svg').default.src} />
+                <div className={styles.menuPop__textContent_flex}>
+                  <div className={styles.menuPop__textContent_flex_top}>
+                    <span>{CHAIN_ID}</span>
+                    <span>{balanceValue}</span>
+                  </div>
+                  <span style={{ color: '#707070' }}>SideChain tDVW Testnet</span>
+                </div>
+              </div>
+              <div></div>
+            </div>
+          </div>
+        </Modal>
 
         <SignIn
           open={showLogin}

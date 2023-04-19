@@ -424,9 +424,9 @@ const MBingoGame = () => {
       case StepStatus.LOGIN:
         return renderDefault();
       case StepStatus.PLAY:
-        return renderPlay();
       case StepStatus.CUTDOWN:
-        return renderCutDown();
+        return renderPlay();
+      // return renderCutDown();
       case StepStatus.BINGO:
         return renderBingo();
       default:

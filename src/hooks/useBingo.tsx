@@ -60,7 +60,7 @@ const useBingo = (Toast: any) => {
 
   const [loading, setLoading] = useState(false);
   const [caAddress, setCaAddress] = useState('');
-  const [time, setTime] = useState(30);
+  const [time, setTime] = useState(3);
 
   const walletRef = useRef<
     DIDWalletInfo & {
