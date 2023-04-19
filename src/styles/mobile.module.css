@@ -9,6 +9,19 @@
   color: #fff;
 }
 
+.ant__modal__body {
+  position: relative;
+}
+
+.ant__modal__body :global .ant-modal-content {
+  background-color: transparent;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+}
+
 .background {
   width: 100%;
   height: 100%;
@@ -22,6 +35,13 @@
   margin-top: 22vh;
   flex-direction: column;
   align-items: center;
+}
+
+.centerPopup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
 }
 
 .logo {
@@ -228,30 +248,72 @@
 }
 
 .settingBtnGroups {
-  margin-top: 20px;
+  position: absolute;
+  top: 10vw;
+  left: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
 }
 
 .settingBtn {
   background-size: 100% 100%;
-  width: 13.8vw;
-  height: 12.8vw;
+  width: 10vw;
+  height: 10vw;
+  margin-left: 2vw;
+  background-image: url('../../public/icon_menu.png');
 }
 
-.settingBtn:nth-child(1) {
-  background-image: url('../../public/settingBtn_1.png');
+.accountBtn {
+  height: 10vw;
+  width: 46vw;
+  margin-left: 2vw;
+  background-size: 100% 100%;
+  background-image: url('../../public/button_bg.png');
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
 }
 
-.settingBtn:nth-child(2) {
-  margin-left: 10px;
-  margin-right: 10px;
-  background-image: url('../../public/settingBtn_2.png');
+.balanceBtn {
+  height: 10vw;
+  width: 35vw;
+  margin-left: 2vw;
+  background-size: 100% 100%;
+  background-image: url('../../public/button_bg.png');
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
 }
 
-.settingBtn:nth-child(3) {
-  background-image: url('../../public/settingBtn_3.png');
+.buttonText {
+  margin-left: 2vw;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 2vw;
+  line-height: 2.5vw;
+  color: #000000;
+  display: block;
+  align-items: center;
+}
+
+.copyIcon {
+  height: 6vw;
+  width: 6vw;
+  margin-left: 0vw;
+  background-size: 100% 100%;
+  background-image: url('../../public/copy_button.png');
+}
+
+.tokenIcon {
+  height: 6vw;
+  width: 6vw;
+  margin-left: 1vw;
+  background-size: 100% 100%;
+  background-image: url('../../public/aelf_symbol.png');
 }
 
 .cutDownWrapper {
@@ -472,4 +534,242 @@
   color: #fff;
   text-align: center;
   line-height: 100vh;
+}
+
+.settingWrapper {
+  height: 100vw;
+  width: 80vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.settingBg {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+.modalClose {
+  height: 8vw;
+  width: 8vw;
+  position: absolute;
+  top: -2vw;
+  right: -2vw;
+  z-index: 100;
+}
+
+.closeIcon {
+  height: 8vw;
+  width: 8vw;
+}
+
+.setting__content {
+  width: 100%;
+  margin-left: 5vw;
+  margin-top: 3vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.setting__account__module {
+  width: 92%;
+  height: 10vw;
+  background-size: 100% 100%;
+  background-image: url('../../public/account_pc.png');
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.setting__account__module__text {
+  margin-left: 12vw;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 2vw;
+  line-height: 2.5vw;
+  color: #000000;
+  display: block;
+  align-items: center;
+}
+
+.setting__account__module__copy {
+  height: 6vw;
+  width: 6vw;
+  margin-left: 13vw;
+  background-size: 100% 100%;
+  background-image: url('../../public/copy_button.png');
+}
+
+.setting__account__module__qrcode {
+  height: 6vw;
+  width: 6vw;
+  background-size: 100% 100%;
+  background-image: url('../../public/qrcode.png');
+}
+
+.setting__balance__module {
+  width: 100%;
+  margin-top: 5vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.setting__balance__row {
+  position: relative;
+  width: 92%;
+  height: 20vw;
+  margin-bottom: 5vw;
+  background-color: #f7ebb3;
+  border-width: 1.5px;
+  border-style: solid;
+  border-color: #000000;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.setting__balance__token__icon {
+  height: 9vw;
+  width: 9vw;
+  background-size: 100% 100%;
+  background-image: url('../../public/aelf_symbol.png');
+  margin-left: 3vw;
+  margin-right: 2vw;
+}
+
+.setting__balance__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.setting__balance__tag__wrapper {
+  height: 5vw;
+  width: 13vw;
+  border-radius: 4px;
+  background: #ff9903;
+  border: 1.5px solid #000000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: -2vw;
+  left: -2vw;
+}
+
+.setting__balance__tag__text {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 9px;
+  line-height: 10px;
+  text-align: center;
+  color: #000000;
+}
+
+.setting__balance__content__title {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 5vw;
+  line-height: 6vw;
+  color: #000000;
+  text-align: left;
+  margin-bottom: 1vw;
+}
+
+.setting__balance__content__subtitle {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 3vw;
+  line-height: 4vw;
+  color: #707070;
+  text-align: left;
+  margin-bottom: 2vw;
+}
+
+.setting__balance__current__wrapper {
+  position: relative;
+  height: 100%;
+  width: 30%;
+}
+.setting__balance__current__value {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 4vw;
+  line-height: 5vw;
+  color: #000000;
+  text-align: right;
+  position: absolute;
+  right: 0;
+  top: 3vw;
+}
+
+.setting__logout {
+  height: 12vw;
+  width: 35%;
+  background-color: #ffd812;
+  border-radius: 34.8px;
+  border: 1.5px solid #000000;
+  position: absolute;
+  left: 20%;
+  bottom: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.setting__logout__text {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 6vw;
+  line-height: 7vw;
+  text-align: center;
+}
+
+.setting__lock {
+  height: 12vw;
+  width: 12.5vw;
+  background-size: 100% 100%;
+  background-image: url('../../public/lock.png');
+  position: absolute;
+  right: 25%;
+  bottom: 10%;
+}
+
+.setting__qrcode__display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.etting__qrcode__address {
+  width: 45vw;
+  word-wrap: break-word;
+  display: block;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 3vw;
+  line-height: 4vw;
+  color: #000000;
 }

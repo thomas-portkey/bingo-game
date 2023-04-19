@@ -26,7 +26,6 @@ const PCBingoGame = () => {
     unLock,
     login,
     logOut,
-    chainId,
     lock,
     step,
     balanceValue,
@@ -39,29 +38,9 @@ const PCBingoGame = () => {
     initContract,
     loading,
     time,
-    tokenContractAddress,
+    getQrInfo,
     accountAddress,
   } = useBingo(message);
-
-  const getQrInfo = () => {
-    const info = shrinkSendQrData({
-      type: 'send',
-      netWorkType: 'TESTNET',
-      chainType: 'aelf',
-      toInfo: {
-        address: accountAddress,
-        name: '',
-      },
-      assetInfo: {
-        symbol: 'ELF',
-        chainId: chainId,
-        tokenContractAddress: tokenContractAddress,
-        decimals: '8',
-      },
-      address: accountAddress,
-    });
-    return info;
-  };
 
   const renderLoginAndUnlock = () => {
     return (
