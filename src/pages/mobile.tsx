@@ -4,7 +4,6 @@ import useBingo, { SettingPage, StepStatus, KEY_NAME, BetType } from '../hooks/u
 import { SignIn, did, PortkeyLoading, Unlock } from '@portkey/did-ui-react';
 import { message, InputNumber, Modal, Popover } from 'antd';
 import { QRCode } from 'react-qrcode-logo';
-import { shrinkSendQrData } from '../utils/common';
 import { CHAIN_ID, anotherNetworkType, currentNetworkType } from '../constants/network';
 import styles from '../styles/mobile.module.css';
 import copy from 'copy-to-clipboard';
@@ -139,7 +138,7 @@ const MBingoGame = () => {
           <button className={styles.balanceBtn}>
             <div className={styles.tokenIcon} />
             <div className={styles.buttonText}>
-              {balanceValue} {TOKEN_UNIT}
+              {decorateBalanceText(balanceValue)} {TOKEN_UNIT}
             </div>
           </button>
         </div>
@@ -175,7 +174,7 @@ const MBingoGame = () => {
           <button className={styles.balanceBtn}>
             <div className={styles.tokenIcon} />
             <div className={styles.buttonText}>
-              {balanceValue} {TOKEN_UNIT}
+              {decorateBalanceText(balanceValue)} {TOKEN_UNIT}
             </div>
           </button>
         </div>
@@ -268,17 +267,37 @@ const MBingoGame = () => {
     );
   };
 
-  const renderCutDown = () => {
-    return (
-      <div className={styles.cutDownWrapper}>
-        <div className={styles.cutDown__bg} />
-        <div className={styles.cutDown}>
-          <p>{time}</p>
-        </div>
-        <span className={styles.cutDown__tip}>Getting on-chain data to generate random numbers...</span>
-      </div>
-    );
+  const decorateBalanceText = (balance: string) => {
+    if (!(balance?.length > 0)) return balance;
+    let dealedBalance = balance;
+    if (balance.lastIndexOf('.') > 0) {
+      const [before, after] = balance.split('.').map((val, idx) => (idx !== 0 ? val.substring(0, 2) : val));
+      const checkedAfter =
+        after.length > 1
+          ? after[0] === '0'
+            ? after
+            : Number(after) % 10 === 0
+            ? `${Number(after) / 10}`
+            : after
+          : after[0] === '0'
+          ? ''
+          : after;
+      dealedBalance = checkedAfter.length > 0 ? `${before}.${checkedAfter}` : before;
+    }
+    return dealedBalance.replace('.00', '');
   };
+
+  // const renderCutDown = () => {
+  //   return (
+  //     <div className={styles.cutDownWrapper}>
+  //       <div className={styles.cutDown__bg} />
+  //       <div className={styles.cutDown}>
+  //         <p>{time}</p>
+  //       </div>
+  //       <span className={styles.cutDown__tip}>Getting on-chain data to generate random numbers...</span>
+  //     </div>
+  //   );
+  // };
 
   const renderBingo = () => {
     const text = isWin ? 'You Win' : 'You Lose';
@@ -376,7 +395,7 @@ const MBingoGame = () => {
               <div className={styles.setting__balance__content__subtitle}>{currentNetworkType}</div>
             </div>
             <div className={styles.setting__balance__current__wrapper}>
-              <div className={styles.setting__balance__current__value}>{balanceValue}</div>
+              <div className={styles.setting__balance__current__value}>{decorateBalanceText(balanceValue)}</div>
             </div>
           </div>
           <div className={styles.setting__balance__row}>
@@ -386,7 +405,7 @@ const MBingoGame = () => {
               <div className={styles.setting__balance__content__subtitle}>{anotherNetworkType}</div>
             </div>
             <div className={styles.setting__balance__current__wrapper}>
-              <div className={styles.setting__balance__current__value}>{anotherBalanceValue}</div>
+              <div className={styles.setting__balance__current__value}>{decorateBalanceText(anotherBalanceValue)}</div>
             </div>
           </div>
         </div>
