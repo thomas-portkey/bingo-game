@@ -8,7 +8,7 @@ import InitLoading from '../page-components/InitLoading';
 import MBingoGame from './mobile';
 import PCBingoGame from './pc';
 
-import sourceMap from './sourceMap';
+import ImgSourceMap from './sourceMap';
 
 ConfigProvider.setGlobalConfig({
   storageMethod: new Store(),
@@ -66,6 +66,7 @@ const BingoGame = (props: SideProps) => {
         }
       };
     };
+    const sourceMap: Array<string> = isMobile ? ImgSourceMap.mobile : ImgSourceMap.pc;
     sourceMap.forEach((src) => {
       schedule(src);
     });

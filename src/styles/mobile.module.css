@@ -588,7 +588,7 @@
   width: 92%;
   height: 10vw;
   background-size: 100% 100%;
-  background-image: url('../../public/account_pc.png');
+  background-image: url('../../public/account.png');
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
