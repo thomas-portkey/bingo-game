@@ -123,7 +123,6 @@
   background-color: transparent;
   background-image: url('../../public/frame.png');
   background-size: 100% 100%;
-  z-index: -1;
 }
 
 .background :global .adm-center-popup-wrap {
