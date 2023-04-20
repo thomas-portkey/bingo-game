@@ -53,3 +53,23 @@ export const shrinkSendQrData = (data: QRCodeDataObjType): QrCodeDataArrType => 
     data.deviceType,
   ];
 };
+
+export const decorateBalanceText = (balance: string) => {
+  if (!(balance?.length > 0)) return balance;
+  let dealedBalance = balance;
+  if (balance.lastIndexOf('.') > 0) {
+    const [before, after] = balance.split('.').map((val, idx) => (idx !== 0 ? val.substring(0, 2) : val));
+    const checkedAfter =
+      after.length > 1
+        ? after[0] === '0'
+          ? after
+          : Number(after) % 10 === 0
+          ? `${Number(after) / 10}`
+          : after
+        : after[0] === '0'
+        ? ''
+        : after;
+    dealedBalance = checkedAfter.length > 0 ? `${before}.${checkedAfter}` : before;
+  }
+  return dealedBalance.replace('.00', '');
+};
