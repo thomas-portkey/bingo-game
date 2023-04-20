@@ -772,6 +772,23 @@
   box-shadow: none;
 }
 
+.menuPop__tag {
+  position: absolute;
+  width: 73px;
+  height: 28px;
+  left: -1.7rem;
+  top: -1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #ff9903;
+  border: 3px solid #000000;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
 .menuPop__wrapper {
   margin: 4rem 4.4rem 4rem 4.4rem;
   overflow: hidden;
@@ -801,6 +818,7 @@
   margin-top: 2.4rem;
   padding: 1.5rem 3.2rem;
   display: flex;
+  position: relative;
 }
 
 .menuPop__textContent_flex {

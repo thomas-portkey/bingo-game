@@ -8,7 +8,7 @@ import InitLoading from '../page-components/InitLoading';
 import MBingoGame from './mobile';
 import PCBingoGame from './pc';
 
-import sourceMap from './sourceMap';
+import sourceMap from '../constants/sourceMap';
 
 ConfigProvider.setGlobalConfig({
   storageMethod: new Store(),

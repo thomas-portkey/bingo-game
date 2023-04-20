@@ -29,6 +29,7 @@ const PCBingoGame = () => {
     lock,
     step,
     balanceValue,
+    anotherBalanceValue,
     setBalanceInputValue,
     getBalance,
     isWin,
@@ -385,13 +386,23 @@ const PCBingoGame = () => {
                 <img src={require('../../public/bitcoin.svg').default.src} />
                 <div className={styles.menuPop__textContent_flex}>
                   <div className={styles.menuPop__textContent_flex_top}>
-                    <span>{CHAIN_ID}</span>
+                    <span>ELF</span>
                     <span>{balanceValue}</span>
                   </div>
                   <span style={{ color: '#707070' }}>SideChain tDVW Testnet</span>
                 </div>
+                <div className={styles.menuPop__tag}>Current</div>
               </div>
-              <div></div>
+              <div className={styles.menuPop__wrapper_content_textContent}>
+                <img src={require('../../public/bitcoin.svg').default.src} />
+                <div className={styles.menuPop__textContent_flex}>
+                  <div className={styles.menuPop__textContent_flex_top}>
+                    <span>ELF</span>
+                    <span>{anotherBalanceValue}</span>
+                  </div>
+                  <span style={{ color: '#707070' }}>MainChain AELF Testnet</span>
+                </div>
+              </div>
             </div>
           </div>
         </Modal>
