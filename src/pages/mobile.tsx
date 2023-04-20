@@ -48,25 +48,18 @@ const MBingoGame = () => {
     login,
     logOut,
     lock,
-    chainId,
     step,
-    settingPage,
     balanceValue,
-    getBalance,
     setBalanceInputValue,
-    showQrCode,
     isWin,
     getQrInfo,
-    setShowQrCode,
     difference,
     result,
     hasFinishBet,
     setSettingPage,
-    setLoading,
     initContract,
     loading,
     time,
-    tokenContractAddress,
     accountAddress,
   } = useBingo(message);
 
@@ -172,7 +165,6 @@ const MBingoGame = () => {
           <button
             onClick={() => {
               showModal();
-              setSettingPage(SettingPage.ACCOUNT);
             }}
             className={[styles.settingBtn, styles.button].join(' ')}></button>
           <button onClick={onCopy} className={[styles.accountBtn, styles.button].join(' ')}>
@@ -203,19 +195,15 @@ const MBingoGame = () => {
                   </div>
                   <div className={styles.playContent__input}>
                     <InputNumber
-                      key="amount-input"
-                      placeholder="0"
-                      type="number"
                       value={inputValue}
-                      onBlur={() => {
-                        const fixedString = Number(inputValue).toFixed(2);
-                        setInputValue(fixedString);
-                        setBalanceInputValue(fixedString);
-                      }}
+                      bordered={false}
+                      precision={2}
+                      className={styles.content__input}
                       onChange={(val) => {
                         setBalanceInputValue(val);
                         setInputValue(val);
                       }}
+                      controls={false}
                     />
                     <span style={{ paddingRight: '8px' }}>BET</span>
                     <span>ELF</span>
@@ -370,7 +358,7 @@ const MBingoGame = () => {
                   eyeRadius={{ outer: 7, inner: 4 }}
                   ecLevel={'L'}
                 />
-                <div className={styles.etting__qrcode__address}>{accountAddress}</div>
+                <div className={styles.setting__qrcode__address}>{accountAddress}</div>
               </div>
             )}>
             <div className={styles.setting__account__module__qrcode} />
