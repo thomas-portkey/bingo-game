@@ -56,20 +56,8 @@ const BingoGame = (props: SideProps) => {
       };
     }
 
-    const schedule = (src: string) => {
-      const img = document.createElement('img');
-      img.src = src;
-      img.onload = () => {
-        unLoadSourceRef.current = unLoadSourceRef.current + 1;
-        if (unLoadSourceRef.current >= sourceMap.length) {
-          setHasLoadedSource(true);
-        }
-      };
-    };
     const sourceMap: Array<string> = isMobile ? ImgSourceMap.mobile : ImgSourceMap.pc;
-    sourceMap.forEach((src) => {
-      schedule(src);
-    });
+
     const timeTask = new Promise(function (resolve) {
       setTimeout(resolve, 10000, false);
     });

@@ -4,7 +4,6 @@ import useBingo, { StepStatus, KEY_NAME, BetType } from '../hooks/useBingo';
 import { SignIn, did, PortkeyLoading, Unlock } from '@portkey/did-ui-react';
 import { InputNumber, message, Popover, Modal } from 'antd';
 import { Button, ButtonType } from '../page-components/Button';
-import { shrinkSendQrData } from '../utils/common';
 import { QRCode } from 'react-qrcode-logo';
 import { CHAIN_ID } from '../constants/network';
 import copy from 'copy-to-clipboard';
@@ -389,7 +388,7 @@ const PCBingoGame = () => {
                     <span>ELF</span>
                     <span>{balanceValue}</span>
                   </div>
-                  <span style={{ color: '#707070' }}>SideChain tDVW Testnet</span>
+                  <span style={{ color: '#707070' }}>SideChain {CHAIN_ID} Testnet</span>
                 </div>
                 <div className={styles.menuPop__tag}>Current</div>
               </div>

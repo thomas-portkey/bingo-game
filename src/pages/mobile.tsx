@@ -136,7 +136,7 @@ const MBingoGame = () => {
             <div className={styles.buttonText}>{dealWithAccountAddressDisplay(accountAddress)}</div>
             <div className={styles.copyIcon} />
           </button>
-          <button className={[styles.balanceBtn, styles.button].join(' ')}>
+          <button className={styles.balanceBtn}>
             <div className={styles.tokenIcon} />
             <div className={styles.buttonText}>
               {balanceValue} {TOKEN_UNIT}
@@ -172,7 +172,7 @@ const MBingoGame = () => {
             <div className={styles.buttonText}>{dealWithAccountAddressDisplay(accountAddress)}</div>
             <div className={styles.copyIcon} />
           </button>
-          <button className={[styles.balanceBtn, styles.button].join(' ')}>
+          <button className={styles.balanceBtn}>
             <div className={styles.tokenIcon} />
             <div className={styles.buttonText}>
               {balanceValue} {TOKEN_UNIT}

@@ -1,8 +1,7 @@
 import React from 'react';
 
 import styles from './index.module.css';
-
-export default (props: { isMobileMode?: boolean }) => {
+const InitLoading = (props: { isMobileMode?: boolean }) => {
   const { isMobileMode } = props;
   return (
     <div className={styles.body}>
@@ -24,3 +23,5 @@ export default (props: { isMobileMode?: boolean }) => {
     </div>
   );
 };
+
+export default InitLoading;
