@@ -29,6 +29,7 @@ const PCBingoGame = () => {
     lock,
     step,
     balanceValue,
+    anotherBalanceValue,
     setBalanceInputValue,
     getBalance,
     isWin,
@@ -64,7 +65,7 @@ const PCBingoGame = () => {
               onClick={() => {
                 setShowUnlock(true);
               }}>
-              <p className={styles.artWord}>UnLock</p>
+              <p className={styles.artWord}>UNLOCK</p>
             </Button>
           )}
 
@@ -86,7 +87,7 @@ const PCBingoGame = () => {
               {step === StepStatus.CUTDOWN ? (
                 <div className={styles.content__cutDown}>
                   <div className={styles.content__cutDown_time}>{time}</div>
-                  <img src={require('../../public/sand_clock.png').default.src} />
+                  <img style={{ width: '25.4rem' }} src={require('../../public/sand_clock.png').default.src} />
                 </div>
               ) : (
                 <>
@@ -126,7 +127,7 @@ const PCBingoGame = () => {
                         }}
                         className={[styles.playContent__btn, styles.button].join(' ')}>
                         MAX
-                        <span style={{ fontSize: '16px', paddingLeft: '4px' }}>{`(${MAX_BET_VALUE})`}</span>
+                        <span style={{ fontSize: '1.6rem', paddingLeft: '0.4rem' }}>{`(${MAX_BET_VALUE})`}</span>
                       </button>
                     </div>
                     <div className={styles.playContent__betBtnGroups}>
@@ -191,7 +192,7 @@ const PCBingoGame = () => {
         {hasFinishBet ? (
           <div className={styles.bingoContentWrapper}>
             <div className={styles.bingoLogo}>
-              <div style={{ fontSize: '180px' }} className={[styles.artWord].join(' ')}>
+              <div style={{ fontSize: '18rem' }} className={[styles.artWord].join(' ')}>
                 {result === Infinity ? '?' : result}
               </div>
             </div>
@@ -218,7 +219,7 @@ const PCBingoGame = () => {
                       setInputValue(INITIAL_INPUT_VALUE);
                     }}>
                     <span className={styles.playContent__betBtn_p}>
-                      <p style={{ fontSize: '48px', fontWeight: 900 }} className={styles.artWord}>
+                      <p style={{ fontSize: '4.8rem', fontWeight: 900 }} className={styles.artWord}>
                         BET
                       </p>
                     </span>
@@ -232,7 +233,7 @@ const PCBingoGame = () => {
             <div className={styles.content__bg}>
               <div className={styles.contentBingoInit__wrapper}>
                 <div className={styles.initBingoLogo}>
-                  <div style={{ fontSize: '180px' }} className={[styles.artWord].join(' ')}>
+                  <div style={{ fontSize: '18rem' }} className={[styles.artWord].join(' ')}>
                     {result === Infinity ? '?' : result}
                   </div>
                 </div>
@@ -278,7 +279,7 @@ const PCBingoGame = () => {
             />
             <div className={styles.setting__balance}>
               <div className={styles.setting__balance__content}>
-                <div style={{ width: '100%', fontSize: '24px' }}>{Number(balanceValue).toFixed(4)} ELF</div>
+                <div style={{ width: '100%', fontSize: '2.4rem' }}>{Number(balanceValue).toFixed(4)} ELF</div>
                 <button
                   className={styles.btn}
                   onClick={() => {
@@ -290,7 +291,7 @@ const PCBingoGame = () => {
             <div className={styles.setting__account}>
               <div className={styles.setting__account__content}>
                 <div>Account</div>
-                <div style={{ width: '400px', overflow: 'hidden' }}>
+                <div style={{ width: '40rem', overflow: 'hidden' }}>
                   {accountAddress.length > 30
                     ? `${accountAddress.slice(0, 15)}...${accountAddress.slice(
                         accountAddress.length - 10,
@@ -344,14 +345,13 @@ const PCBingoGame = () => {
           onCancel={() => setShowMenuPop(false)}
           width={1000}
           closeIcon={<img style={{ width: '6.4rem' }} src={require('../../public/close.png').default.src} />}
-          // bodyStyle={{ margin: '62px' }}
           footer={null}>
           <div className={styles.menuPop__wrapper}>
             <div className={styles.menuPop__wrapper_content}>
               <div className={[styles.setting__account, styles.menuPop__wrapper_account].join(' ')}>
                 <div className={styles.setting__account__content}>
                   <div>Account</div>
-                  <div style={{ width: '400px', overflow: 'hidden' }}>
+                  <div style={{ width: '42rem', overflow: 'hidden' }}>
                     {accountAddress.length > 30
                       ? `${accountAddress.slice(0, 15)}...${accountAddress.slice(
                           accountAddress.length - 10,
@@ -386,13 +386,23 @@ const PCBingoGame = () => {
                 <img src={require('../../public/bitcoin.svg').default.src} />
                 <div className={styles.menuPop__textContent_flex}>
                   <div className={styles.menuPop__textContent_flex_top}>
-                    <span>{CHAIN_ID}</span>
+                    <span>ELF</span>
                     <span>{balanceValue}</span>
                   </div>
                   <span style={{ color: '#707070' }}>SideChain tDVW Testnet</span>
                 </div>
+                <div className={styles.menuPop__tag}>Current</div>
               </div>
-              <div></div>
+              <div className={styles.menuPop__wrapper_content_textContent}>
+                <img src={require('../../public/bitcoin.svg').default.src} />
+                <div className={styles.menuPop__textContent_flex}>
+                  <div className={styles.menuPop__textContent_flex_top}>
+                    <span>ELF</span>
+                    <span>{anotherBalanceValue}</span>
+                  </div>
+                  <span style={{ color: '#707070' }}>MainChain AELF Testnet</span>
+                </div>
+              </div>
             </div>
           </div>
         </Modal>

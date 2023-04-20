@@ -11,11 +11,12 @@ export default function Document() {
         <Script id="fontsize" strategy="afterInteractive">
           {`  
             !(function(doc, win) {
+              var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
               var docEle = doc.documentElement,
                 event = "onorientationchange" in window ? "orientationchange" : "resize",
                 fn = function() {
                   var width = docEle.clientWidth;
-                  var unitWidth = width < 1180 ? 375 : 1920;
+                  var unitWidth = isMobile ? 375 : 1920;
                   width && (docEle.style.fontSize = 10 * (width / unitWidth) + "px");
                 };
 
