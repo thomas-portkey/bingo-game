@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
 import { DIDWalletInfo, did } from '@portkey/did-ui-react';
 import { ChainInfo } from '@portkey/services';
 import { getContractBasic, ContractBasic } from '@portkey/contracts';
@@ -54,6 +54,8 @@ const useBingo = (Toast: any) => {
   const [enablePlay, setEnablePlay] = useState(false);
 
   const [balanceValue, setBalanceValue] = useState('0');
+  const [anotherBalanceValue, setAnoterhBalanceValue] = useState('0');
+
   const [difference, setDifference] = useState(0);
   const [result, setResult] = useState(Infinity);
   const [hasFinishBet, setHasFinishBet] = useState(false);
@@ -70,8 +72,12 @@ const useBingo = (Toast: any) => {
   >();
 
   const chainInfoRef = useRef<ChainInfo>();
+  const chainsInfoRef = useRef<ChainInfo[]>([]);
+
   const caContractRef = useRef<ContractBasic>();
   const multiTokenContractRef = useRef<ContractBasic>();
+  const anotherMultiTokenContractRef = useRef<ContractBasic>();
+
   const aelfRef = useRef<any>();
   const txIdRef = useRef('');
   const tokenContractAddressRef = useRef('');
@@ -88,6 +94,7 @@ const useBingo = (Toast: any) => {
 
   const init = async () => {
     const chainsInfo = await did.services.getChainsInfo();
+    chainsInfoRef.current = chainsInfo;
     const chainInfo = chainsInfo.find((chain) => chain.chainId === CHAIN_ID);
     if (!chainInfo) {
       showError('chain is not running');
@@ -120,11 +127,15 @@ const useBingo = (Toast: any) => {
   };
 
   const getBalance = async () => {
+    getCurrentChainBalance();
+    getAnotherChainBalance();
+  };
+
+  const getCurrentChainBalance = async () => {
     const multiTokenContract = multiTokenContractRef.current;
     const wallet = walletRef.current;
     if (!multiTokenContract || !wallet) return 0;
 
-    await delay();
     const result = await multiTokenContract.callViewMethod('GetBalance', {
       symbol: 'ELF',
       owner: wallet.caInfo.caAddress,
@@ -135,6 +146,20 @@ const useBingo = (Toast: any) => {
     const differenceValue = balance - Number(balanceValue);
     setBalanceValue(balance.toString());
     return differenceValue;
+  };
+
+  const getAnotherChainBalance = async () => {
+    const multiTokenContract = anotherMultiTokenContractRef.current;
+    const wallet = walletRef.current;
+    if (!multiTokenContract || !wallet) return 0;
+    const result = await multiTokenContract.callViewMethod('GetBalance', {
+      symbol: 'ELF',
+      owner: wallet.caInfo.caAddress,
+    });
+    const balance = result.data.balance / 10 ** 8;
+    console.log('another balance', balance);
+
+    setAnoterhBalanceValue(balance.toString());
   };
 
   const approve = async () => {
@@ -159,6 +184,8 @@ const useBingo = (Toast: any) => {
       };
       return true;
     }
+    await delay();
+
     getBalance();
   };
 
@@ -230,6 +257,8 @@ const useBingo = (Toast: any) => {
     });
     const balance = result.data.balance / 10 ** 8;
     setBalanceValue(balance.toString());
+
+    getAnotherChainBalance();
   }, 5000);
 
   const unLock = async (localWallet) => {
@@ -255,8 +284,12 @@ const useBingo = (Toast: any) => {
   };
 
   const initContract = async () => {
+    initCurrentChainContract();
+    initAnotherChainContract();
+  };
+
+  const initCurrentChainContract = async () => {
     const chainInfo = chainInfoRef.current;
-    const aelf = aelfRef.current;
     const wallet = walletRef.current;
     if (!aelfRef.current || !chainInfo || !wallet) return;
     setLoading(true);
@@ -266,19 +299,8 @@ const useBingo = (Toast: any) => {
         account: wallet.walletInfo.wallet,
         rpcUrl: chainInfo?.endPoint,
       });
-      const chainStatus = await aelf.chain.getChainStatus();
-      const zeroC = await getContractBasic({
-        contractAddress: chainStatus.GenesisContractAddress,
-        account: wallet.walletInfo.wallet,
-        rpcUrl: chainInfo?.endPoint,
-      });
-      const tokenContractAddress = await zeroC.callViewMethod(
-        'GetContractAddressByName',
-        sha256('AElf.ContractNames.Token'),
-      );
-      tokenContractAddressRef.current = tokenContractAddress.data;
       const multiTokenContract = await getContractBasic({
-        contractAddress: tokenContractAddress.data,
+        contractAddress: chainInfo.defaultToken.address,
         account: wallet.walletInfo.wallet,
         rpcUrl: chainInfo?.endPoint,
       });
@@ -295,6 +317,29 @@ const useBingo = (Toast: any) => {
 
     setLoading(false);
     setCaAddress(wallet.caInfo.caAddress);
+  };
+
+  const initAnotherChainContract = async () => {
+    const chainInfo = chainsInfoRef.current.find((chain) => chain.chainId !== CHAIN_ID);
+    const wallet = walletRef.current;
+    if (!aelfRef.current || !chainInfo || !wallet) return;
+
+    try {
+      caContractRef.current = await getContractBasic({
+        contractAddress: chainInfo?.caContractAddress,
+        account: wallet.walletInfo.wallet,
+        rpcUrl: chainInfo?.endPoint,
+      });
+      const multiTokenContract = await getContractBasic({
+        contractAddress: chainInfo.defaultToken.address,
+        account: wallet.walletInfo.wallet,
+        rpcUrl: chainInfo?.endPoint,
+      });
+
+      anotherMultiTokenContractRef.current = multiTokenContract;
+    } catch (error) {
+      console.error('initAnotherChainContract: error', error);
+    }
   };
 
   const setBalanceInputValue = (value: string) => {
@@ -400,6 +445,7 @@ const useBingo = (Toast: any) => {
         setIsWin(isWin);
         setResult(randomNumber);
         setDifference(Number(award) / 10 ** 8);
+        await delay();
         getBalance();
         setHasFinishBet(true);
       } catch (error) {
@@ -481,6 +527,8 @@ const useBingo = (Toast: any) => {
     caAddress,
     balanceValue,
     setBalanceValue,
+    anotherBalanceValue,
+    setAnoterhBalanceValue,
     setWallet,
     balanceInputValue: balanceInputValueRef.current,
     step,

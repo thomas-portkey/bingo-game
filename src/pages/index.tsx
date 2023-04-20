@@ -8,7 +8,7 @@ import InitLoading from '../page-components/InitLoading';
 import MBingoGame from './mobile';
 import PCBingoGame from './pc';
 
-import sourceMap from './sourceMap';
+import sourceMap from '../constants/sourceMap';
 
 ConfigProvider.setGlobalConfig({
   storageMethod: new Store(),
@@ -56,27 +56,36 @@ const BingoGame = (props: SideProps) => {
       };
     }
 
-    const schedule = (src: string) => {
-      const img = document.createElement('img');
-      img.src = src;
-      img.onload = () => {
-        unLoadSourceRef.current = unLoadSourceRef.current + 1;
-        if (unLoadSourceRef.current >= sourceMap.length) {
-          setHasLoadedSource(true);
-        }
-      };
-    };
-    sourceMap.forEach((src) => {
-      schedule(src);
+    const timeTask = new Promise(function (resolve) {
+      setTimeout(resolve, 10000, false);
     });
 
-    if (!isMobileBrowser) {
-      // const style = document.createElement('style');
-      // style.setAttribute('type', 'text/css');
-      // style.textContent =
-      //   'body{ @media screen and (max-width: 1280px) {zoom: 0.6; }  @media screen and (min-width: 1280px) and (max-width: 1920px) {zoom: 0.6;} }  @media screen and (min-width: 1920) {zoom: 1;}';
-      // document.head.appendChild(style);
-    }
+    const scheduleTask = new Promise(function (resolve) {
+      const start = Date.now();
+      const schedule = (src: string) => {
+        const img = document.createElement('img');
+        img.src = src;
+        img.onload = () => {
+          unLoadSourceRef.current = unLoadSourceRef.current + 1;
+          if (unLoadSourceRef.current >= sourceMap.length) {
+            if (Date.now() - start > 3000) {
+              resolve(true);
+            } else {
+              setTimeout(() => {
+                resolve(true);
+              }, 3000 - (Date.now() - start));
+            }
+          }
+        };
+      };
+      sourceMap.forEach((src) => {
+        schedule(src);
+      });
+    });
+
+    Promise.race([timeTask, scheduleTask]).then(() => {
+      setHasLoadedSource(true);
+    });
   }, []);
 
   if (!hasLoadedSource) {
