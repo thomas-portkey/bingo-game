@@ -347,12 +347,9 @@
   color: #000000;
 }
 
-/* .content__right :global .ant-input-number {
-  background: #ffffff;
-  border: 3.5px solid #000000;
-  border-radius: 2rem;
-  height: 10rem;
-} */
+.content__right :global .ant-input-number-input {
+  height: 4rem;
+}
 
 .playContent {
   margin: 44.1vw 13.2vw 8.5vw 13.2vw;
