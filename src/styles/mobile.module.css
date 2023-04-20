@@ -689,7 +689,7 @@
 .setting__balance__tag__text {
   font-family: 'Roboto';
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 1.2rem;
   line-height: 1.5rem;
   text-align: center;
@@ -699,18 +699,19 @@
 .setting__balance__content__title {
   font-family: 'Roboto';
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 1.6rem;
   line-height: 1.8rem;
   color: #000000;
   text-align: left;
   margin-bottom: 1vw;
+  margin-top: 0.8rem;
 }
 
 .setting__balance__content__subtitle {
   font-family: 'Roboto';
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 1.2rem;
   line-height: 1.4rem;
   color: #707070;
@@ -786,6 +787,6 @@
   font-style: normal;
   font-weight: 400;
   font-size: 0.8rem;
-  line-height: 1rem;
+  line-height: 1.2rem;
   color: #000000;
 }

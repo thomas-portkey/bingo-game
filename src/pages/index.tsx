@@ -56,7 +56,7 @@ const BingoGame = (props: SideProps) => {
       };
     }
 
-    const sourceMap: Array<string> = isMobile ? ImgSourceMap.mobile : ImgSourceMap.pc;
+    const sourceMap: Array<string> = isMobileBrowser ? ImgSourceMap.mobile : ImgSourceMap.pc;
 
     const timeTask = new Promise(function (resolve) {
       setTimeout(resolve, 10000, false);
