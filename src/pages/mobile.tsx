@@ -5,7 +5,7 @@ import { SignIn, did, PortkeyLoading, Unlock } from '@portkey/did-ui-react';
 import { message, InputNumber, Modal, Popover } from 'antd';
 import { QRCode } from 'react-qrcode-logo';
 import { shrinkSendQrData } from '../utils/common';
-import { CHAIN_ID, networkType } from '../constants/network';
+import { CHAIN_ID, anotherNetworkType, currentNetworkType } from '../constants/network';
 import styles from '../styles/mobile.module.css';
 import copy from 'copy-to-clipboard';
 
@@ -61,6 +61,7 @@ const MBingoGame = () => {
     loading,
     time,
     accountAddress,
+    anotherBalanceValue,
   } = useBingo(message);
 
   const onCopy = () => {
@@ -372,10 +373,20 @@ const MBingoGame = () => {
             </div>
             <div className={styles.setting__balance__content}>
               <div className={styles.setting__balance__content__title}>ELF</div>
-              <div className={styles.setting__balance__content__subtitle}>{networkType}</div>
+              <div className={styles.setting__balance__content__subtitle}>{currentNetworkType}</div>
             </div>
             <div className={styles.setting__balance__current__wrapper}>
               <div className={styles.setting__balance__current__value}>{balanceValue}</div>
+            </div>
+          </div>
+          <div className={styles.setting__balance__row}>
+            <div className={styles.setting__balance__token__icon} />
+            <div className={styles.setting__balance__content}>
+              <div className={styles.setting__balance__content__title}>ELF</div>
+              <div className={styles.setting__balance__content__subtitle}>{anotherNetworkType}</div>
+            </div>
+            <div className={styles.setting__balance__current__wrapper}>
+              <div className={styles.setting__balance__current__value}>{anotherBalanceValue}</div>
             </div>
           </div>
         </div>

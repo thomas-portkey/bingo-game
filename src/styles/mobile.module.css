@@ -123,7 +123,6 @@
   background-color: transparent;
   background-image: url('../../public/frame.png');
   background-size: 100% 100%;
-  z-index: -1;
 }
 
 .background :global .adm-center-popup-wrap {
@@ -589,7 +588,7 @@
   width: 92%;
   height: 10vw;
   background-size: 100% 100%;
-  background-image: url('../../public/account_pc.png');
+  background-image: url('../../public/account.png');
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -715,6 +714,8 @@
   color: #707070;
   text-align: left;
   margin-bottom: 2vw;
+  white-space: nowrap;
+  display: block;
 }
 
 .setting__balance__current__wrapper {
