@@ -714,6 +714,8 @@
   color: #707070;
   text-align: left;
   margin-bottom: 2vw;
+  white-space: nowrap;
+  display: block;
 }
 
 .setting__balance__current__wrapper {

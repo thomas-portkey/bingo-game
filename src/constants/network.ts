@@ -8,6 +8,7 @@ if (process.env.NEXT_PUBLIC_APP_ENV === 'development') {
   CHAIN_ID = 'tDVV';
 }
 
-const networkType = `SideChain ${CHAIN_ID} Textnet`;
+const currentNetworkType = `SideChain ${CHAIN_ID} Textnet`;
+const anotherNetworkType = `MainChain AELF Testnet`;
 
-export { bingoAddress, CHAIN_ID, networkType };
+export { bingoAddress, CHAIN_ID, currentNetworkType, anotherNetworkType };
