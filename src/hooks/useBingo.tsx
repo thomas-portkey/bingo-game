@@ -306,11 +306,7 @@ const useBingo = (Toast: any) => {
   };
 
   const showError = (message: string) => {
-    if (isMobile(navigator.userAgent)) {
-      ToastRef.current?.show(message);
-    } else {
-      ToastRef.current?.error(message);
-    }
+    ToastRef.current?.error(message);
   };
 
   const onPlay = async (betResult: BetType) => {

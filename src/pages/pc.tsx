@@ -97,8 +97,6 @@ const PCBingoGame = () => {
                         value={inputValue}
                         bordered={false}
                         precision={2}
-                        min={'0'}
-                        max={`${MAX_BET_VALUE}`}
                         className={styles.content__input}
                         onChange={(val) => {
                           setBalanceInputValue(val);
