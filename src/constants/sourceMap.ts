@@ -42,6 +42,7 @@ const ImgSourceMap: { pc: Array<string>; mobile: Array<string> } = {
       require('../../public/settingBtn_2.png').default.src,
       require('../../public/settingBtn_3.png').default.src,
       require('../../public/bingo_pc.png').default.src,
+      require('../../public/copy.svg').default.src,
     ],
     SharedImgs,
   ),

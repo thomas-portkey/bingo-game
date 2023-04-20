@@ -4,7 +4,7 @@ import { SideProps } from '../type';
 
 import { ConfigProvider } from '@portkey/did-ui-react';
 import { Store } from '../utils/store';
-import InitLoading from '../page-components/InitLoading';
+import InitLoading from '../page-components/Loading';
 import MBingoGame from './mobile';
 import PCBingoGame from './pc';
 
@@ -39,7 +39,7 @@ ConfigProvider.setGlobalConfig({
 });
 
 const BingoGame = (props: SideProps) => {
-  const isMobileBrowser = isMobile(props.uaString);
+  const isMobileBrowser = isMobile(props.uaString || navigator.userAgent);
   const [hasLoadedSource, setHasLoadedSource] = useState<boolean>(false);
   const unLoadSourceRef = useRef<number>(0);
 
@@ -91,7 +91,7 @@ const BingoGame = (props: SideProps) => {
   }, []);
 
   if (!hasLoadedSource) {
-    return <InitLoading isMobileMode={isMobileBrowser} />;
+    return <InitLoading isMobileMode={isMobileBrowser} isInit loading />;
   }
 
   return isMobileBrowser ? <MBingoGame /> : <PCBingoGame />;

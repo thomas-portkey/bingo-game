@@ -77,6 +77,7 @@ const useBingo = (Toast: any) => {
   const caContractRef = useRef<ContractBasic>();
   const multiTokenContractRef = useRef<ContractBasic>();
   const anotherMultiTokenContractRef = useRef<ContractBasic>();
+  const otherChainAddressRef = useRef<string[]>([]);
 
   const aelfRef = useRef<any>();
   const txIdRef = useRef('');
@@ -128,7 +129,7 @@ const useBingo = (Toast: any) => {
 
   const getBalance = async () => {
     getCurrentChainBalance();
-    getAnotherChainBalance();
+    // getAnotherChainBalance();
   };
 
   const getCurrentChainBalance = async () => {
@@ -219,6 +220,7 @@ const useBingo = (Toast: any) => {
       methodName: 'Register',
       args: null,
     });
+    // debugger;
     if (!registerResult.error || registerResult.error.message?.includes('already registered')) {
       walletRef.current = {
         ...wallet,
@@ -263,9 +265,10 @@ const useBingo = (Toast: any) => {
 
   const unLock = async (localWallet) => {
     let caInfo = localWallet.didWallet.caInfo[CHAIN_ID];
+    let caHash = caInfo?.caHash;
     if (!caInfo) {
       const key = Object.keys(localWallet.didWallet.caInfo)[0];
-      const caHash = localWallet.didWallet.caInfo[key].caHash;
+      caHash = localWallet.didWallet.caInfo[key].caHash;
 
       caInfo = await did.didWallet.getHolderInfoByContract({
         caHash: caHash,
@@ -285,7 +288,7 @@ const useBingo = (Toast: any) => {
 
   const initContract = async () => {
     initCurrentChainContract();
-    initAnotherChainContract();
+    // initAnotherChainContract();
   };
 
   const initCurrentChainContract = async () => {
@@ -387,7 +390,6 @@ const useBingo = (Toast: any) => {
         if (!registered) return showError('Synchronizing on-chain account information...');
       }
       if (!wallet.approved) await approve();
-
       const playResult = await caContract.callSendMethod('ManagerForwardCall', wallet.walletInfo.wallet.address, {
         caHash: wallet.caInfo.caHash,
         contractAddress: bingoAddress,
@@ -442,12 +444,12 @@ const useBingo = (Toast: any) => {
         });
         const { randomNumber, award } = rewardResult.data;
         const isWin = Number(award) > 0;
-        setIsWin(isWin);
-        setResult(randomNumber);
-        setDifference(Number(award) / 10 ** 8);
         await delay();
         getBalance();
         setHasFinishBet(true);
+        setIsWin(isWin);
+        setResult(randomNumber);
+        setDifference(Number(award) / 10 ** 8);
       } catch (error) {
         console.error(error);
         showError(error.message);

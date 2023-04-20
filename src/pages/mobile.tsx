@@ -1,12 +1,14 @@
 import React, { MouseEventHandler, useState } from 'react';
 import { INITIAL_INPUT_VALUE, MAX_BET_VALUE, TOKEN_UNIT, defaultCountryCodeConfig } from '../constants/global';
 import useBingo, { SettingPage, StepStatus, KEY_NAME, BetType } from '../hooks/useBingo';
-import { SignIn, did, PortkeyLoading, Unlock } from '@portkey/did-ui-react';
+import { SignIn, did, Unlock } from '@portkey/did-ui-react';
 import { message, InputNumber, Modal, Popover } from 'antd';
+import Loading from '../page-components/Loading';
 import { QRCode } from 'react-qrcode-logo';
 import { CHAIN_ID, anotherNetworkType, currentNetworkType } from '../constants/network';
 import styles from '../styles/mobile.module.css';
 import copy from 'copy-to-clipboard';
+import { decorateBalanceText } from '../utils/common';
 
 enum ButtonType {
   BLUE,
@@ -267,26 +269,6 @@ const MBingoGame = () => {
     );
   };
 
-  const decorateBalanceText = (balance: string) => {
-    if (!(balance?.length > 0)) return balance;
-    let dealedBalance = balance;
-    if (balance.lastIndexOf('.') > 0) {
-      const [before, after] = balance.split('.').map((val, idx) => (idx !== 0 ? val.substring(0, 2) : val));
-      const checkedAfter =
-        after.length > 1
-          ? after[0] === '0'
-            ? after
-            : Number(after) % 10 === 0
-            ? `${Number(after) / 10}`
-            : after
-          : after[0] === '0'
-          ? ''
-          : after;
-      dealedBalance = checkedAfter.length > 0 ? `${before}.${checkedAfter}` : before;
-    }
-    return dealedBalance.replace('.00', '');
-  };
-
   // const renderCutDown = () => {
   //   return (
   //     <div className={styles.cutDownWrapper}>
@@ -387,9 +369,9 @@ const MBingoGame = () => {
         <div className={styles.setting__balance__module}>
           <div className={styles.setting__balance__row}>
             <div className={styles.setting__balance__token__icon} />
-            <div className={styles.setting__balance__tag__wrapper}>
+            {/* <div className={styles.setting__balance__tag__wrapper}>
               <div className={styles.setting__balance__tag__text}>Current</div>
-            </div>
+            </div> */}
             <div className={styles.setting__balance__content}>
               <div className={styles.setting__balance__content__title}>ELF</div>
               <div className={styles.setting__balance__content__subtitle}>{currentNetworkType}</div>
@@ -398,7 +380,7 @@ const MBingoGame = () => {
               <div className={styles.setting__balance__current__value}>{decorateBalanceText(balanceValue)}</div>
             </div>
           </div>
-          <div className={styles.setting__balance__row}>
+          {/* <div className={styles.setting__balance__row}>
             <div className={styles.setting__balance__token__icon} />
             <div className={styles.setting__balance__content}>
               <div className={styles.setting__balance__content__title}>ELF</div>
@@ -407,7 +389,7 @@ const MBingoGame = () => {
             <div className={styles.setting__balance__current__wrapper}>
               <div className={styles.setting__balance__current__value}>{decorateBalanceText(anotherBalanceValue)}</div>
             </div>
-          </div>
+          </div> */}
         </div>
         <div
           className={styles.setting__logout}
@@ -470,7 +452,8 @@ const MBingoGame = () => {
 
   return (
     <div className={styles.background}>
-      <PortkeyLoading loading={loading} />
+      <Loading isMobileMode loading={loading} />
+      {/* <PortkeyLoading loading={loading} /> */}
       {renderSence()}
       <SignIn
         open={showLogin}

@@ -70,7 +70,7 @@
 
 .defaultBtn__origin {
   margin-top: 8vh;
-  width: 392px;
+  width: 39.2rem;
   height: 10rem;
   background-image: url('../../public/btn_pc_var4.png') !important;
   background-size: 100% 100%;
@@ -303,7 +303,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 180px;
+  font-size: 18rem;
   color: #ffffff;
 
   border: 2px solid #000000;
@@ -753,7 +753,7 @@
 }
 
 .menuPop {
-  width: 108.2rem;
+  width: 108.2rem !important;
   height: 59.2rem;
   background-image: url('../../public/frame_pc_1.png');
   background-size: 100% 100%;
@@ -771,8 +771,8 @@
 
 .menuPop__tag {
   position: absolute;
-  width: 73px;
-  height: 28px;
+  width: 7.3rem;
+  height: 2.8rem;
   left: -1.7rem;
   top: -1.5rem;
   display: flex;
@@ -783,7 +783,7 @@
   border: 3px solid #000000;
   border-radius: 4px;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 1.4rem;
 }
 
 .menuPop__wrapper {

@@ -1,14 +1,19 @@
 import React from 'react';
 
 import styles from './index.module.css';
-const InitLoading = (props: { isMobileMode?: boolean }) => {
-  const { isMobileMode } = props;
+const InitLoading = (props: { isMobileMode?: boolean; isInit?: boolean; loading: boolean }) => {
+  const { isMobileMode, isInit, loading } = props;
+
+  if (!loading) {
+    return null;
+  }
+
   return (
-    <div className={styles.body}>
+    <div className={isInit ? styles.body_init : styles.body}>
       {isMobileMode ? (
-        <img className={styles.bingo} src={require('../../../public/bingo_white.png').default.src} />
+        <img className={styles.bingo_mobile} src={require('../../../public/bingo_white.png').default.src} />
       ) : (
-        <img className={styles.bingo} src={require('../../../public/bingo_white_pc.png').default.src} />
+        <img className={styles.bingo_pc} src={require('../../../public/bingo_white_pc.png').default.src} />
       )}
 
       <div className={styles.wrapper}>
