@@ -358,7 +358,7 @@ const MBingoGame = () => {
                   eyeRadius={{ outer: 7, inner: 4 }}
                   ecLevel={'L'}
                 />
-                <div className={styles.etting__qrcode__address}>{accountAddress}</div>
+                <div className={styles.setting__qrcode__address}>{accountAddress}</div>
               </div>
             )}>
             <div className={styles.setting__account__module__qrcode} />

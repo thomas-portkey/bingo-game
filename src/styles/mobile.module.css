@@ -311,13 +311,13 @@
   background-image: url('../../public/copy_button.png');
   position: absolute;
   top: 2vw;
-  right: 1vw;
+  right: 0.7rem;
 }
 
 .tokenIcon {
   height: 6vw;
   width: 6vw;
-  margin-left: 1vw;
+  margin-left: 0.65rem;
   background-size: 100% 100%;
   background-image: url('../../public/aelf_symbol.png');
 }
@@ -775,14 +775,14 @@
   justify-content: center;
 }
 
-.etting__qrcode__address {
+.setting__qrcode__address {
   width: 45vw;
   word-wrap: break-word;
   display: block;
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 400;
-  font-size: 3vw;
-  line-height: 4vw;
+  font-size: 0.8rem;
+  line-height: 1rem;
   color: #000000;
 }
