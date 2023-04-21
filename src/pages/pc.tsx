@@ -43,6 +43,7 @@ const PCBingoGame = () => {
     getQrInfo,
     isMainChain,
     accountAddress,
+    loadingExtraDataMode,
   } = useBingo(message);
 
   const setShowLogin = (show: boolean) => {
@@ -285,7 +286,7 @@ const PCBingoGame = () => {
   return (
     <div className={styles.background}>
       <div className={styles.bodyWrapper}>
-        <Loading loading={loading || true} />
+        <Loading loading={loading} extraDataMode={loadingExtraDataMode} isMainChain={isMainChain} />
         {![StepStatus.INIT, StepStatus.LOCK, StepStatus.LOGIN, StepStatus.END].includes(step) && (
           <div className={styles.settingHeader}>
             <img
@@ -460,7 +461,6 @@ const PCBingoGame = () => {
               setIsWrongPassword(true);
               return;
             }
-
             await unLock(localWallet);
             setIsWrongPassword(false);
             setPasswordValue('');

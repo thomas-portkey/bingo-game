@@ -15,11 +15,11 @@ ConfigProvider.setGlobalConfig({
   graphQLUrl: '/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql',
   socialLogin: {
     Apple: {
-      clientId: process.env.APPLE_CLIENT_ID,
-      redirectURI: process.env.APPLE_REDIRECT_URI,
+      clientId: 'did.portkey',
+      redirectURI: 'https://localtest-applesign.portkey.finance/api/app/appleAuth/bingoReceive',
     },
     Google: {
-      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientId: '176147744733-a2ks681uuqrmb8ajqrpu17te42gst6lq.apps.googleusercontent.com',
     },
   },
   network: {
@@ -91,7 +91,7 @@ const BingoGame = (props: SideProps) => {
   }, []);
 
   if (!hasLoadedSource) {
-    return <InitLoading isMobileMode={isMobileBrowser} isInit loading />;
+    return <InitLoading isMobileMode={isMobileBrowser} isInit loading isMainChain />;
   }
 
   return isMobileBrowser ? <MBingoGame /> : <PCBingoGame />;

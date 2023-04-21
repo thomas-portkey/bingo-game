@@ -62,6 +62,8 @@ const MBingoGame = () => {
     loading,
     time,
     accountAddress,
+    isMainChain,
+    loadingExtraDataMode,
   } = useBingo(message);
 
   const setShowLogin = (show: boolean) => {
@@ -92,9 +94,11 @@ const MBingoGame = () => {
     return (
       <div className={styles.defaultWrapper}>
         <div className={styles.title__img__wrapper}>
-          <div className={styles.test__tag__wrapper}>
-            <div className={styles.test__tag__wrapper__content}>TEST</div>
-          </div>
+          {!isMainChain && (
+            <div className={styles.test__tag__wrapper}>
+              <div className={styles.test__tag__wrapper__content}>TEST</div>
+            </div>
+          )}
           <img className={styles.logo} src={require('../../public/bingo.png').default.src} />
         </div>
         {step === StepStatus.LOCK && (
@@ -122,10 +126,12 @@ const MBingoGame = () => {
             </Button>
           </>
         )}
-        <div className={styles.initTip}>
-          <img src={require('../../public/warn.svg').default.src} />
-          <span>This is a demo on the Testnet.</span>
-        </div>
+        {!isMainChain && (
+          <div className={styles.initTip}>
+            <img src={require('../../public/warn.svg').default.src} />
+            <span>This is a demo on the Testnet.</span>
+          </div>
+        )}
       </div>
     );
   };
@@ -460,7 +466,7 @@ const MBingoGame = () => {
 
   return (
     <div className={styles.background}>
-      <Loading isMobileMode loading={loading || true} />
+      <Loading isMobileMode loading={loading} extraDataMode={loadingExtraDataMode} isMainChain={isMainChain} />
       {/* <PortkeyLoading loading={loading} /> */}
       {renderSence()}
       <SignIn
