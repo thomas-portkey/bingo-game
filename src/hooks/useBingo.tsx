@@ -97,7 +97,6 @@ const useBingo = (Toast: any) => {
   const init = async () => {
     const chainsInfo = await did.services.getChainsInfo();
     chainsInfoRef.current = chainsInfo;
-    setIsMainChain(document.location.href?.lastIndexOf?.('bingogame.portkey.finance') !== -1);
     const chainInfo = chainsInfo.find((chain) => chain.chainId === CHAIN_ID);
     if (!chainInfo) {
       showError('chain is not running');
@@ -114,6 +113,7 @@ const useBingo = (Toast: any) => {
 
   const login = async (wallet) => {
     if (wallet.chainId !== CHAIN_ID) {
+      setIsMainChain(true);
       const caInfo = await did.didWallet.getHolderInfoByContract({
         caHash: wallet.caInfo.caHash,
         chainId: CHAIN_ID,
@@ -278,7 +278,7 @@ const useBingo = (Toast: any) => {
     if (!caInfo) {
       const key = Object.keys(localWallet.didWallet.caInfo)[0];
       caHash = localWallet.didWallet.caInfo[key].caHash;
-
+      setIsMainChain(true);
       caInfo = await did.didWallet.getHolderInfoByContract({
         caHash: caHash,
         chainId: CHAIN_ID,
@@ -305,7 +305,7 @@ const useBingo = (Toast: any) => {
     const wallet = walletRef.current;
     if (!aelfRef.current || !chainInfo || !wallet) return;
     setLoading(true);
-    setLoadingExtraDataMode(ExtraDataMode.INIT_MAIN_CHAIN);
+    setLoadingExtraDataMode(isMainChain ? ExtraDataMode.NONE : ExtraDataMode.INIT_MAIN_CHAIN);
     try {
       caContractRef.current = await getContractBasic({
         contractAddress: chainInfo?.caContractAddress,
