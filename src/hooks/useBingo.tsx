@@ -43,7 +43,7 @@ export enum BetType {
 }
 
 export const KEY_NAME = 'BINGO_GAME';
-const COUNT = 3;
+const COUNT = 9;
 
 const useBingo = (Toast: any) => {
   const [step, setStep] = useState<StepStatus>(StepStatus.INIT);
@@ -62,7 +62,7 @@ const useBingo = (Toast: any) => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [caAddress, setCaAddress] = useState<string>('');
-  const [time, setTime] = useState<number>(3);
+  const [time, setTime] = useState(COUNT);
   const [isMainChain, setIsMainChain] = useState<boolean>(false);
   const [loadingExtraDataMode, setLoadingExtraDataMode] = useState<ExtraDataMode>(ExtraDataMode.NONE);
 
