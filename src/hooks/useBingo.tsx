@@ -63,6 +63,7 @@ const useBingo = (Toast: any) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [caAddress, setCaAddress] = useState<string>('');
   const [time, setTime] = useState(COUNT);
+  const [isTest, setIsTest] = useState<boolean>(true);
   const [isMainChain, setIsMainChain] = useState<boolean>(false);
   const [loadingExtraDataMode, setLoadingExtraDataMode] = useState<ExtraDataMode>(ExtraDataMode.NONE);
 
@@ -88,6 +89,10 @@ const useBingo = (Toast: any) => {
   const ToastRef = useRef<{ error: (mes: string) => void }>(null);
 
   const accountAddress = `ELF_${caAddress}_${chainInfoRef.current?.chainId}`;
+
+  useEffect(() => {
+    setIsTest(document.location.href?.lastIndexOf?.('bingogame.portkey.finance') === -1);
+  }, []);
 
   /**
    *  logic function
@@ -561,6 +566,7 @@ const useBingo = (Toast: any) => {
     result,
     hasFinishBet,
     time,
+    isTest,
     isMainChain,
     accountAddress,
     chainId: chainInfoRef.current?.chainId,

@@ -41,6 +41,7 @@ const PCBingoGame = () => {
     loading,
     time,
     getQrInfo,
+    isTest,
     isMainChain,
     accountAddress,
     loadingExtraDataMode,
@@ -55,7 +56,7 @@ const PCBingoGame = () => {
       <div>
         <div className={styles.defaultWrapper}>
           <div className={styles.title__img__wrapper}>
-            {!isMainChain && (
+            {isTest && (
               <div className={styles.test__tag__wrapper}>
                 <div className={styles.test__tag__wrapper__content}>TEST</div>
               </div>
@@ -83,7 +84,7 @@ const PCBingoGame = () => {
             </Button>
           )}
 
-          {!isMainChain && (
+          {isTest && (
             <div className={styles.initTip}>
               <img src={require('../../public/warn.svg').default.src} />
               <span>This is a demo on the Testnet.</span>
