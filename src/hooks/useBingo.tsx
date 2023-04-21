@@ -11,7 +11,7 @@ import { useDelay } from './useDelay';
 import { bingoAddress, CHAIN_ID } from '../constants/network';
 
 import useIntervalAsync from './useIntervalTool';
-import { INITIAL_INPUT_VALUE, MAX_BET_VALUE, MIN_BET_VALUE } from '../constants/global';
+import { INITIAL_INPUT_VALUE, MAIN_CHAIN_SYMBOL, MAX_BET_VALUE, MIN_BET_VALUE } from '../constants/global';
 
 export enum StepStatus {
   INIT,
@@ -53,16 +53,17 @@ const useBingo = (Toast: any) => {
   const [isWin, setIsWin] = useState(false);
   const [enablePlay, setEnablePlay] = useState(false);
 
-  const [balanceValue, setBalanceValue] = useState('0');
-  const [anotherBalanceValue, setAnoterhBalanceValue] = useState('0');
+  const [balanceValue, setBalanceValue] = useState<string>('0');
+  const [anotherBalanceValue, setAnoterhBalanceValue] = useState<string>('0');
 
-  const [difference, setDifference] = useState(0);
-  const [result, setResult] = useState(Infinity);
-  const [hasFinishBet, setHasFinishBet] = useState(false);
+  const [difference, setDifference] = useState<number>(0);
+  const [result, setResult] = useState<number>(Infinity);
+  const [hasFinishBet, setHasFinishBet] = useState<boolean>(false);
 
-  const [loading, setLoading] = useState(false);
-  const [caAddress, setCaAddress] = useState('');
-  const [time, setTime] = useState(3);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [caAddress, setCaAddress] = useState<string>('');
+  const [time, setTime] = useState<number>(3);
+  const [isMainChain, setIsMainChain] = useState<boolean>(true);
 
   const walletRef = useRef<
     DIDWalletInfo & {
@@ -96,6 +97,7 @@ const useBingo = (Toast: any) => {
   const init = async () => {
     const chainsInfo = await did.services.getChainsInfo();
     chainsInfoRef.current = chainsInfo;
+    setIsMainChain(chainsInfo.some((chain) => chain.chainId === MAIN_CHAIN_SYMBOL));
     const chainInfo = chainsInfo.find((chain) => chain.chainId === CHAIN_ID);
     if (!chainInfo) {
       showError('chain is not running');
@@ -550,6 +552,7 @@ const useBingo = (Toast: any) => {
     result,
     hasFinishBet,
     time,
+    isMainChain,
     accountAddress,
     chainId: chainInfoRef.current?.chainId,
     tokenContractAddress: tokenContractAddressRef.current,

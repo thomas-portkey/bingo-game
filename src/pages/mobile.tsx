@@ -91,7 +91,12 @@ const MBingoGame = () => {
   const renderDefault = () => {
     return (
       <div className={styles.defaultWrapper}>
-        <img className={styles.logo} src={require('../../public/bingo.png').default.src} />
+        <div className={styles.title__img__wrapper}>
+          <div className={styles.test__tag__wrapper}>
+            <div className={styles.test__tag__wrapper__content}>TEST</div>
+          </div>
+          <img className={styles.logo} src={require('../../public/bingo.png').default.src} />
+        </div>
         {step === StepStatus.LOCK && (
           <>
             <Button
