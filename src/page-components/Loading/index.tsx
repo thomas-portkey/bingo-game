@@ -16,14 +16,10 @@ const InitLoading = (props: { isMobileMode?: boolean; isInit?: boolean; loading:
         <img className={styles.bingo_pc} src={require('../../../public/bingo_white_pc.png').default.src} />
       )}
 
-      <div className={styles.wrapper}>
-        <div className={styles.circle}></div>
-        <div className={styles.circle}></div>
-        <div className={styles.circle}></div>
-
-        <div className={styles.shadow}></div>
-        <div className={styles.shadow}></div>
-        <div className={styles.shadow}></div>
+      <div className={isMobileMode ? styles.wrapper_mobile : styles.wrapper}>
+        <div className={[styles.circle, styles.circle_1].join(' ')}></div>
+        <div className={[styles.circle, styles.circle_2].join(' ')}></div>
+        <div className={[styles.circle, styles.circle_3].join(' ')}></div>
       </div>
     </div>
   );

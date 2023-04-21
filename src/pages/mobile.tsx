@@ -455,7 +455,7 @@ const MBingoGame = () => {
 
   return (
     <div className={styles.background}>
-      <Loading isMobileMode loading={loading} />
+      <Loading isMobileMode loading={loading || true} />
       {/* <PortkeyLoading loading={loading} /> */}
       {renderSence()}
       <SignIn
