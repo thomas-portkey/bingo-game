@@ -1,10 +1,10 @@
-import { useEffect, useReducer, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { DIDWalletInfo, did } from '@portkey/did-ui-react';
 import { ChainInfo } from '@portkey/services';
 import { getContractBasic, ContractBasic } from '@portkey/contracts';
 
 import AElf from 'aelf-sdk';
-import { isMobile, shrinkSendQrData } from '../utils/common';
+import { shrinkSendQrData } from '../utils/common';
 
 import { useDelay } from './useDelay';
 
@@ -42,7 +42,6 @@ export enum BetType {
 }
 
 export const KEY_NAME = 'BINGO_GAME';
-const { sha256 } = AElf.utils;
 const COUNT = 3;
 
 const useBingo = (Toast: any) => {
@@ -77,7 +76,6 @@ const useBingo = (Toast: any) => {
   const caContractRef = useRef<ContractBasic>();
   const multiTokenContractRef = useRef<ContractBasic>();
   const anotherMultiTokenContractRef = useRef<ContractBasic>();
-  const otherChainAddressRef = useRef<string[]>([]);
 
   const aelfRef = useRef<any>();
   const txIdRef = useRef('');
