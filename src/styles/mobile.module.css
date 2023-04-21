@@ -31,10 +31,39 @@
 }
 
 .defaultWrapper {
+  position: relative;
   display: flex;
   margin-top: 22vh;
   flex-direction: column;
   align-items: center;
+}
+
+.title__img__wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.test__tag__wrapper {
+  height: 2.88rem;
+  width: 5.6rem;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-size: 100% 100%;
+  background-image: url('../../public/test_sign.png');
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.test__tag__wrapper__content {
+  font-size: 1.2rem;
+  margin-bottom: 0.4rem;
+  color: #000000;
+  z-index: 10;
 }
 
 .centerPopup {

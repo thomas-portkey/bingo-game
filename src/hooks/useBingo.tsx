@@ -12,6 +12,7 @@ import { bingoAddress, CHAIN_ID } from '../constants/network';
 
 import useIntervalAsync from './useIntervalTool';
 import { INITIAL_INPUT_VALUE, MAX_BET_VALUE, MIN_BET_VALUE } from '../constants/global';
+import { ExtraDataMode } from '../page-components/Loading';
 
 export enum StepStatus {
   INIT,
@@ -45,23 +46,25 @@ export const KEY_NAME = 'BINGO_GAME';
 const COUNT = 3;
 
 const useBingo = (Toast: any) => {
-  const [step, setStep] = useState(StepStatus.INIT);
-  const [settingPage, setSettingPage] = useState(SettingPage.NULL);
-  const [isLogin, setIsLogin] = useState(false);
-  const [showQrCode, setShowQrCode] = useState(false);
-  const [isWin, setIsWin] = useState(false);
-  const [enablePlay, setEnablePlay] = useState(false);
+  const [step, setStep] = useState<StepStatus>(StepStatus.INIT);
+  const [settingPage, setSettingPage] = useState<SettingPage>(SettingPage.NULL);
+  const [isLogin, setIsLogin] = useState<boolean>(false);
+  const [showQrCode, setShowQrCode] = useState<boolean>(false);
+  const [isWin, setIsWin] = useState<boolean>(false);
+  const [enablePlay, setEnablePlay] = useState<boolean>(false);
 
-  const [balanceValue, setBalanceValue] = useState('0');
-  const [anotherBalanceValue, setAnoterhBalanceValue] = useState('0');
+  const [balanceValue, setBalanceValue] = useState<string>('0');
+  const [anotherBalanceValue, setAnoterhBalanceValue] = useState<string>('0');
 
-  const [difference, setDifference] = useState(0);
-  const [result, setResult] = useState(Infinity);
-  const [hasFinishBet, setHasFinishBet] = useState(false);
+  const [difference, setDifference] = useState<number>(0);
+  const [result, setResult] = useState<number>(Infinity);
+  const [hasFinishBet, setHasFinishBet] = useState<boolean>(false);
 
-  const [loading, setLoading] = useState(false);
-  const [caAddress, setCaAddress] = useState('');
-  const [time, setTime] = useState(3);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [caAddress, setCaAddress] = useState<string>('');
+  const [time, setTime] = useState<number>(3);
+  const [isMainChain, setIsMainChain] = useState<boolean>(false);
+  const [loadingExtraDataMode, setLoadingExtraDataMode] = useState<ExtraDataMode>(ExtraDataMode.NONE);
 
   const walletRef = useRef<
     DIDWalletInfo & {
@@ -78,11 +81,11 @@ const useBingo = (Toast: any) => {
   const anotherMultiTokenContractRef = useRef<ContractBasic>();
 
   const aelfRef = useRef<any>();
-  const txIdRef = useRef('');
-  const tokenContractAddressRef = useRef('');
+  const txIdRef = useRef<string>('');
+  const tokenContractAddressRef = useRef<string>('');
   const balanceInputValueRef = useRef<string>(INITIAL_INPUT_VALUE);
-  const requestTimeRef = useRef(0);
-  const ToastRef = useRef(null);
+  const requestTimeRef = useRef<number>(0);
+  const ToastRef = useRef<{ error: (mes: string) => void }>(null);
 
   const accountAddress = `ELF_${caAddress}_${chainInfoRef.current?.chainId}`;
 
@@ -94,6 +97,7 @@ const useBingo = (Toast: any) => {
   const init = async () => {
     const chainsInfo = await did.services.getChainsInfo();
     chainsInfoRef.current = chainsInfo;
+    setIsMainChain(document.location.href?.lastIndexOf?.('bingogame.portkey.finance') !== -1);
     const chainInfo = chainsInfo.find((chain) => chain.chainId === CHAIN_ID);
     if (!chainInfo) {
       showError('chain is not running');
@@ -208,17 +212,25 @@ const useBingo = (Toast: any) => {
     return info;
   };
 
+  const registerLoop = async () => {
+    let registerResult = undefined;
+    do {
+      registerResult = await register();
+      !registerResult && (await delay());
+    } while (!registerResult);
+    getBalance();
+  };
+
   const register = async () => {
     const caContract = caContractRef.current;
     const wallet = walletRef.current;
-    if (!wallet || !caContract) return;
+    if (!wallet || !caContract) return false;
     const registerResult = await caContract.callSendMethod('ManagerForwardCall', wallet.walletInfo.wallet.address, {
       caHash: wallet.caInfo.caHash,
       contractAddress: bingoAddress,
       methodName: 'Register',
       args: null,
     });
-    // debugger;
     if (!registerResult.error || registerResult.error.message?.includes('already registered')) {
       walletRef.current = {
         ...wallet,
@@ -226,8 +238,7 @@ const useBingo = (Toast: any) => {
       };
       return true;
     }
-    await delay();
-    getBalance();
+    return false;
   };
 
   const cutDown = async () => {
@@ -294,6 +305,7 @@ const useBingo = (Toast: any) => {
     const wallet = walletRef.current;
     if (!aelfRef.current || !chainInfo || !wallet) return;
     setLoading(true);
+    setLoadingExtraDataMode(ExtraDataMode.INIT_MAIN_CHAIN);
     try {
       caContractRef.current = await getContractBasic({
         contractAddress: chainInfo?.caContractAddress,
@@ -309,7 +321,7 @@ const useBingo = (Toast: any) => {
       multiTokenContractRef.current = multiTokenContract;
 
       await delay();
-      await register();
+      await registerLoop();
       await approve();
       setStep(StepStatus.PLAY);
     } catch (error) {
@@ -317,6 +329,7 @@ const useBingo = (Toast: any) => {
     }
 
     setLoading(false);
+    setLoadingExtraDataMode(ExtraDataMode.NONE);
     setCaAddress(wallet.caInfo.caAddress);
   };
 
@@ -383,10 +396,10 @@ const useBingo = (Toast: any) => {
 
     setLoading(true);
     try {
-      if (!wallet.registered) {
-        const registered = await register();
-        if (!registered) return showError('Synchronizing on-chain account information...');
-      }
+      // if (!wallet.registered) {
+      //   const registered = await register();
+      //   if (!registered) return showError('Synchronizing on-chain account information...');
+      // }
       if (!wallet.approved) await approve();
       const playResult = await caContract.callSendMethod('ManagerForwardCall', wallet.walletInfo.wallet.address, {
         caHash: wallet.caInfo.caHash,
@@ -548,9 +561,11 @@ const useBingo = (Toast: any) => {
     result,
     hasFinishBet,
     time,
+    isMainChain,
     accountAddress,
     chainId: chainInfoRef.current?.chainId,
     tokenContractAddress: tokenContractAddressRef.current,
+    loadingExtraDataMode,
   };
 };
 export default useBingo;

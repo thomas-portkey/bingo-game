@@ -41,7 +41,9 @@ const PCBingoGame = () => {
     loading,
     time,
     getQrInfo,
+    isMainChain,
     accountAddress,
+    loadingExtraDataMode,
   } = useBingo(message);
 
   const setShowLogin = (show: boolean) => {
@@ -52,7 +54,14 @@ const PCBingoGame = () => {
     return (
       <div>
         <div className={styles.defaultWrapper}>
-          <img className={styles.logo} src={require('../../public/bingo.png').default.src} />
+          <div className={styles.title__img__wrapper}>
+            {!isMainChain && (
+              <div className={styles.test__tag__wrapper}>
+                <div className={styles.test__tag__wrapper__content}>TEST</div>
+              </div>
+            )}
+            <img className={styles.logo} src={require('../../public/bingo.png').default.src} />
+          </div>
           {step === StepStatus.LOGIN && (
             <Button
               className={styles.defaultBtn__origin}
@@ -74,10 +83,12 @@ const PCBingoGame = () => {
             </Button>
           )}
 
-          <div className={styles.initTip}>
-            <img src={require('../../public/warn.svg').default.src} />
-            <span>This is a demo on the Testnet.</span>
-          </div>
+          {!isMainChain && (
+            <div className={styles.initTip}>
+              <img src={require('../../public/warn.svg').default.src} />
+              <span>This is a demo on the Testnet.</span>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -275,7 +286,7 @@ const PCBingoGame = () => {
   return (
     <div className={styles.background}>
       <div className={styles.bodyWrapper}>
-        <Loading loading={loading || true} />
+        <Loading loading={loading} extraDataMode={loadingExtraDataMode} isMainChain={isMainChain} />
         {![StepStatus.INIT, StepStatus.LOCK, StepStatus.LOGIN, StepStatus.END].includes(step) && (
           <div className={styles.settingHeader}>
             <img
@@ -450,7 +461,6 @@ const PCBingoGame = () => {
               setIsWrongPassword(true);
               return;
             }
-
             await unLock(localWallet);
             setIsWrongPassword(false);
             setPasswordValue('');

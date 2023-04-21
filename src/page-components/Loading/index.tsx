@@ -1,8 +1,43 @@
 import React from 'react';
 
 import styles from './index.module.css';
-const InitLoading = (props: { isMobileMode?: boolean; isInit?: boolean; loading: boolean }) => {
-  const { isMobileMode, isInit, loading } = props;
+import { CHAIN_ID } from '../../constants/network';
+import { MAIN_CHAIN_SYMBOL } from '../../constants/global';
+
+export enum ExtraDataMode {
+  NONE,
+  INIT_MAIN_CHAIN,
+}
+
+const InitLoading = (props: {
+  extraDataMode?: ExtraDataMode;
+  isMobileMode?: boolean;
+  isMainChain: boolean;
+  isInit?: boolean;
+  loading: boolean;
+}) => {
+  const { isMobileMode, isInit, loading, extraDataMode, isMainChain } = props;
+
+  const renderExtraData = () => {
+    switch (extraDataMode) {
+      case ExtraDataMode.INIT_MAIN_CHAIN: {
+        return (
+          <div className={isMobileMode ? styles.extra__data__wrapper__mobile : styles.extra__data__wrapper__pc}>
+            <div className={isMobileMode ? styles.sync__maintitle__mobile : styles.sync__maintitle__pc}>
+              Synchronizing on-chain account information...
+            </div>
+            <div className={isMobileMode ? styles.sync__subtitle__mobile : styles.sync__subtitle__pc}>
+              While waiting, you can pre-deposit funds in the Portkey wallet for use in the game on the{' '}
+              {isMainChain ? 'mainchain' : 'sidechain'} {isMainChain ? MAIN_CHAIN_SYMBOL : CHAIN_ID}.
+            </div>
+          </div>
+        );
+      }
+      default: {
+        return null;
+      }
+    }
+  };
 
   if (!loading) {
     return null;
@@ -21,6 +56,7 @@ const InitLoading = (props: { isMobileMode?: boolean; isInit?: boolean; loading:
         <div className={[styles.circle, styles.circle_2].join(' ')}></div>
         <div className={[styles.circle, styles.circle_3].join(' ')}></div>
       </div>
+      {renderExtraData()}
     </div>
   );
 };
