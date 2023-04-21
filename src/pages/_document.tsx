@@ -8,7 +8,7 @@ export default function Document() {
         <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
       </Head>
       <body>
-        <Script id="fontsize" strategy="afterInteractive">
+        <Script id="fontsize" strategy="beforeInteractive">
           {`  
             !(function(doc, win) {
               var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);

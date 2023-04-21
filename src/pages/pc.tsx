@@ -285,7 +285,7 @@ const PCBingoGame = () => {
   return (
     <div className={styles.background}>
       <div className={styles.bodyWrapper}>
-        <Loading loading={loading} />
+        <Loading loading={loading || true} />
         {![StepStatus.INIT, StepStatus.LOCK, StepStatus.LOGIN, StepStatus.END].includes(step) && (
           <div className={styles.settingHeader}>
             <img
@@ -311,7 +311,7 @@ const PCBingoGame = () => {
                 <div>Account</div>
                 <div style={{ width: '40rem', overflow: 'hidden' }}>
                   {accountAddress.length > 30
-                    ? `${accountAddress.slice(0, 15)}...${accountAddress.slice(
+                    ? `${accountAddress.slice(0, 13)}...${accountAddress.slice(
                         accountAddress.length - 10,
                         accountAddress.length,
                       )}`

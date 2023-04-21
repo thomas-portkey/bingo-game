@@ -27,23 +27,30 @@
 }
 
 .bingo_mobile {
-  width: 27.4rem;
+  width: 16rem;
   margin-bottom: 2.1rem;
 }
 
 .bingo_pc {
-  width: 67.1rem;
-  margin-bottom: 5.2rem;
+  width: 36rem;
+  margin-bottom: 2.1rem;
 }
 
 .wrapper {
-  width: 200px;
-  height: 60px;
+  width: 20rem;
+  height: 6rem;
   position: relative;
 }
+
+.wrapper_mobile {
+  width: 20rem;
+  height: 6rem;
+  position: relative;
+}
+
 .circle {
-  width: 20px;
-  height: 20px;
+  width: 2rem;
+  height: 2rem;
   position: absolute;
   border-radius: 50%;
   background-color: #fff;
@@ -52,15 +59,22 @@
   animation: circle 0.5s alternate infinite ease;
 }
 
+.wrapper_mobile .circle {
+  width: 1rem;
+  height: 1rem;
+  left: 25%;
+  animation: circle_mobile 0.5s alternate infinite ease;
+}
+
 @keyframes circle {
   0% {
-    top: 60px;
-    height: 5px;
-    border-radius: 50px 50px 25px 25px;
+    top: 6rem;
+    height: 0.5rem;
+    border-radius: 5rem 5rem 2.5rem 2.5rem;
     transform: scaleX(1.7);
   }
   40% {
-    height: 20px;
+    height: 2rem;
     border-radius: 50%;
     transform: scaleX(1);
   }
@@ -68,15 +82,44 @@
     top: 0%;
   }
 }
-.circle:nth-child(2) {
+
+@keyframes circle_mobile {
+  0% {
+    top: 3rem;
+    height: 0.5rem;
+    border-radius: 5rem 5rem 2.5rem 2.5rem;
+    transform: scaleX(1.7);
+  }
+  40% {
+    height: 1rem;
+    border-radius: 50%;
+    transform: scaleX(1);
+  }
+  100% {
+    top: 0%;
+  }
+}
+
+.circle_2 {
   left: 45%;
   animation-delay: 0.2s;
 }
-.circle:nth-child(3) {
+.circle_3 {
   left: auto;
   right: 15%;
   animation-delay: 0.3s;
 }
+
+.wrapper_mobile .circle_2 {
+  left: 48%;
+  animation-delay: 0.2s;
+}
+.wrapper_mobile .circle_3 {
+  left: auto;
+  right: 25%;
+  animation-delay: 0.3s;
+}
+
 .shadow {
   width: 20px;
   height: 4px;
