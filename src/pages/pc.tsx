@@ -1,13 +1,17 @@
 import React, { useState, useRef } from 'react';
 import { INITIAL_INPUT_VALUE, MAX_BET_VALUE, defaultCountryCodeConfig } from '../constants/global';
 import useBingo, { StepStatus, KEY_NAME, BetType } from '../hooks/useBingo';
-import { SignIn, did, PortkeyLoading, Unlock, SignInInterface } from '@portkey/did-ui-react';
+import { SignIn, did, Unlock, SignInInterface } from '@portkey/did-ui-react';
 import { InputNumber, message, Popover, Modal } from 'antd';
+import Loading from '../page-components/Loading';
+
 import { Button, ButtonType } from '../page-components/Button';
 import { QRCode } from 'react-qrcode-logo';
 import { CHAIN_ID } from '../constants/network';
 import copy from 'copy-to-clipboard';
 import styles from '../styles/pc.module.css';
+
+import { decorateBalanceText } from '../utils/common';
 
 const PCBingoGame = () => {
   const [inputValue, setInputValue] = useState<string>(INITIAL_INPUT_VALUE);
@@ -27,7 +31,6 @@ const PCBingoGame = () => {
     lock,
     step,
     balanceValue,
-    anotherBalanceValue,
     setBalanceInputValue,
     getBalance,
     isWin,
@@ -203,9 +206,12 @@ const PCBingoGame = () => {
                 <>
                   <div className={styles.bingoTips}>
                     {isWin ? (
-                      <img src={require('../../public/congratulations_pc.png').default.src} />
+                      <img
+                        style={{ width: '51.6rem' }}
+                        src={require('../../public/congratulations_pc.png').default.src}
+                      />
                     ) : (
-                      <img src={require('../../public/lose_pc.png').default.src} />
+                      <img style={{ width: '51.6rem' }} src={require('../../public/lose_pc.png').default.src} />
                     )}
                     <div className={styles.bingoText}>
                       <span>{text}</span>
@@ -269,7 +275,7 @@ const PCBingoGame = () => {
   return (
     <div className={styles.background}>
       <div className={styles.bodyWrapper}>
-        <PortkeyLoading loading={loading} />
+        <Loading loading={loading} />
         {![StepStatus.INIT, StepStatus.LOCK, StepStatus.LOGIN, StepStatus.END].includes(step) && (
           <div className={styles.settingHeader}>
             <img
@@ -281,7 +287,7 @@ const PCBingoGame = () => {
             />
             <div className={styles.setting__balance}>
               <div className={styles.setting__balance__content}>
-                <div style={{ width: '100%', fontSize: '2.4rem' }}>{Number(balanceValue).toFixed(4)} ELF</div>
+                <div style={{ width: '100%', fontSize: '2.4rem' }}>{decorateBalanceText(balanceValue)} ELF</div>
                 <button
                   className={styles.btn}
                   onClick={() => {
@@ -389,13 +395,13 @@ const PCBingoGame = () => {
                 <div className={styles.menuPop__textContent_flex}>
                   <div className={styles.menuPop__textContent_flex_top}>
                     <span>ELF</span>
-                    <span>{balanceValue}</span>
+                    <span>{decorateBalanceText(balanceValue)}</span>
                   </div>
-                  <span style={{ color: '#707070' }}>SideChain {CHAIN_ID} Testnet</span>
+                  <span style={{ color: '#707070', fontSize: '1.2rem' }}>SideChain {CHAIN_ID} Testnet</span>
                 </div>
-                <div className={styles.menuPop__tag}>Current</div>
+                {/* <div className={styles.menuPop__tag}>Current</div> */}
               </div>
-              <div className={styles.menuPop__wrapper_content_textContent}>
+              {/* <div className={styles.menuPop__wrapper_content_textContent}>
                 <img src={require('../../public/bitcoin.svg').default.src} />
                 <div className={styles.menuPop__textContent_flex}>
                   <div className={styles.menuPop__textContent_flex_top}>
@@ -404,7 +410,7 @@ const PCBingoGame = () => {
                   </div>
                   <span style={{ color: '#707070' }}>MainChain AELF Testnet</span>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </Modal>
