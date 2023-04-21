@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { INITIAL_INPUT_VALUE, MAX_BET_VALUE, defaultCountryCodeConfig } from '../constants/global';
 import useBingo, { StepStatus, KEY_NAME, BetType } from '../hooks/useBingo';
-import { SignIn, did, PortkeyLoading, Unlock } from '@portkey/did-ui-react';
+import { SignIn, did, PortkeyLoading, Unlock, SignInInterface } from '@portkey/did-ui-react';
 import { InputNumber, message, Popover, Modal } from 'antd';
 import { Button, ButtonType } from '../page-components/Button';
 import { QRCode } from 'react-qrcode-logo';
@@ -13,10 +13,9 @@ const PCBingoGame = () => {
   const [inputValue, setInputValue] = useState<string>(INITIAL_INPUT_VALUE);
   const [passwordValue, setPasswordValue] = useState<string>('');
   const [showUnlock, setShowUnlock] = useState<boolean>(false);
-  const [showLogin, setShowLogin] = useState<boolean>(false);
   const [showMenuPop, setShowMenuPop] = useState<boolean>(false);
-
   const [isWrongPassword, setIsWrongPassword] = useState<boolean>(false);
+  const signinRef = useRef<SignInInterface | null>(null);
 
   const {
     onBet,
@@ -41,6 +40,10 @@ const PCBingoGame = () => {
     getQrInfo,
     accountAddress,
   } = useBingo(message);
+
+  const setShowLogin = (show: boolean) => {
+    signinRef.current?.setOpen(show);
+  };
 
   const renderLoginAndUnlock = () => {
     return (
@@ -407,7 +410,7 @@ const PCBingoGame = () => {
         </Modal>
 
         <SignIn
-          open={showLogin}
+          ref={(ref) => (signinRef.current = ref as SignInInterface)}
           sandboxId="portkey-ui-sandbox"
           defaultChainId={CHAIN_ID}
           phoneCountry={defaultCountryCodeConfig}

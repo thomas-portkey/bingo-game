@@ -1,7 +1,7 @@
-import React, { MouseEventHandler, useState } from 'react';
+import React, { MouseEventHandler, useRef, useState } from 'react';
 import { INITIAL_INPUT_VALUE, MAX_BET_VALUE, TOKEN_UNIT, defaultCountryCodeConfig } from '../constants/global';
 import useBingo, { SettingPage, StepStatus, KEY_NAME, BetType } from '../hooks/useBingo';
-import { SignIn, did, PortkeyLoading, Unlock } from '@portkey/did-ui-react';
+import { SignIn, did, PortkeyLoading, Unlock, SignInInterface } from '@portkey/did-ui-react';
 import { message, InputNumber, Modal, Popover } from 'antd';
 import { QRCode } from 'react-qrcode-logo';
 import { CHAIN_ID, anotherNetworkType, currentNetworkType } from '../constants/network';
@@ -35,9 +35,9 @@ const MBingoGame = () => {
   const [inputValue, setInputValue] = useState<string>(INITIAL_INPUT_VALUE);
   const [passwordValue, setPasswordValue] = useState<string>('');
   const [showUnlock, setShowUnlock] = useState<boolean>(false);
-  const [showLogin, setShowLogin] = useState<boolean>(false);
   const [isWrongPassword, setIsWrongPassword] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const signinRef = useRef<SignInInterface | null>(null);
 
   const {
     onBet,
@@ -62,6 +62,10 @@ const MBingoGame = () => {
     accountAddress,
     anotherBalanceValue,
   } = useBingo(message);
+
+  const setShowLogin = (show: boolean) => {
+    signinRef.current?.setOpen(show);
+  };
 
   const onCopy = () => {
     copy(accountAddress);
@@ -473,7 +477,7 @@ const MBingoGame = () => {
       <PortkeyLoading loading={loading} />
       {renderSence()}
       <SignIn
-        open={showLogin}
+        ref={(ref) => (signinRef.current = ref as SignInInterface)}
         uiType="Modal"
         phoneCountry={defaultCountryCodeConfig}
         sandboxId="portkey-ui-sandbox"
