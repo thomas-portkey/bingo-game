@@ -310,7 +310,7 @@ const useBingo = (Toast: any) => {
     const wallet = walletRef.current;
     if (!aelfRef.current || !chainInfo || !wallet) return;
     setLoading(true);
-    setLoadingExtraDataMode(isMainChain ? ExtraDataMode.NONE : ExtraDataMode.INIT_MAIN_CHAIN);
+    setLoadingExtraDataMode(isMainChain ? ExtraDataMode.INIT_MAIN_CHAIN : ExtraDataMode.NONE);
     try {
       caContractRef.current = await getContractBasic({
         contractAddress: chainInfo?.caContractAddress,

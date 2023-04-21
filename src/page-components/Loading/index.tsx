@@ -16,7 +16,7 @@ const InitLoading = (props: {
   isInit?: boolean;
   loading: boolean;
 }) => {
-  const { isMobileMode, isInit, loading, extraDataMode, isMainChain } = props;
+  const { isMobileMode, isInit, loading, extraDataMode } = props;
 
   const renderExtraData = () => {
     switch (extraDataMode) {
@@ -27,8 +27,8 @@ const InitLoading = (props: {
               Synchronizing on-chain account information...
             </div>
             <div className={isMobileMode ? styles.sync__subtitle__mobile : styles.sync__subtitle__pc}>
-              While waiting, you can pre-deposit funds in the Portkey wallet for use in the game on the{' '}
-              {isMainChain ? 'mainchain' : 'sidechain'} {isMainChain ? MAIN_CHAIN_SYMBOL : CHAIN_ID}.
+              While waiting, you can pre-deposit funds in the Portkey wallet for use in the game on the {'sidechain'}{' '}
+              {CHAIN_ID}.
             </div>
           </div>
         );
