@@ -15,11 +15,11 @@ ConfigProvider.setGlobalConfig({
   graphQLUrl: '/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql',
   socialLogin: {
     Apple: {
-      clientId: 'did.portkey',
-      redirectURI: 'https://localtest-applesign.portkey.finance/api/app/appleAuth/bingoReceive',
+      clientId: process.env.APPLE_CLIENT_ID,
+      redirectURI: process.env.APPLE_REDIRECT_URI,
     },
     Google: {
-      clientId: '176147744733-a2ks681uuqrmb8ajqrpu17te42gst6lq.apps.googleusercontent.com',
+      clientId: process.env.GOOGLE_CLIENT_ID,
     },
   },
   network: {
