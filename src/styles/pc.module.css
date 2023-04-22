@@ -557,6 +557,30 @@
   font-size: 3.6rem;
 }
 
+.random {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: center;
+  /* animation: shark 3s infinite; */
+}
+
+.randomNum {
+  animation: shark 1s infinite;
+}
+
+@keyframes shark {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  20% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
 .bingoLogo {
   position: absolute;
   z-index: 1;
