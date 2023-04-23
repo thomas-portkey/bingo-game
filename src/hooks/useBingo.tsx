@@ -46,6 +46,7 @@ export enum BetType {
 export const KEY_NAME = 'BINGO_GAME';
 const COUNT = 5;
 const RAMDOM_COUNT = 1;
+const RAMDOM_TIME = 6;
 
 const useBingo = (Toast: any) => {
   const [step, setStep] = useState<StepStatus>(StepStatus.INIT);
