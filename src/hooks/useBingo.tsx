@@ -473,7 +473,14 @@ const useBingo = (Toast: any) => {
           address: caAddress,
           playId: txId,
         });
-        const { randomNumber, award } = rewardResult.data;
+        const { randomNumber, award, isComplete } = rewardResult.data;
+
+        if (!isComplete) {
+          setLoading(false);
+          showError('Draw failed, please click bingo again');
+          return;
+        }
+
         const isWin = Number(award) > 0;
         await delay();
         getBalance();
