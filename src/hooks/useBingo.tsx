@@ -94,7 +94,10 @@ const useBingo = (Toast: any) => {
   const accountAddress = `ELF_${caAddress}_${chainInfoRef.current?.chainId}`;
 
   useEffect(() => {
-    setIsTest(document.location.href?.lastIndexOf?.('bingogame.portkey.finance') === -1);
+    setIsTest(
+      document.location.href?.lastIndexOf?.('bingogame.portkey.finance') === -1 &&
+        document.location.href?.lastIndexOf?.('portkey-bingo-game-sand.vercel.app/') === -1,
+    );
   }, []);
   const options = {
     timer: null,
