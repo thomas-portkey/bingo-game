@@ -438,6 +438,7 @@ const PCBingoGame = () => {
           uiType="Modal"
           isShowScan
           onFinish={async (wallet) => {
+            console.log('SignIn onFinish==', wallet);
             await login(wallet);
             setShowLogin(false);
             initContract();
@@ -465,6 +466,7 @@ const PCBingoGame = () => {
               setIsWrongPassword(true);
               return;
             }
+            console.log('Unlock onFinish==', localWallet);
             await unLock(localWallet);
             setIsWrongPassword(false);
             setPasswordValue('');

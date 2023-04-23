@@ -46,7 +46,6 @@ export enum BetType {
 export const KEY_NAME = 'BINGO_GAME';
 const COUNT = 5;
 const RAMDOM_COUNT = 1;
-const RAMDOM_TIME = 4;
 
 const useBingo = (Toast: any) => {
   const [step, setStep] = useState<StepStatus>(StepStatus.INIT);
@@ -129,7 +128,6 @@ const useBingo = (Toast: any) => {
 
   const login = async (wallet) => {
     if (wallet.chainId !== CHAIN_ID) {
-      isMainChain.current = true;
       const caInfo = await did.didWallet.getHolderInfoByContract({
         caHash: wallet.caInfo.caHash,
         chainId: CHAIN_ID,
@@ -142,6 +140,7 @@ const useBingo = (Toast: any) => {
     setLoading(true);
     setWallet(wallet);
     did.save(wallet.pin, KEY_NAME);
+    isMainChain.current = wallet.chainId !== CHAIN_ID;
     return true;
   };
 
@@ -292,7 +291,6 @@ const useBingo = (Toast: any) => {
     let caInfo = localWallet.didWallet.caInfo[CHAIN_ID];
     let caHash = caInfo?.caHash;
     if (!caInfo) {
-      isMainChain.current = true;
       const key = Object.keys(localWallet.didWallet.caInfo)[0];
       caHash = localWallet.didWallet.caInfo[key].caHash;
       caInfo = await did.didWallet.getHolderInfoByContract({
@@ -300,7 +298,7 @@ const useBingo = (Toast: any) => {
         chainId: CHAIN_ID,
       });
     }
-
+    isMainChain.current = !caInfo;
     const wallet = {
       caInfo,
       pin: '',
