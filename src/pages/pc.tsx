@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { INITIAL_INPUT_VALUE, MAX_BET_VALUE, defaultCountryCodeConfig } from '../constants/global';
 import useBingo, { StepStatus, KEY_NAME, BetType } from '../hooks/useBingo';
 import { SignIn, did, Unlock, SignInInterface } from '@portkey/did-ui-react';
@@ -18,6 +18,7 @@ const PCBingoGame = () => {
   const [passwordValue, setPasswordValue] = useState<string>('');
   const [showUnlock, setShowUnlock] = useState<boolean>(false);
   const [showMenuPop, setShowMenuPop] = useState<boolean>(false);
+
   const [isWrongPassword, setIsWrongPassword] = useState<boolean>(false);
   const signinRef = useRef<SignInInterface | null>(null);
 
@@ -30,6 +31,8 @@ const PCBingoGame = () => {
     logOut,
     lock,
     step,
+    setStep,
+    random,
     balanceValue,
     setBalanceInputValue,
     getBalance,
@@ -100,12 +103,24 @@ const PCBingoGame = () => {
         <div className={styles.contentWrapper}>
           <div className={styles.content__bg}>
             <div className={styles.content__wrapper}>
-              {step === StepStatus.CUTDOWN ? (
+              {step === StepStatus.CUTDOWN && (
                 <div className={styles.content__cutDown}>
                   <div className={styles.content__cutDown_time}>{time}</div>
                   <img style={{ width: '25.4rem' }} src={require('../../public/sand_clock.png').default.src} />
                 </div>
-              ) : (
+              )}
+
+              {step === StepStatus.RAMDOM && (
+                <div className={styles.random}>
+                  <div className={styles.initBingoLogo}>
+                    <div style={{ fontSize: '18rem' }} className={[styles.artWord, styles.randomNum].join(' ')}>
+                      {random}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {step === StepStatus.PLAY && (
                 <>
                   <img src={require('../../public/question.png').default.src} />
                   <div className={styles.content__right}>
@@ -176,18 +191,6 @@ const PCBingoGame = () => {
             </div>
           </div>
         </div>
-      </div>
-    );
-  };
-
-  const renderCutDown = () => {
-    return (
-      <div className={styles.cutDownWrapper}>
-        <div className={styles.cutDown__bg} />
-        <div className={styles.cutDown}>
-          <p>{time}</p>
-        </div>
-        <span className={styles.cutDown__tip}>Getting on-chain data to generate random numbers...</span>
       </div>
     );
   };
@@ -274,6 +277,7 @@ const PCBingoGame = () => {
       case StepStatus.LOGIN:
         return renderLoginAndUnlock();
       case StepStatus.CUTDOWN:
+      case StepStatus.RAMDOM:
       case StepStatus.PLAY:
         return renderPlay();
       case StepStatus.BINGO:
