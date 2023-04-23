@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useRef, useState, useEffect } from 'react';
+import React, { MouseEventHandler, useRef, useState } from 'react';
 import { INITIAL_INPUT_VALUE, MAX_BET_VALUE, TOKEN_UNIT, defaultCountryCodeConfig } from '../constants/global';
 import useBingo, { SettingPage, StepStatus, KEY_NAME, BetType } from '../hooks/useBingo';
 import { SignIn, did, Unlock, SignInInterface } from '@portkey/did-ui-react';
@@ -480,7 +480,7 @@ const MBingoGame = () => {
         defaultChainId={CHAIN_ID}
         isShowScan
         onFinish={async (wallet) => {
-          console.log('SignIn onFinish==', wallet);
+          console.log('SignIn onFinish==', JSON.stringify(wallet));
           await login(wallet);
           setShowLogin(false);
           initContract();
@@ -509,7 +509,7 @@ const MBingoGame = () => {
             setIsWrongPassword(true);
             return;
           }
-          console.log('Unlock onFinish==', localWallet);
+          console.log('Unlock onFinish==', JSON.stringify(localWallet));
           await unLock(localWallet);
           setIsWrongPassword(false);
           setPasswordValue('');
