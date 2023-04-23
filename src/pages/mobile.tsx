@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useRef, useState } from 'react';
+import React, { MouseEventHandler, useRef, useState, useEffect } from 'react';
 import { INITIAL_INPUT_VALUE, MAX_BET_VALUE, TOKEN_UNIT, defaultCountryCodeConfig } from '../constants/global';
 import useBingo, { SettingPage, StepStatus, KEY_NAME, BetType } from '../hooks/useBingo';
 import { SignIn, did, Unlock, SignInInterface } from '@portkey/did-ui-react';
@@ -40,6 +40,7 @@ const MBingoGame = () => {
   const [isWrongPassword, setIsWrongPassword] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const signinRef = useRef<SignInInterface | null>(null);
+  // const [random, setRandom] = useState<number>(randomNum());
 
   const {
     onBet,
@@ -50,6 +51,7 @@ const MBingoGame = () => {
     logOut,
     lock,
     step,
+    random,
     balanceValue,
     setBalanceInputValue,
     isWin,
@@ -198,14 +200,28 @@ const MBingoGame = () => {
         <div className={styles.centerPopup}>
           <div className={styles.playWrapper}>
             <div className={styles.playContent}>
-              {step === StepStatus.CUTDOWN ? (
+              {step === StepStatus.CUTDOWN && (
                 <div>
                   <div className={styles.playContent__cutDown}>
                     <div className={styles.playContent__cutDown_time}>{time}</div>
                     <img style={{ width: '15rem' }} src={require('../../public/sand_clock.png').default.src} />
                   </div>
                 </div>
-              ) : (
+              )}
+
+              {step === StepStatus.RAMDOM && (
+                <div className={styles.random}>
+                  <div className={styles.bingoContent}>
+                    <div className={styles.boardWrapper}>
+                      <div style={{ fontSize: '9.6rem' }} className={[styles.artWord, styles.randomNum].join(' ')}>
+                        {random}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {step === StepStatus.PLAY && (
                 <>
                   <div style={{ fontSize: '96px' }} className={[styles.boardWrapper, styles.artWord].join(' ')}>
                     ?
@@ -384,9 +400,6 @@ const MBingoGame = () => {
         <div className={styles.setting__balance__module}>
           <div className={styles.setting__balance__row}>
             <div className={styles.setting__balance__token__icon} />
-            {/* <div className={styles.setting__balance__tag__wrapper}>
-              <div className={styles.setting__balance__tag__text}>Current</div>
-            </div> */}
             <div className={styles.setting__balance__content}>
               <div className={styles.setting__balance__content__title}>ELF</div>
               <div className={styles.setting__balance__content__subtitle}>{currentNetworkType}</div>
@@ -395,16 +408,6 @@ const MBingoGame = () => {
               <div className={styles.setting__balance__current__value}>{decorateBalanceText(balanceValue)}</div>
             </div>
           </div>
-          {/* <div className={styles.setting__balance__row}>
-            <div className={styles.setting__balance__token__icon} />
-            <div className={styles.setting__balance__content}>
-              <div className={styles.setting__balance__content__title}>ELF</div>
-              <div className={styles.setting__balance__content__subtitle}>{anotherNetworkType}</div>
-            </div>
-            <div className={styles.setting__balance__current__wrapper}>
-              <div className={styles.setting__balance__current__value}>{decorateBalanceText(anotherBalanceValue)}</div>
-            </div>
-          </div> */}
         </div>
         <div
           className={styles.setting__logout}
@@ -455,6 +458,7 @@ const MBingoGame = () => {
       case StepStatus.LOGIN:
         return renderDefault();
       case StepStatus.PLAY:
+      case StepStatus.RAMDOM:
       case StepStatus.CUTDOWN:
         return renderPlay();
       // return renderCutDown();
@@ -468,7 +472,6 @@ const MBingoGame = () => {
   return (
     <div className={styles.background}>
       <Loading isMobileMode loading={loading} extraDataMode={loadingExtraDataMode} isMainChain={isMainChain} />
-      {/* <PortkeyLoading loading={loading} /> */}
       {renderSence()}
       <SignIn
         ref={(ref) => (signinRef.current = ref as SignInInterface)}

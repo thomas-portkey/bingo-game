@@ -4,7 +4,7 @@ import { ChainInfo } from '@portkey/services';
 import { getContractBasic, ContractBasic } from '@portkey/contracts';
 
 import AElf from 'aelf-sdk';
-import { shrinkSendQrData } from '../utils/common';
+import { clearMyInterval, randomNum, setMyInterval, shrinkSendQrData } from '../utils/common';
 
 import { useDelay } from './useDelay';
 
@@ -19,6 +19,7 @@ export enum StepStatus {
   LOCK,
   LOGIN,
   PLAY,
+  RAMDOM,
   CUTDOWN,
   BINGO,
   END,
@@ -43,7 +44,9 @@ export enum BetType {
 }
 
 export const KEY_NAME = 'BINGO_GAME';
-const COUNT = 9;
+const COUNT = 5;
+const RAMDOM_COUNT = 1;
+const RAMDOM_TIME = 4;
 
 const useBingo = (Toast: any) => {
   const [step, setStep] = useState<StepStatus>(StepStatus.INIT);
@@ -59,6 +62,7 @@ const useBingo = (Toast: any) => {
   const [difference, setDifference] = useState<number>(0);
   const [result, setResult] = useState<number>(Infinity);
   const [hasFinishBet, setHasFinishBet] = useState<boolean>(false);
+  const [random, setRandom] = useState<number>(randomNum());
 
   const [loading, setLoading] = useState<boolean>(false);
   const [caAddress, setCaAddress] = useState<string>('');
@@ -93,6 +97,13 @@ const useBingo = (Toast: any) => {
   useEffect(() => {
     setIsTest(document.location.href?.lastIndexOf?.('bingogame.portkey.finance') === -1);
   }, []);
+  const options = {
+    timer: null,
+    callback: () => {
+      setRandom(randomNum());
+    },
+    timeout: RAMDOM_COUNT * 1000,
+  };
 
   /**
    *  logic function
@@ -423,9 +434,17 @@ const useBingo = (Toast: any) => {
       }
       txIdRef.current = playResult.data?.TransactionId || '';
       setLoading(false);
-      setStep(StepStatus.CUTDOWN);
-      await cutDown();
-      setStep(StepStatus.BINGO);
+      setStep(StepStatus.RAMDOM);
+
+      // SHOW RANDOM NUMBER
+      setMyInterval(options);
+      setTimeout(async () => {
+        setStep(StepStatus.CUTDOWN);
+        await cutDown();
+        setStep(StepStatus.BINGO);
+        setTime(COUNT);
+        clearMyInterval(options.timer);
+      }, 6000);
     } catch (err) {
       console.error(err);
     } finally {
@@ -518,6 +537,7 @@ const useBingo = (Toast: any) => {
     if (typeof window !== undefined && window.localStorage.getItem(KEY_NAME)) {
       setEnablePlay(true);
       setStep(StepStatus.LOCK);
+      // setStep(StepStatus.RAMDOM);
     } else {
       setEnablePlay(true);
       setStep(StepStatus.LOGIN);
@@ -550,6 +570,9 @@ const useBingo = (Toast: any) => {
     setWallet,
     balanceInputValue: balanceInputValueRef.current,
     step,
+    setStep,
+    random,
+    setRandom,
     getBalance,
     initContract,
     setLoading,
