@@ -63,8 +63,8 @@ const MBingoGame = () => {
     initContract,
     loading,
     time,
+    isTest,
     accountAddress,
-    isMainChain,
     loadingExtraDataMode,
   } = useBingo(message);
 
@@ -96,7 +96,7 @@ const MBingoGame = () => {
     return (
       <div className={styles.defaultWrapper}>
         <div className={styles.title__img__wrapper}>
-          {!isMainChain && (
+          {isTest && (
             <div className={styles.test__tag__wrapper}>
               <div className={styles.test__tag__wrapper__content}>TEST</div>
             </div>
@@ -128,7 +128,7 @@ const MBingoGame = () => {
             </Button>
           </>
         )}
-        {!isMainChain && (
+        {isTest && (
           <div className={styles.initTip}>
             <img src={require('../../public/warn.svg').default.src} />
             <span>This is a demo on the Testnet.</span>
@@ -470,7 +470,7 @@ const MBingoGame = () => {
 
   return (
     <div className={styles.background}>
-      <Loading isMobileMode loading={loading} extraDataMode={loadingExtraDataMode} isMainChain={isMainChain} />
+      <Loading isMobileMode loading={loading} extraDataMode={loadingExtraDataMode} />
       {renderSence()}
       <SignIn
         ref={(ref) => (signinRef.current = ref as SignInInterface)}
@@ -480,6 +480,7 @@ const MBingoGame = () => {
         defaultChainId={CHAIN_ID}
         isShowScan
         onFinish={async (wallet) => {
+          console.log('SignIn onFinish==', wallet);
           await login(wallet);
           setShowLogin(false);
           initContract();
@@ -508,6 +509,7 @@ const MBingoGame = () => {
             setIsWrongPassword(true);
             return;
           }
+          console.log('Unlock onFinish==', localWallet);
           await unLock(localWallet);
           setIsWrongPassword(false);
           setPasswordValue('');

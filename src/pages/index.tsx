@@ -91,7 +91,7 @@ const BingoGame = (props: SideProps) => {
   }, []);
 
   if (!hasLoadedSource) {
-    return <InitLoading isMobileMode={isMobileBrowser} isInit loading isMainChain />;
+    return <InitLoading isMobileMode={isMobileBrowser} isInit loading />;
   }
 
   return isMobileBrowser ? <MBingoGame /> : <PCBingoGame />;

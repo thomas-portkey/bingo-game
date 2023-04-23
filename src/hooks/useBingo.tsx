@@ -67,8 +67,9 @@ const useBingo = (Toast: any) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [caAddress, setCaAddress] = useState<string>('');
   const [time, setTime] = useState(COUNT);
-  const [isMainChain, setIsMainChain] = useState<boolean>(false);
+  const [isTest, setIsTest] = useState<boolean>(true);
   const [loadingExtraDataMode, setLoadingExtraDataMode] = useState<ExtraDataMode>(ExtraDataMode.NONE);
+  const isMainChain = useRef<boolean>(false);
 
   const walletRef = useRef<
     DIDWalletInfo & {
@@ -93,6 +94,9 @@ const useBingo = (Toast: any) => {
 
   const accountAddress = `ELF_${caAddress}_${chainInfoRef.current?.chainId}`;
 
+  useEffect(() => {
+    setIsTest(document.location.href?.lastIndexOf?.('bingogame.portkey.finance') === -1);
+  }, []);
   const options = {
     timer: null,
     callback: () => {
@@ -125,7 +129,7 @@ const useBingo = (Toast: any) => {
 
   const login = async (wallet) => {
     if (wallet.chainId !== CHAIN_ID) {
-      setIsMainChain(true);
+      isMainChain.current = true;
       const caInfo = await did.didWallet.getHolderInfoByContract({
         caHash: wallet.caInfo.caHash,
         chainId: CHAIN_ID,
@@ -288,9 +292,9 @@ const useBingo = (Toast: any) => {
     let caInfo = localWallet.didWallet.caInfo[CHAIN_ID];
     let caHash = caInfo?.caHash;
     if (!caInfo) {
+      isMainChain.current = true;
       const key = Object.keys(localWallet.didWallet.caInfo)[0];
       caHash = localWallet.didWallet.caInfo[key].caHash;
-      setIsMainChain(true);
       caInfo = await did.didWallet.getHolderInfoByContract({
         caHash: caHash,
         chainId: CHAIN_ID,
@@ -317,7 +321,7 @@ const useBingo = (Toast: any) => {
     const wallet = walletRef.current;
     if (!aelfRef.current || !chainInfo || !wallet) return;
     setLoading(true);
-    setLoadingExtraDataMode(isMainChain ? ExtraDataMode.NONE : ExtraDataMode.INIT_MAIN_CHAIN);
+    setLoadingExtraDataMode(isMainChain.current ? ExtraDataMode.INIT_MAIN_CHAIN : ExtraDataMode.NONE);
     try {
       caContractRef.current = await getContractBasic({
         contractAddress: chainInfo?.caContractAddress,
@@ -585,7 +589,7 @@ const useBingo = (Toast: any) => {
     result,
     hasFinishBet,
     time,
-    isMainChain,
+    isTest,
     accountAddress,
     chainId: chainInfoRef.current?.chainId,
     tokenContractAddress: tokenContractAddressRef.current,
