@@ -127,6 +127,7 @@ const useBingo = (Toast: any) => {
   };
 
   const login = async (wallet) => {
+    setLoading(true);
     if (wallet.chainId !== CHAIN_ID) {
       const caInfo = await did.didWallet.getHolderInfoByContract({
         caHash: wallet.caInfo.caHash,
@@ -137,7 +138,6 @@ const useBingo = (Toast: any) => {
         caHash: caInfo.caHash,
       };
     }
-    setLoading(true);
     setWallet(wallet);
     did.save(wallet.pin, KEY_NAME);
     isMainChain.current = wallet.chainId !== CHAIN_ID;
@@ -510,13 +510,13 @@ const useBingo = (Toast: any) => {
     const caContract = caContractRef.current;
     const wallet = walletRef.current;
     if (!caContract || !wallet) return;
+    setLoading(true);
     await caContract.callSendMethod('ManagerForwardCall', wallet.walletInfo.wallet.address, {
       caHash: wallet.caInfo.caHash,
       contractAddress: bingoAddress,
       methodName: 'Quit',
       args: {},
     });
-    setLoading(true);
     await caContractRef.current?.callSendMethod('RemoveManagerInfo', caAddress, {
       caHash: walletRef.current.caInfo.caHash,
       managerInfo: {
