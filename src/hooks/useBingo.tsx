@@ -95,8 +95,10 @@ const useBingo = (Toast: any) => {
 
   useEffect(() => {
     setIsTest(
-      document.location.href?.lastIndexOf?.('bingogame.portkey.finance') === -1 &&
-        document.location.href?.lastIndexOf?.('portkey-bingo-game-sand.vercel.app/') === -1,
+      document.location.href?.lastIndexOf?.('bingogame.portkey.finance') === -1,
+      // use below to see recognize portkey-bingo-game-sand.vercel.app as mainnet
+      // document.location.href?.lastIndexOf?.('bingogame.portkey.finance') === -1 &&
+      //   document.location.href?.lastIndexOf?.('portkey-bingo-game-sand.vercel.app') === -1,
     );
   }, []);
   const options = {
