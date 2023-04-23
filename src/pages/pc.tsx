@@ -45,7 +45,6 @@ const PCBingoGame = () => {
     time,
     getQrInfo,
     isTest,
-    isMainChain,
     accountAddress,
     loadingExtraDataMode,
   } = useBingo(message);
@@ -291,7 +290,7 @@ const PCBingoGame = () => {
   return (
     <div className={styles.background}>
       <div className={styles.bodyWrapper}>
-        <Loading loading={loading} extraDataMode={loadingExtraDataMode} isMainChain={isMainChain} />
+        <Loading loading={loading} extraDataMode={loadingExtraDataMode} />
         {![StepStatus.INIT, StepStatus.LOCK, StepStatus.LOGIN, StepStatus.END].includes(step) && (
           <div className={styles.settingHeader}>
             <img

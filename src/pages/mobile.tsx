@@ -63,7 +63,6 @@ const MBingoGame = () => {
     initContract,
     loading,
     time,
-    isMainChain,
     isTest,
     accountAddress,
     loadingExtraDataMode,
@@ -471,7 +470,7 @@ const MBingoGame = () => {
 
   return (
     <div className={styles.background}>
-      <Loading isMobileMode loading={loading} extraDataMode={loadingExtraDataMode} isMainChain={isMainChain} />
+      <Loading isMobileMode loading={loading} extraDataMode={loadingExtraDataMode} />
       {renderSence()}
       <SignIn
         ref={(ref) => (signinRef.current = ref as SignInInterface)}

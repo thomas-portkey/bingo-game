@@ -12,7 +12,6 @@ export enum ExtraDataMode {
 const InitLoading = (props: {
   extraDataMode?: ExtraDataMode;
   isMobileMode?: boolean;
-  isMainChain: boolean;
   isInit?: boolean;
   loading: boolean;
 }) => {
