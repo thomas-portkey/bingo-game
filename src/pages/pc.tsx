@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { INITIAL_INPUT_VALUE, MAX_BET_VALUE, defaultCountryCodeConfig } from '../constants/global';
 import useBingo, { StepStatus, KEY_NAME, BetType } from '../hooks/useBingo';
 import { SignIn, did, Unlock, SignInInterface } from '@portkey/did-ui-react';
