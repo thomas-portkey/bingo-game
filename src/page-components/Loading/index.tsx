@@ -2,7 +2,6 @@ import React from 'react';
 
 import styles from './index.module.css';
 import { CHAIN_ID } from '../../constants/network';
-import { MAIN_CHAIN_SYMBOL } from '../../constants/global';
 
 export enum ExtraDataMode {
   NONE,
