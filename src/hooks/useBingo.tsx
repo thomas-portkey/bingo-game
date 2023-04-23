@@ -485,7 +485,7 @@ const useBingo = (Toast: any) => {
         }
 
         const isWin = Number(award) > 0;
-        await delay();
+        // await delay();
         getBalance();
         setHasFinishBet(true);
         setIsWin(isWin);
