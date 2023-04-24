@@ -1,21 +1,25 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { DIDWalletInfo, did } from '@portkey/did-ui-react';
 import { ChainInfo } from '@portkey/services';
 import { getContractBasic, ContractBasic } from '@portkey/contracts';
-import AElf from 'aelf-sdk';
-import { Toast } from 'antd-mobile';
 
-import { useDelay } from './common';
+import AElf from 'aelf-sdk';
+import { clearMyInterval, randomNum, setMyInterval, shrinkSendQrData, transaction } from '../utils/common';
+
+import { useDelay } from './useDelay';
 
 import { bingoAddress, CHAIN_ID } from '../constants/network';
 
-import useIntervalAsync from './useInterValAsync';
+import useIntervalAsync from './useIntervalTool';
+import { INITIAL_INPUT_VALUE, MAX_BET_VALUE, MIN_BET_VALUE } from '../constants/global';
+import { ExtraDataMode } from '../page-components/Loading';
 
 export enum StepStatus {
   INIT,
   LOCK,
   LOGIN,
   PLAY,
+  RAMDOM,
   CUTDOWN,
   BINGO,
   END,
@@ -26,6 +30,7 @@ export enum SettingPage {
   ACCOUNT,
   BALANCE,
   LOGOUT,
+  QRCODE,
 }
 
 export enum ButtonType {
@@ -33,28 +38,38 @@ export enum ButtonType {
   ORIANGE,
 }
 
+export enum BetType {
+  SMALL,
+  BIG,
+}
+
 export const KEY_NAME = 'BINGO_GAME';
-const { sha256 } = AElf.utils;
-const COUNT = 3;
+const COUNT = 5;
+const RAMDOM_COUNT = 1;
+const RAMDOM_TIME = 6;
 
-const useBingo = () => {
-  const [step, setStep] = useState(StepStatus.INIT);
-  const [settingPage, setSettingPage] = useState(SettingPage.NULL);
-  const [isLogin, setIsLogin] = useState(false);
-  const [showQrCode, setShowQrCode] = useState(false);
-  const [isWin, setIsWin] = useState(false);
-  const [enablePlay, setEnablePlay] = useState(false);
+const useBingo = (Toast: any) => {
+  const [step, setStep] = useState<StepStatus>(StepStatus.INIT);
+  const [settingPage, setSettingPage] = useState<SettingPage>(SettingPage.NULL);
+  const [isLogin, setIsLogin] = useState<boolean>(false);
+  const [showQrCode, setShowQrCode] = useState<boolean>(false);
+  const [isWin, setIsWin] = useState<boolean>(false);
+  const [enablePlay, setEnablePlay] = useState<boolean>(false);
 
-  const [passwordValue, setPasswordValue] = useState('');
+  const [balanceValue, setBalanceValue] = useState<string>('0');
+  const [anotherBalanceValue, setAnoterhBalanceValue] = useState<string>('0');
 
-  const [balanceValue, setBalanceValue] = useState('0');
-  const [difference, setDifference] = useState(0);
-  const [result, setResult] = useState(Infinity);
-  const [hasFinishBet, setHasFinishBet] = useState(false);
+  const [difference, setDifference] = useState<number>(0);
+  const [result, setResult] = useState<number>(Infinity);
+  const [hasFinishBet, setHasFinishBet] = useState<boolean>(false);
+  const [random, setRandom] = useState<number>(randomNum());
 
-  const [loading, setLoading] = useState(false);
-  const [caAddress, setCaAddress] = useState('');
-  const [time, setTime] = useState(30);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [caAddress, setCaAddress] = useState<string>('');
+  const [time, setTime] = useState(COUNT);
+  const [isTest, setIsTest] = useState<boolean>(true);
+  const [loadingExtraDataMode, setLoadingExtraDataMode] = useState<ExtraDataMode>(ExtraDataMode.NONE);
+  const isMainChain = useRef<boolean>(false);
 
   const walletRef = useRef<
     DIDWalletInfo & {
@@ -64,35 +79,31 @@ const useBingo = () => {
   >();
 
   const chainInfoRef = useRef<ChainInfo>();
+  const chainsInfoRef = useRef<ChainInfo[]>([]);
+
   const caContractRef = useRef<ContractBasic>();
   const multiTokenContractRef = useRef<ContractBasic>();
+  const anotherMultiTokenContractRef = useRef<ContractBasic>();
+
   const aelfRef = useRef<any>();
-  const txIdRef = useRef('');
-  const smallOrBigRef = useRef(false); // true: big, false: small;
-  const tokenContractAddressRef = useRef('');
-  const balanceInputValueRef = useRef<string>('1');
-  const requestTimeRef = useRef(0);
+  const txIdRef = useRef<string>('');
+  const tokenContractAddressRef = useRef<string>('');
+  const balanceInputValueRef = useRef<string>(INITIAL_INPUT_VALUE);
+  const requestTimeRef = useRef<number>(0);
+  const ToastRef = useRef<{ error: (mes: string) => void }>(null);
 
   const accountAddress = `ELF_${caAddress}_${chainInfoRef.current?.chainId}`;
 
-  useIntervalAsync(async () => {
-    const multiTokenContract = multiTokenContractRef.current;
-    const wallet = walletRef.current;
-    if (!multiTokenContract || !wallet) return;
-
-    if (Date.now() - requestTimeRef.current < 5000) {
-      return;
-    }
-
-    const result = await multiTokenContract.callViewMethod('GetBalance', {
-      symbol: 'ELF',
-      owner: wallet.caInfo.caAddress,
-    });
-
-    console.log('useIntervalAsync setBalance: result', result);
-    const balance = result.data.balance / 10 ** 8;
-    setBalanceValue(balance.toString());
-  }, 5000);
+  useEffect(() => {
+    setIsTest(document.location.href?.lastIndexOf?.('bingogame.portkey.finance') === -1);
+  }, []);
+  const options = {
+    timer: null,
+    callback: () => {
+      setRandom(randomNum());
+    },
+    timeout: RAMDOM_COUNT * 1000,
+  };
 
   /**
    *  logic function
@@ -101,51 +112,73 @@ const useBingo = () => {
 
   const init = async () => {
     const chainsInfo = await did.services.getChainsInfo();
-    console.log('chainsInfo--', chainsInfo);
-
+    chainsInfoRef.current = chainsInfo;
     const chainInfo = chainsInfo.find((chain) => chain.chainId === CHAIN_ID);
     if (!chainInfo) {
-      Toast.show({
-        content: 'chain is not running',
-      });
+      showError('chain is not running');
       return;
     }
     chainInfoRef.current = chainInfo;
-
     const aelf = new AElf(new AElf.providers.HttpProvider(chainInfo.endPoint));
     aelfRef.current = aelf;
     if (!aelf.isConnected()) {
-      Toast.show({
-        content: 'Blockchain Node is not running.',
-      });
+      showError('Blockchain Node is not running.');
       return;
     }
-    console.log('init success', aelf, chainInfo);
   };
 
-  const login = () => {
-    setIsLogin(true);
+  const login = async (wallet) => {
+    setLoading(true);
+    if (wallet.chainId !== CHAIN_ID) {
+      const caInfo = await did.didWallet.getHolderInfoByContract({
+        caHash: wallet.caInfo.caHash,
+        chainId: CHAIN_ID,
+      });
+      wallet.caInfo = {
+        caAddress: caInfo.caAddress,
+        caHash: caInfo.caHash,
+      };
+    }
+    setWallet(wallet);
+    did.save(wallet.pin, KEY_NAME);
+    isMainChain.current = wallet.chainId !== CHAIN_ID;
+    return true;
   };
 
   const getBalance = async () => {
+    getCurrentChainBalance();
+    // getAnotherChainBalance();
+  };
+
+  const getCurrentChainBalance = async () => {
     const multiTokenContract = multiTokenContractRef.current;
     const wallet = walletRef.current;
     if (!multiTokenContract || !wallet) return 0;
 
-    // setBalanceValue('loading...');
-    await delay();
     const result = await multiTokenContract.callViewMethod('GetBalance', {
       symbol: 'ELF',
       owner: wallet.caInfo.caAddress,
     });
 
     requestTimeRef.current = Date.now();
-
-    console.log('getBalance: result', result);
-    const balance = result.data.balance / 10 ** 8;
+    const balance = result?.data?.balance / 10 ** 8;
     const differenceValue = balance - Number(balanceValue);
     setBalanceValue(balance.toString());
     return differenceValue;
+  };
+
+  const getAnotherChainBalance = async () => {
+    const multiTokenContract = anotherMultiTokenContractRef.current;
+    const wallet = walletRef.current;
+    if (!multiTokenContract || !wallet) return 0;
+    const result = await multiTokenContract.callViewMethod('GetBalance', {
+      symbol: 'ELF',
+      owner: wallet.caInfo.caAddress,
+    });
+    const balance = result.data.balance / 10 ** 8;
+    console.log('another balance', balance);
+
+    setAnoterhBalanceValue(balance.toString());
   };
 
   const approve = async () => {
@@ -153,8 +186,6 @@ const useBingo = () => {
     const caContract = caContractRef.current;
     const multiTokenContract = multiTokenContractRef.current;
     if (!caContract || !wallet || !multiTokenContract) return;
-    console.log('wallet--', wallet);
-
     const approve = await caContract.callSendMethod('ManagerForwardCall', wallet.walletInfo.wallet.address, {
       caHash: wallet.caInfo.caHash,
       contractAddress: multiTokenContract.address,
@@ -172,24 +203,61 @@ const useBingo = () => {
       };
       return true;
     }
-    console.log('approve: result', approve);
+    await delay();
+
     getBalance();
-    console.log('Congratulations on your successful approve');
+  };
+
+  const getQrInfo = () => {
+    const info = shrinkSendQrData({
+      type: 'send',
+      netWorkType: 'TESTNET',
+      chainType: 'aelf',
+      toInfo: {
+        address: accountAddress,
+        name: '',
+      },
+      assetInfo: {
+        symbol: 'ELF',
+        chainId: chainInfoRef.current?.chainId,
+        tokenContractAddress: tokenContractAddressRef.current,
+        decimals: '8',
+      },
+      address: accountAddress,
+    });
+    return info;
+  };
+
+  const registerLoop = async () => {
+    let registerResult = undefined;
+    const begainTime = Date.now();
+    do {
+      registerResult = await register();
+      !registerResult && (await delay());
+    } while (!registerResult);
+    getBalance();
+
+    try {
+      transaction.setMeasurement(
+        'Synchronizing on-chain account information ',
+        (Date.now() - begainTime) / 1000,
+        'second',
+      );
+    } catch (error) {
+      console.log('Synchronizing error:', error);
+    }
   };
 
   const register = async () => {
     const caContract = caContractRef.current;
     const wallet = walletRef.current;
-    if (!wallet || !caContract) return;
-    //
+    if (!wallet || !caContract) return false;
     const registerResult = await caContract.callSendMethod('ManagerForwardCall', wallet.walletInfo.wallet.address, {
       caHash: wallet.caInfo.caHash,
       contractAddress: bingoAddress,
       methodName: 'Register',
       args: null,
     });
-
-    // already registered or success
     if (!registerResult.error || registerResult.error.message?.includes('already registered')) {
       walletRef.current = {
         ...wallet,
@@ -197,13 +265,9 @@ const useBingo = () => {
       };
       return true;
     }
-    console.log('register: result', registerResult);
-    await delay();
-    console.log('Congratulations on your successful registration！Please approve');
-    getBalance();
+    return false;
   };
 
-  // cutdown function
   const cutDown = async () => {
     await new Promise<void>((resolve) => {
       let count = COUNT;
@@ -218,54 +282,64 @@ const useBingo = () => {
     });
   };
 
-  const unLock = async () => {
-    const wallet = await did.load('', KEY_NAME);
-    if (!wallet.didWallet.accountInfo.loginAccount) {
-      //   setIsErrorTipShow(true);
+  useIntervalAsync(async () => {
+    const multiTokenContract = multiTokenContractRef.current;
+    const wallet = walletRef.current;
+    if (!multiTokenContract || !wallet) return;
+    if (Date.now() - requestTimeRef.current < 5000) {
       return;
     }
-    walletRef.current = {
-      caInfo: { ...wallet.didWallet.caInfo[CHAIN_ID] },
+    const result = await multiTokenContract.callViewMethod('GetBalance', {
+      symbol: 'ELF',
+      owner: wallet.caInfo.caAddress,
+    });
+    const balance = result?.data?.balance / 10 ** 8;
+    setBalanceValue(balance.toString());
+
+    getAnotherChainBalance();
+  }, 5000);
+
+  const unLock = async (localWallet) => {
+    let caInfo = localWallet.didWallet.caInfo[CHAIN_ID];
+    let caHash = caInfo?.caHash;
+    if (!caInfo) {
+      const key = Object.keys(localWallet.didWallet.caInfo)[0];
+      caHash = localWallet.didWallet.caInfo[key].caHash;
+      caInfo = await did.didWallet.getHolderInfoByContract({
+        caHash: caHash,
+        chainId: CHAIN_ID,
+      });
+    }
+    isMainChain.current = !caInfo;
+    const wallet = {
+      caInfo,
       pin: '',
       chainId: CHAIN_ID,
-      walletInfo: wallet.didWallet.managementAccount,
+      walletInfo: localWallet.didWallet.managementAccount,
     };
+    setWallet(wallet);
     initContract();
   };
 
   const initContract = async () => {
+    initCurrentChainContract();
+    // initAnotherChainContract();
+  };
+
+  const initCurrentChainContract = async () => {
     const chainInfo = chainInfoRef.current;
-    const aelf = aelfRef.current;
     const wallet = walletRef.current;
-
     if (!aelfRef.current || !chainInfo || !wallet) return;
-    console.log('init go on');
-
-    // if (loadingRef.current) return;
     setLoading(true);
-
+    setLoadingExtraDataMode(isMainChain.current ? ExtraDataMode.INIT_MAIN_CHAIN : ExtraDataMode.NONE);
     try {
       caContractRef.current = await getContractBasic({
         contractAddress: chainInfo?.caContractAddress,
         account: wallet.walletInfo.wallet,
         rpcUrl: chainInfo?.endPoint,
       });
-
-      const chainStatus = await aelf.chain.getChainStatus();
-      const zeroC = await getContractBasic({
-        contractAddress: chainStatus.GenesisContractAddress,
-        account: wallet.walletInfo.wallet,
-        rpcUrl: chainInfo?.endPoint,
-      });
-      const tokenContractAddress = await zeroC.callViewMethod(
-        'GetContractAddressByName',
-        sha256('AElf.ContractNames.Token'),
-      );
-
-      tokenContractAddressRef.current = tokenContractAddress.data;
-
       const multiTokenContract = await getContractBasic({
-        contractAddress: tokenContractAddress.data,
+        contractAddress: chainInfo.defaultToken.address,
         account: wallet.walletInfo.wallet,
         rpcUrl: chainInfo?.endPoint,
       });
@@ -273,86 +347,116 @@ const useBingo = () => {
       multiTokenContractRef.current = multiTokenContract;
 
       await delay();
-      await register();
+      await registerLoop();
       await approve();
       setStep(StepStatus.PLAY);
-      console.log('initContract success');
     } catch (error) {
-      console.log('initContract: error', error);
+      console.error('initContract: error', error);
     }
 
     setLoading(false);
+    setLoadingExtraDataMode(ExtraDataMode.NONE);
     setCaAddress(wallet.caInfo.caAddress);
   };
 
-  const setWallet = (wallet: any) => {
-    walletRef.current = wallet;
+  const initAnotherChainContract = async () => {
+    const chainInfo = chainsInfoRef.current.find((chain) => chain.chainId !== CHAIN_ID);
+    const wallet = walletRef.current;
+    if (!aelfRef.current || !chainInfo || !wallet) return;
+
+    try {
+      caContractRef.current = await getContractBasic({
+        contractAddress: chainInfo?.caContractAddress,
+        account: wallet.walletInfo.wallet,
+        rpcUrl: chainInfo?.endPoint,
+      });
+      const multiTokenContract = await getContractBasic({
+        contractAddress: chainInfo.defaultToken.address,
+        account: wallet.walletInfo.wallet,
+        rpcUrl: chainInfo?.endPoint,
+      });
+
+      anotherMultiTokenContractRef.current = multiTokenContract;
+    } catch (error) {
+      console.error('initAnotherChainContract: error', error);
+    }
   };
 
   const setBalanceInputValue = (value: string) => {
     balanceInputValueRef.current = value;
   };
 
-  const onPlay = async (smallOrBig: boolean) => {
+  const setWallet = (wallet) => {
+    walletRef.current = wallet;
+  };
+
+  const showError = (message: string) => {
+    ToastRef.current?.error(message);
+  };
+
+  const onPlay = async (betResult: BetType) => {
     const caContract = caContractRef.current;
     const wallet = walletRef.current;
     if (!caContract || !wallet) return;
 
-    // const reg = /^[1-9]\d*$/;
-    // const value = parseInt(balanceInputValueRef.current, 10);
     const value = Number(balanceInputValueRef.current);
 
     if (value <= 0) {
-      Toast.show('Insufficient funds');
+      showError('Insufficient funds');
       return;
     }
 
-    if (value < 1) {
-      return Toast.show('A minimum bet of 1 ELF!');
+    if (value < MIN_BET_VALUE) {
+      showError(`A minimum bet of ${MIN_BET_VALUE} ELF!`);
+      return;
     }
 
     if (value > Number(balanceValue)) {
-      Toast.show('Please enter a number less than the number of ELF you own!');
+      showError('Please enter a number less than the number of ELF you own!');
       return;
     }
-    if (value > 100) {
-      Toast.show('Please enter a number less than 100 ELF!');
+    if (value > MAX_BET_VALUE) {
+      showError(`Please enter a number less than ${MAX_BET_VALUE} ELF!`);
       return;
     }
 
     setLoading(true);
     try {
-      if (!wallet.registered) {
-        const registered = await register();
-        if (!registered) return Toast.show('Synchronizing on-chain account information...');
-      }
+      // if (!wallet.registered) {
+      //   const registered = await register();
+      //   if (!registered) return showError('Synchronizing on-chain account information...');
+      // }
       if (!wallet.approved) await approve();
-
       const playResult = await caContract.callSendMethod('ManagerForwardCall', wallet.walletInfo.wallet.address, {
         caHash: wallet.caInfo.caHash,
         contractAddress: bingoAddress,
         methodName: 'Play',
         args: {
           amount: value * 10 ** 8,
-          type: smallOrBig,
+          type: betResult,
         },
       });
 
       if (playResult.error || playResult.data.Error) {
         setLoading(false);
-        Toast.show('Insufficient funds');
+        showError('Insufficient funds');
         return;
       }
-
-      console.log('Play result: ', playResult);
       txIdRef.current = playResult.data?.TransactionId || '';
-      smallOrBigRef.current = smallOrBig;
       setLoading(false);
-      setStep(StepStatus.CUTDOWN);
-      await cutDown();
-      setStep(StepStatus.BINGO);
+      setStep(StepStatus.RAMDOM);
+
+      // SHOW RANDOM NUMBER
+      setMyInterval(options);
+      setTimeout(async () => {
+        setStep(StepStatus.CUTDOWN);
+        await cutDown();
+        setStep(StepStatus.BINGO);
+        setTime(COUNT);
+        clearMyInterval(options.timer);
+      }, RAMDOM_TIME * 1000);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -365,44 +469,59 @@ const useBingo = () => {
     if (!caContract || !wallet || !txId) return;
     setLoading(true);
 
+    const begainTime = Date.now();
     try {
-      const bingoResult = await caContract.callSendMethod('ManagerForwardCall', wallet.walletInfo.wallet.address, {
+      await caContract.callSendMethod('ManagerForwardCall', wallet.walletInfo.wallet.address, {
         caHash: wallet.caInfo.caHash,
         contractAddress: bingoAddress,
         methodName: 'Bingo',
         args: txId,
       });
-
-      console.log(bingoResult);
-
       const bingoContract = await getContractBasic({
         contractAddress: bingoAddress,
         account: wallet.walletInfo.wallet,
         rpcUrl: chainInfoRef.current?.endPoint,
       });
 
-      const rewardResult = await bingoContract.callViewMethod('GetPlayerInformation', caAddress);
       try {
-        // eslint-disable-next-line
-        const { randomNumber, award } = rewardResult.data?.bouts?.pop();
-        console.log('Bingo: result', bingoResult);
+        const rewardResult = await bingoContract.callViewMethod('GetBoutInformation', {
+          address: caAddress,
+          playId: txId,
+        });
+        const { randomNumber, award, isComplete } = rewardResult.data;
+
+        if (!isComplete) {
+          setLoading(false);
+          showError('Draw failed, please click bingo again');
+          try {
+            transaction.setMeasurement('Draw failed time ', (Date.now() - begainTime) / 1000, 'second');
+          } catch (error) {
+            console.log('transaction error', error);
+          }
+          return;
+        }
+
+        try {
+          transaction.setMeasurement('bingo success time ', (Date.now() - begainTime) / 1000, 'second');
+        } catch (error) {
+          console.log('transaction error', error);
+        }
 
         const isWin = Number(award) > 0;
+        // await delay();
+        getBalance();
+        setHasFinishBet(true);
         setIsWin(isWin);
         setResult(randomNumber);
         setDifference(Number(award) / 10 ** 8);
-        getBalance();
       } catch (error) {
         console.error(error);
-        Toast.show({
-          content: error.message,
-        });
+        showError(error.message);
       }
-
-      setHasFinishBet(true);
       setLoading(false);
     } catch (err) {
-      console.log(err);
+      console.error(err);
+      setLoading(false);
     }
   };
 
@@ -413,16 +532,23 @@ const useBingo = () => {
   };
 
   const logOut = async () => {
+    const caContract = caContractRef.current;
+    const wallet = walletRef.current;
+    if (!caContract || !wallet) return;
     setLoading(true);
-    const result = await caContractRef.current?.callSendMethod('RemoveManagerInfo', caAddress, {
+    await caContract.callSendMethod('ManagerForwardCall', wallet.walletInfo.wallet.address, {
+      caHash: wallet.caInfo.caHash,
+      contractAddress: bingoAddress,
+      methodName: 'Quit',
+      args: {},
+    });
+    await caContractRef.current?.callSendMethod('RemoveManagerInfo', caAddress, {
       caHash: walletRef.current.caInfo.caHash,
       managerInfo: {
         address: caAddress,
         extraData: new Date().getTime(),
       },
     });
-    console.log('logout result', result);
-
     setLoading(false);
     window.localStorage.removeItem(KEY_NAME);
     setStep(StepStatus.LOGIN);
@@ -430,31 +556,30 @@ const useBingo = () => {
   };
 
   const lock = async () => {
-    setPasswordValue('');
     setStep(StepStatus.LOCK);
     setSettingPage(SettingPage.NULL);
+    did.reset();
   };
 
   useEffect(() => {
     setLoading(true);
     init();
-    // if (typeof window !== undefined && window.localStorage.getItem(KEY_NAME)) {
-    //   //   walletRef.current = JSON.parse(window.localStorage.getItem('testWallet') || '{}' as any);
-    //   setTimeout(() => {
-    //     unLock();
-    //   }, 2000);
-    //   //   setIsLogoutShow(true);
-    //   setStep(StepStatus.LOCK);
-    // } else {
-    //   setEnablePlay(true);
-    //   setStep(StepStatus.LOGIN);
-    // }
-
-    setEnablePlay(true);
-    setStep(StepStatus.LOGIN);
-
+    if (typeof window !== undefined && window.localStorage.getItem(KEY_NAME)) {
+      setEnablePlay(true);
+      setStep(StepStatus.LOCK);
+      // setStep(StepStatus.RAMDOM);
+    } else {
+      setEnablePlay(true);
+      setStep(StepStatus.LOGIN);
+    }
     setLoading(false);
   }, []);
+
+  useEffect(() => {
+    if (!ToastRef.current) {
+      ToastRef.current = Toast;
+    }
+  }, [Toast]);
 
   return {
     onBet,
@@ -470,8 +595,14 @@ const useBingo = () => {
     caAddress,
     balanceValue,
     setBalanceValue,
+    anotherBalanceValue,
+    setAnoterhBalanceValue,
+    setWallet,
     balanceInputValue: balanceInputValueRef.current,
     step,
+    setStep,
+    random,
+    setRandom,
     getBalance,
     initContract,
     setLoading,
@@ -483,14 +614,16 @@ const useBingo = () => {
     isWin,
     enablePlay,
     setShowQrCode,
+    getQrInfo,
     difference,
     result,
     hasFinishBet,
     time,
-    setWallet,
+    isTest,
     accountAddress,
     chainId: chainInfoRef.current?.chainId,
     tokenContractAddress: tokenContractAddressRef.current,
+    loadingExtraDataMode,
   };
 };
 export default useBingo;

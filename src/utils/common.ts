@@ -1,3 +1,5 @@
+import * as Sentry from '@sentry/nextjs';
+
 export type QRCodeDataObjType = {
   address: string;
   netWorkType: string;
@@ -25,6 +27,12 @@ export type QrCodeDataArrType = [
   number | undefined, //
 ];
 
+export interface IOptions {
+  timer: number | null;
+  callback: () => void;
+  timeout: number;
+}
+
 export const copy = (content: string) => {
   const input = document.createElement('input');
   input.value = content;
@@ -35,7 +43,7 @@ export const copy = (content: string) => {
 };
 
 // check if the user is on mobile
-export const isMobile = (uaString: string) => {
+export const isMobile = (uaString?: string) => {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(uaString);
 };
 
@@ -53,3 +61,53 @@ export const shrinkSendQrData = (data: QRCodeDataObjType): QrCodeDataArrType => 
     data.deviceType,
   ];
 };
+
+export const decorateBalanceText = (balance: string) => {
+  if (!(balance?.length > 0)) return balance;
+  let dealedBalance = balance;
+  if (balance.lastIndexOf('.') > 0) {
+    const [before, after] = balance.split('.').map((val, idx) => (idx !== 0 ? val.substring(0, 2) : val));
+    const checkedAfter =
+      after.length > 1
+        ? after[0] === '0'
+          ? after
+          : Number(after) % 10 === 0
+          ? `${Number(after) / 10}`
+          : after
+        : after[0] === '0'
+        ? ''
+        : after;
+    dealedBalance = checkedAfter.length > 0 ? `${before}.${checkedAfter}` : before;
+  }
+  return dealedBalance.replace('.00', '');
+};
+
+export const setMyInterval = (options: IOptions) => {
+  const requestAnimationFrame = window.requestAnimationFrame;
+  let i = 1;
+  let count = 1;
+  options.timer = options.timer || null;
+  const loop = () => {
+    options.timer = requestAnimationFrame(loop);
+    if (i % 60 === 0) {
+      const timeout = options.timeout || 1000;
+      if (count % parseInt(String(timeout / 1000)) === 0) {
+        options.callback && options.callback();
+      }
+      count++;
+    }
+    i++;
+  };
+  options.timer = requestAnimationFrame(loop);
+};
+
+export const clearMyInterval = (timer) => {
+  const cancelAnimationFrame = window.cancelAnimationFrame;
+  cancelAnimationFrame(timer);
+};
+
+export const randomNum = () => {
+  return parseInt(String(Math.random() * 256 + 1), 10);
+};
+
+export const transaction = Sentry?.getCurrentHub()?.getScope()?.getTransaction();

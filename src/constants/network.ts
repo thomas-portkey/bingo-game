@@ -1,5 +1,15 @@
-export const bingoAddress = 'CuHsvBBBEtV3vManBWUsCmwWs7ANag3Mk8UUbPN7s1waFVa8G';
-export const CHAIN_ID = 'tDVW';
+import { ChainId } from '@portkey/types';
 
-// export const bingoAddress = 'JvDB3rguLJtpFsovre8udJeXJLhsV1EPScGz2u1FFneahjBQm';
-// export const CHAIN_ID = 'tDVV';
+const bingoAddress = 'fU9csLqXtnSbcyRJs3fPYLFTz2S9EZowUqkYe4zrJgp1avXK2';
+const CHAIN_ID = 'tDVV';
+// let bingoAddress = '2CrjkQeeWYTnH9zFHmpuMtxv8ZTBDmHi31zzdo9SUNjmpxJ82T';
+// let CHAIN_ID = 'tDVW' as ChainId;
+// if (process.env.NEXT_PUBLIC_APP_ENV === 'development') {
+//   bingoAddress = 'JvDB3rguLJtpFsovre8udJeXJLhsV1EPScGz2u1FFneahjBQm';
+//   CHAIN_ID = 'tDVV';
+// }
+
+const currentNetworkType = `SideChain ${CHAIN_ID} Textnet`;
+const anotherNetworkType = `MainChain AELF Testnet`;
+
+export { bingoAddress, CHAIN_ID, currentNetworkType, anotherNetworkType };
