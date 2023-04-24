@@ -46,6 +46,7 @@ export enum BetType {
 export const KEY_NAME = 'BINGO_GAME';
 const COUNT = 5;
 const RAMDOM_COUNT = 1;
+const RAMDOM_TIME = 6;
 
 const useBingo = (Toast: any) => {
   const [step, setStep] = useState<StepStatus>(StepStatus.INIT);
@@ -165,7 +166,7 @@ const useBingo = (Toast: any) => {
     });
 
     requestTimeRef.current = Date.now();
-    const balance = result.data.balance / 10 ** 8;
+    const balance = result?.data?.balance / 10 ** 8;
     const differenceValue = balance - Number(balanceValue);
     setBalanceValue(balance.toString());
     return differenceValue;
@@ -286,7 +287,7 @@ const useBingo = (Toast: any) => {
       symbol: 'ELF',
       owner: wallet.caInfo.caAddress,
     });
-    const balance = result.data.balance / 10 ** 8;
+    const balance = result?.data?.balance / 10 ** 8;
     setBalanceValue(balance.toString());
 
     getAnotherChainBalance();
@@ -447,7 +448,7 @@ const useBingo = (Toast: any) => {
         setStep(StepStatus.BINGO);
         setTime(COUNT);
         clearMyInterval(options.timer);
-      }, 6000);
+      }, RAMDOM_TIME * 1000);
     } catch (err) {
       console.error(err);
     } finally {
@@ -502,6 +503,7 @@ const useBingo = (Toast: any) => {
       setLoading(false);
     } catch (err) {
       console.error(err);
+      setLoading(false);
     }
   };
 
