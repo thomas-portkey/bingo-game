@@ -9,7 +9,7 @@ const CHAIN_ID = 'tDVV';
 //   CHAIN_ID = 'tDVV';
 // }
 
-const currentNetworkType = `SideChain ${CHAIN_ID} Textnet`;
-const anotherNetworkType = `MainChain AELF Testnet`;
+const currentNetworkType = `SideChain ${CHAIN_ID} Testnet`;
+const anotherNetworkType = `MainChain AELF`;
 
 export { bingoAddress, CHAIN_ID, currentNetworkType, anotherNetworkType };

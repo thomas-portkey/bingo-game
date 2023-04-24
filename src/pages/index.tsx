@@ -27,12 +27,12 @@ ConfigProvider.setGlobalConfig({
     },
   },
   network: {
-    defaultNetwork: 'TESTNET',
+    defaultNetwork: 'MAINNET',
     networkList: [
       {
-        name: 'aelf Testnet',
+        name: 'aelf MAINNET',
         walletType: 'aelf',
-        networkType: 'TESTNET',
+        networkType: 'MAINNET',
         isActive: true,
         apiUrl: '',
         graphQLUrl: '/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql',
