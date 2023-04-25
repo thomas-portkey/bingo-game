@@ -190,7 +190,7 @@ const useBingo = (Toast: any) => {
     try {
       const result = await multiTokenContract.callViewMethod('GetAllowance', {
         symbol: 'ELF',
-        owner: wallet.walletInfo.wallet.address,
+        owner: wallet.caInfo.caAddress,
         spender: bingoAddress,
       });
 
@@ -271,6 +271,7 @@ const useBingo = (Toast: any) => {
       methodName: 'Register',
       args: null,
     });
+
     if (!registerResult.error || registerResult.error.message?.includes('already registered')) {
       walletRef.current = {
         ...wallet,
