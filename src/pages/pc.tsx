@@ -22,8 +22,6 @@ const PCBingoGame = () => {
   const [isWrongPassword, setIsWrongPassword] = useState<boolean>(false);
   const signinRef = useRef<SignInInterface | null>(null);
 
-  console.log(isTestNet);
-
   const {
     onBet,
     onBingo,
