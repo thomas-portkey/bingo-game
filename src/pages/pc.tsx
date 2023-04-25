@@ -33,7 +33,6 @@ const PCBingoGame = () => {
     logOut,
     lock,
     step,
-    setStep,
     random,
     balanceValue,
     setBalanceInputValue,
