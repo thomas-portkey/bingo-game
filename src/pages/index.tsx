@@ -27,10 +27,10 @@ ConfigProvider.setGlobalConfig({
     },
   },
   network: {
-    defaultNetwork: 'MAINNET',
+    defaultNetwork: 'MAIN',
     networkList: [
       {
-        name: 'aelf MAINNET',
+        name: 'aelf MAIN',
         walletType: 'aelf',
         networkType: 'MAINNET',
         isActive: true,
