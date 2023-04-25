@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { isMobile } from '../utils/common';
+import { isTestNet } from '../constants/network';
 import { SideProps } from '../type';
 
 import { ConfigProvider } from '@portkey/did-ui-react';
@@ -27,7 +28,7 @@ ConfigProvider.setGlobalConfig({
     },
   },
   network: {
-    defaultNetwork: 'MAIN',
+    defaultNetwork: isTestNet ? 'TESTNET' : 'MAIN',
     networkList: [
       {
         name: 'aelf MAIN',
