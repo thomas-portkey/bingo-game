@@ -12,7 +12,9 @@ const CHAIN_ID = 'tDVV';
 
 export const isTestNet =
   typeof location !== 'undefined' &&
-  !['bingogame.portkey.finance', '​bingogame-pro.portkey.finance'].includes(location?.host);
+  !['bingogame-pro.portkey.finance', 'bingogame.portkey.finance'].includes(location?.host);
+
+// !['bingogame.portkey.finance', '​bingogame-pro.portkey.finance'].includes(location?.host);
 
 const currentNetworkType = `SideChain ${CHAIN_ID} ${isTestNet ? 'Testnet' : ''}`;
 const anotherNetworkType = `MainChain AELF`;
