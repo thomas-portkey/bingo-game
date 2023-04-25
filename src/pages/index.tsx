@@ -25,6 +25,10 @@ ConfigProvider.setGlobalConfig({
     Google: {
       clientId: '176147744733-a2ks681uuqrmb8ajqrpu17te42gst6lq.apps.googleusercontent.com',
     },
+    Portkey: {
+      websiteName: 'Bingo Game',
+      websiteIcon: '​https://bingogame.portkey.finance/favicon.ico',
+    },
   },
   network: {
     defaultNetwork: isTestNet ? 'TESTNET' : 'MAIN',
