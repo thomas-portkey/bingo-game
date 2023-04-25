@@ -4,7 +4,7 @@ import { ChainInfo } from '@portkey/services';
 import { getContractBasic, ContractBasic } from '@portkey/contracts';
 
 import AElf from 'aelf-sdk';
-import { clearMyInterval, randomNum, setMyInterval, shrinkSendQrData } from '../utils/common';
+import { clearMyInterval, randomNum, setMyInterval, shrinkSendQrData, transaction } from '../utils/common';
 
 import { useDelay } from './useDelay';
 
@@ -235,11 +235,22 @@ const useBingo = (Toast: any) => {
 
   const registerLoop = async () => {
     let registerResult = undefined;
+    const begainTime = Date.now();
     do {
       registerResult = await register();
       !registerResult && (await delay());
     } while (!registerResult);
     getBalance();
+
+    try {
+      transaction.setMeasurement(
+        'Synchronizing on-chain account information ',
+        (Date.now() - begainTime) / 1000,
+        'second',
+      );
+    } catch (error) {
+      console.log('Synchronizing error:', error);
+    }
   };
 
   const register = async () => {
@@ -463,6 +474,7 @@ const useBingo = (Toast: any) => {
     if (!caContract || !wallet || !txId) return;
     setLoading(true);
 
+    const begainTime = Date.now();
     try {
       await caContract.callSendMethod('ManagerForwardCall', wallet.walletInfo.wallet.address, {
         caHash: wallet.caInfo.caHash,
@@ -486,11 +498,22 @@ const useBingo = (Toast: any) => {
         if (!isComplete) {
           setLoading(false);
           showError('Draw failed, please click bingo again');
+          try {
+            transaction.setMeasurement('Draw failed time ', (Date.now() - begainTime) / 1000, 'second');
+          } catch (error) {
+            console.log('transaction error', error);
+          }
           return;
         }
 
+        try {
+          transaction.setMeasurement('bingo success time ', (Date.now() - begainTime) / 1000, 'second');
+        } catch (error) {
+          console.log('transaction error', error);
+        }
+
         const isWin = Number(award) > 0;
-        await delay();
+        // await delay();
         getBalance();
         setHasFinishBet(true);
         setIsWin(isWin);

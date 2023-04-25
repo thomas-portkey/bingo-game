@@ -5,7 +5,7 @@ import { SignIn, did, Unlock, SignInInterface } from '@portkey/did-ui-react';
 import { message, InputNumber, Modal, Popover } from 'antd';
 import Loading from '../page-components/Loading';
 import { QRCode } from 'react-qrcode-logo';
-import { CHAIN_ID, currentNetworkType } from '../constants/network';
+import { CHAIN_ID, currentNetworkType, anotherNetworkType } from '../constants/network';
 import styles from '../styles/mobile.module.css';
 import copy from 'copy-to-clipboard';
 import { decorateBalanceText } from '../utils/common';
@@ -401,7 +401,9 @@ const MBingoGame = () => {
             <div className={styles.setting__balance__token__icon} />
             <div className={styles.setting__balance__content}>
               <div className={styles.setting__balance__content__title}>ELF</div>
-              <div className={styles.setting__balance__content__subtitle}>{currentNetworkType}</div>
+              <div className={styles.setting__balance__content__subtitle}>
+                {isTest ? currentNetworkType : anotherNetworkType}
+              </div>
             </div>
             <div className={styles.setting__balance__current__wrapper}>
               <div className={styles.setting__balance__current__value}>{decorateBalanceText(balanceValue)}</div>

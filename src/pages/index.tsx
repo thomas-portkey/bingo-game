@@ -16,19 +16,23 @@ ConfigProvider.setGlobalConfig({
   socialLogin: {
     Apple: {
       clientId: 'did.portkey',
-      redirectURI: 'https://localtest-applesign.portkey.finance/api/app/appleAuth/bingoReceive',
+      redirectURI: 'https://did-portkey.portkey.finance/api/app/appleAuth/bingoReceive',
     },
     Google: {
       clientId: '176147744733-a2ks681uuqrmb8ajqrpu17te42gst6lq.apps.googleusercontent.com',
     },
+    Portkey: {
+      websiteName: 'Bingo Game',
+      websiteIcon: '',
+    },
   },
   network: {
-    defaultNetwork: 'TESTNET',
+    defaultNetwork: 'MAIN',
     networkList: [
       {
-        name: 'aelf Testnet',
+        name: 'aelf MAIN',
         walletType: 'aelf',
-        networkType: 'TESTNET',
+        networkType: 'MAINNET',
         isActive: true,
         apiUrl: '',
         graphQLUrl: '/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql',

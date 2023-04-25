@@ -295,10 +295,10 @@
     "@portkey/utils" "^0.0.1-alpha.1.4"
     aelf-sdk "^3.2.44"
 
-"@portkey/did-ui-react@^0.0.1-alpha.5.0":
-  version "0.0.1-alpha.5.0"
-  resolved "https://registry.yarnpkg.com/@portkey/did-ui-react/-/did-ui-react-0.0.1-alpha.5.0.tgz#4bbf3ce3a2ccc1f0de734431751294b5a5d28ba5"
-  integrity sha512-gsw9V/eLEhvfyHal7GRVjpbMEX/n8AgS+hiLK6iy7LdZuZVHasqu1N+derQREp427rMIwSiTrUiG+qdblSKJEQ==
+"@portkey/did-ui-react@0.0.1-alpha.6.1":
+  version "0.0.1-alpha.6.1"
+  resolved "https://registry.yarnpkg.com/@portkey/did-ui-react/-/did-ui-react-0.0.1-alpha.6.1.tgz#4f31a168bec3cfcc67c9bbb21f8a3c28469afb78"
+  integrity sha512-QkVYJQItTBztEJRLy3DWjr0x8+1NBRlnhf9WJVN3KjrIVMLfdzxlC8nuMIBB0fptAmicHYcMacw8CCuqKd42gw==
   dependencies:
     "@portkey/did" "^0.0.1-alpha.2.8"
     aelf-sdk "^3.2.40"
@@ -306,6 +306,7 @@
     antd-mobile "5.26.0"
     bignumber.js "^9.1.0"
     clsx "^1.2.1"
+    query-string "^6.14.1"
     react-i18next "^11.18.6"
     react-qrcode-logo "2.9.0"
     react-use "^17.4.0"

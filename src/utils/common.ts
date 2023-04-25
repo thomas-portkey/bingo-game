@@ -1,3 +1,5 @@
+import * as Sentry from '@sentry/nextjs';
+
 export type QRCodeDataObjType = {
   address: string;
   netWorkType: string;
@@ -107,3 +109,5 @@ export const clearMyInterval = (timer) => {
 export const randomNum = () => {
   return parseInt(String(Math.random() * 256 + 1), 10);
 };
+
+export const transaction = Sentry?.getCurrentHub()?.getScope()?.getTransaction();
