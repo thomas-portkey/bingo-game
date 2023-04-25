@@ -32,7 +32,7 @@ ConfigProvider.setGlobalConfig({
       {
         name: 'aelf MAIN',
         walletType: 'aelf',
-        networkType: 'MAINNET',
+        networkType: 'MAIN',
         isActive: true,
         apiUrl: '',
         graphQLUrl: '/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql',
