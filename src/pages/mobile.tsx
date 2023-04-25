@@ -401,9 +401,7 @@ const MBingoGame = () => {
             <div className={styles.setting__balance__token__icon} />
             <div className={styles.setting__balance__content}>
               <div className={styles.setting__balance__content__title}>ELF</div>
-              <div className={styles.setting__balance__content__subtitle}>
-                {isTest ? currentNetworkType : anotherNetworkType}
-              </div>
+              <div className={styles.setting__balance__content__subtitle}>{currentNetworkType}</div>
             </div>
             <div className={styles.setting__balance__current__wrapper}>
               <div className={styles.setting__balance__current__value}>{decorateBalanceText(balanceValue)}</div>

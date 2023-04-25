@@ -211,7 +211,7 @@ const useBingo = (Toast: any) => {
   const getQrInfo = () => {
     const info = shrinkSendQrData({
       type: 'send',
-      netWorkType: 'TESTNET',
+      netWorkType: isTest ? 'TESTNET' : 'MAIN',
       chainType: 'aelf',
       toInfo: {
         address: accountAddress,
