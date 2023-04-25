@@ -1,4 +1,4 @@
-import { ChainId } from '@portkey/types';
+// import { ChainId } from '@portkey/types';
 
 const bingoAddress = 'fU9csLqXtnSbcyRJs3fPYLFTz2S9EZowUqkYe4zrJgp1avXK2';
 const CHAIN_ID = 'tDVV';
@@ -12,8 +12,7 @@ const CHAIN_ID = 'tDVV';
 
 export const isTestNet =
   typeof location !== 'undefined' &&
-  !['bingogame.portkey.finance', '​bingogame-pro.portkey.finance'].includes(location?.host);
-
+  !['bingogame-pro.portkey.finance', 'bingogame.portkey.finance'].includes(location?.host);
 const currentNetworkType = `SideChain ${CHAIN_ID} ${isTestNet ? 'Testnet' : ''}`;
 const anotherNetworkType = `MainChain AELF`;
 
