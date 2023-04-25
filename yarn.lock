@@ -147,6 +147,13 @@
   resolved "https://registry.yarnpkg.com/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.4.15.tgz#d7c6e6755c78567a951e04ab52ef0fd26de59f32"
   integrity sha512-eF2rxCRulEKXHTRiDrDy6erMYWqNw4LPdQ8UQA4huuxaQsVeRPFl2oM8oDGxMFhJUWZf9McpLtJasDDZb/Bpeg==
 
+"@matt-block/react-recaptcha-v2@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@matt-block/react-recaptcha-v2/-/react-recaptcha-v2-2.0.0.tgz#db0b314679fde429eb00e9cfe877fe51b91c7ad2"
+  integrity sha512-0Nr3BWtQLCr6M9ZnJZi/Rz52u5zunVTv417uomNa367K1Y2gjn87GcByHJ7IlNIsFE1ZgAmK81jYVLhLe4/lOg==
+  dependencies:
+    nanoid "^3.3.4"
+
 "@microsoft/tsdoc-config@0.16.2":
   version "0.16.2"
   resolved "https://registry.npmjs.org/@microsoft/tsdoc-config/-/tsdoc-config-0.16.2.tgz"
@@ -295,25 +302,25 @@
     "@portkey/utils" "^0.0.1-alpha.1.4"
     aelf-sdk "^3.2.44"
 
-"@portkey/did-ui-react@0.0.1-alpha.6.1":
-  version "0.0.1-alpha.6.1"
-  resolved "https://registry.yarnpkg.com/@portkey/did-ui-react/-/did-ui-react-0.0.1-alpha.6.1.tgz#4f31a168bec3cfcc67c9bbb21f8a3c28469afb78"
-  integrity sha512-QkVYJQItTBztEJRLy3DWjr0x8+1NBRlnhf9WJVN3KjrIVMLfdzxlC8nuMIBB0fptAmicHYcMacw8CCuqKd42gw==
+"@portkey/did-ui-react@0.0.1-alpha.6.3":
+  version "0.0.1-alpha.6.3"
+  resolved "https://registry.yarnpkg.com/@portkey/did-ui-react/-/did-ui-react-0.0.1-alpha.6.3.tgz#9e175577e74caaa927d6301ab25ed4f24c39e787"
+  integrity sha512-JQj7AvGQTehL1hz21CYUsK2vgCSE81hdInZa2DSgIhTz6SiAALCKl/l2EzGnRZs0UffHMlcz3Zrd26UM8H5R/w==
   dependencies:
-    "@portkey/did" "^0.0.1-alpha.2.8"
+    "@matt-block/react-recaptcha-v2" "^2.0.0"
+    "@portkey/did" "^0.0.1-alpha.2.9"
     aelf-sdk "^3.2.40"
     antd "4.24.4"
     antd-mobile "5.26.0"
     bignumber.js "^9.1.0"
     clsx "^1.2.1"
-    query-string "^6.14.1"
     react-i18next "^11.18.6"
     react-qrcode-logo "2.9.0"
     react-use "^17.4.0"
     reactjs-social-login "^2.6.2"
     uuid "^8.3.2"
 
-"@portkey/did@^0.0.1-alpha.2.8":
+"@portkey/did@^0.0.1-alpha.2.9":
   version "0.0.1-alpha.2.9"
   resolved "https://registry.yarnpkg.com/@portkey/did/-/did-0.0.1-alpha.2.9.tgz#13b4961a52c7756ed6374d3bc4d5f9c08b8c8310"
   integrity sha512-WS3K40xaNkW7j352EkBsBvq7IjeIOp0nNT4paUIRU9HUDwO4c+YcPPmDXVCdLuWspQ4jlRwXcDV4xiasSuqgIg==
