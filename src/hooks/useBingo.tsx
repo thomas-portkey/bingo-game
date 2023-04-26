@@ -4,6 +4,7 @@ import { ChainInfo } from '@portkey/services';
 import { getContractBasic, ContractBasic } from '@portkey/contracts';
 
 import AElf from 'aelf-sdk';
+
 import { clearMyInterval, randomNum, setMyInterval, shrinkSendQrData, transaction } from '../utils/common';
 
 import { useDelay } from './useDelay';
@@ -13,6 +14,8 @@ import { bingoAddress, CHAIN_ID, isTestNet } from '../constants/network';
 import useIntervalAsync from './useIntervalTool';
 import { INITIAL_INPUT_VALUE, MAX_BET_VALUE, MIN_BET_VALUE } from '../constants/global';
 import { ExtraDataMode } from '../page-components/Loading';
+
+const { sha256 } = AElf.utils;
 
 export enum StepStatus {
   INIT,
@@ -343,6 +346,8 @@ const useBingo = (Toast: any) => {
   const initCurrentChainContract = async () => {
     const chainInfo = chainInfoRef.current;
     const wallet = walletRef.current;
+    const aelf = aelfRef.current;
+
     if (!aelfRef.current || !chainInfo || !wallet) return;
     setLoading(true);
     setLoadingExtraDataMode(isMainChain.current ? ExtraDataMode.INIT_MAIN_CHAIN : ExtraDataMode.NONE);
@@ -352,6 +357,19 @@ const useBingo = (Toast: any) => {
         account: wallet.walletInfo.wallet,
         rpcUrl: chainInfo?.endPoint,
       });
+
+      const chainStatus = await aelf.chain.getChainStatus();
+      const zeroC = await getContractBasic({
+        contractAddress: chainStatus.GenesisContractAddress,
+        account: wallet.walletInfo.wallet,
+        rpcUrl: chainInfo?.endPoint,
+      });
+      const tokenContractAddress = await zeroC.callViewMethod(
+        'GetContractAddressByName',
+        sha256('AElf.ContractNames.Token'),
+      );
+      tokenContractAddressRef.current = tokenContractAddress.data;
+
       const multiTokenContract = await getContractBasic({
         contractAddress: chainInfo.defaultToken.address,
         account: wallet.walletInfo.wallet,
