@@ -479,7 +479,7 @@ const MBingoGame = () => {
         defaultChainId={CHAIN_ID}
         isShowScan={false}
         onFinish={async (wallet) => {
-          console.log('SignIn onFinish===', wallet);
+          console.log('SignIn onFinish==', wallet);
           await login(wallet);
           setShowLogin(false);
           initContract();
