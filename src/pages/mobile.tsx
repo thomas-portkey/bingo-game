@@ -477,7 +477,7 @@ const MBingoGame = () => {
         phoneCountry={defaultCountryCodeConfig}
         sandboxId="portkey-ui-sandbox"
         defaultChainId={CHAIN_ID}
-        isShowScan={false}
+        isShowScan
         onFinish={async (wallet) => {
           console.log('SignIn onFinish==', wallet);
           await login(wallet);
