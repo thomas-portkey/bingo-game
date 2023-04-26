@@ -302,10 +302,10 @@
     "@portkey/utils" "^0.0.1-alpha.1.4"
     aelf-sdk "^3.2.44"
 
-"@portkey/did-ui-react@0.0.1-alpha.6.4":
-  version "0.0.1-alpha.6.4"
-  resolved "https://registry.yarnpkg.com/@portkey/did-ui-react/-/did-ui-react-0.0.1-alpha.6.4.tgz#97fbc1785918fdae34fd2ddd37ea99b9f1acf9d0"
-  integrity sha512-qZwTI6HSwgCO+H6pCTjSYPwh2FXaWa+uK9BnRbHVPd9Mkq3HH8Z7/tsIYXQkK7l9HPAU1VkB5gWjDUgCP0xj9w==
+"@portkey/did-ui-react@0.0.1-alpha.6.5":
+  version "0.0.1-alpha.6.5"
+  resolved "https://registry.npmjs.org/@portkey/did-ui-react/-/did-ui-react-0.0.1-alpha.6.5.tgz#017b233ca2ea2da30d86a17d6a30b77579e91d98"
+  integrity sha512-Qkd8YS37OrucPAQNTKof/0c516FSt2u5SM4rrkVfmMW1V47aTsFi1OWlONClgrWJlXgmOLUtaG7wECTh7kN+bg==
   dependencies:
     "@matt-block/react-recaptcha-v2" "^2.0.0"
     "@portkey/did" "^0.0.1-alpha.2.9"
@@ -314,6 +314,7 @@
     antd-mobile "5.26.0"
     bignumber.js "^9.1.0"
     clsx "^1.2.1"
+    query-string "^6.14.1"
     react-i18next "^11.18.6"
     react-qrcode-logo "2.9.0"
     react-use "^17.4.0"
