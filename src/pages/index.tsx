@@ -14,9 +14,9 @@ import ImgSourceMap from '../constants/sourceMap';
 ConfigProvider.setGlobalConfig({
   storageMethod: new Store(),
   graphQLUrl: '/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql',
-  // reCaptchaConfig: {
-  //   siteKey: '6LfR_bElAAAAAJSOBuxle4dCFaciuu9zfxRQfQC0',
-  // },
+  reCaptchaConfig: {
+    siteKey: process.env.RECAPTCHA_CONFIG,
+  },
   socialLogin: {
     Apple: {
       clientId: 'did.portkey',

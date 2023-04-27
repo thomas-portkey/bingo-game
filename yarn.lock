@@ -302,13 +302,13 @@
     "@portkey/utils" "^0.0.1-alpha.1.4"
     aelf-sdk "^3.2.44"
 
-"@portkey/did-ui-react@0.0.1-alpha.6.7":
-  version "0.0.1-alpha.6.7"
-  resolved "https://registry.npmjs.org/@portkey/did-ui-react/-/did-ui-react-0.0.1-alpha.6.7.tgz#3a1b871247c01f0b76b10fdc262de08d94b4d0e1"
-  integrity sha512-87NcTlK3wmyBtT74Cb2x/pxymyYFF8bEyabuI2ge3MPk35Tc+2uJth8szPDal3dGBsK898A6NEjgfOIEoNyvKw==
+"@portkey/did-ui-react@0.0.1-alpha.7.0":
+  version "0.0.1-alpha.7.0"
+  resolved "https://registry.yarnpkg.com/@portkey/did-ui-react/-/did-ui-react-0.0.1-alpha.7.0.tgz#8168037f746610beafd2e1b16b33dcf549b7ac55"
+  integrity sha512-/81TR0uD7OfHZJiibfEYy0RE+Fm5D8cxXB9pJ2NUVDW+ZqdbIYFFIn85MYCqE9jpYJMGEsd+5laWqWEY+Eagdw==
   dependencies:
     "@matt-block/react-recaptcha-v2" "^2.0.0"
-    "@portkey/did" "^0.0.1-alpha.2.9"
+    "@portkey/did" "^0.0.1-alpha.3.1"
     aelf-sdk "^3.2.40"
     antd "4.24.4"
     antd-mobile "5.26.0"
@@ -321,16 +321,16 @@
     reactjs-social-login "^2.6.2"
     uuid "^8.3.2"
 
-"@portkey/did@^0.0.1-alpha.2.9":
-  version "0.0.1-alpha.2.9"
-  resolved "https://registry.yarnpkg.com/@portkey/did/-/did-0.0.1-alpha.2.9.tgz#13b4961a52c7756ed6374d3bc4d5f9c08b8c8310"
-  integrity sha512-WS3K40xaNkW7j352EkBsBvq7IjeIOp0nNT4paUIRU9HUDwO4c+YcPPmDXVCdLuWspQ4jlRwXcDV4xiasSuqgIg==
+"@portkey/did@^0.0.1-alpha.3.1":
+  version "0.0.1-alpha.3.1"
+  resolved "https://registry.yarnpkg.com/@portkey/did/-/did-0.0.1-alpha.3.1.tgz#529885a254e85b764899a08d7887815da528bd5f"
+  integrity sha512-bqnc6et/iZRsGUPpudW9LFryryVeF4QphZQOjj91RenxW5uSk7vmJT9bXb/HYRx2vs9yLBL9uDopjTiFJCYIAw==
   dependencies:
     "@portkey/accounts" "^0.0.1-alpha.1.4"
     "@portkey/contracts" "^0.0.1-alpha.1.6"
     "@portkey/graphql" "^0.0.1-alpha.1.6"
     "@portkey/request" "^0.0.1-alpha.1.6"
-    "@portkey/services" "^0.0.1-alpha.2.0"
+    "@portkey/services" "^0.0.1-alpha.2.1"
     "@portkey/types" "^0.0.1-alpha.1.5"
     "@portkey/utils" "^0.0.1-alpha.1.7"
     aelf-sdk "^3.2.44"
@@ -354,10 +354,10 @@
     "@portkey/types" "^0.0.1-alpha.1.4"
     query-string "^6.14.1"
 
-"@portkey/services@^0.0.1-alpha.2.0":
-  version "0.0.1-alpha.2.0"
-  resolved "https://registry.yarnpkg.com/@portkey/services/-/services-0.0.1-alpha.2.0.tgz#ac7a817664c96cd512109d58bfdbbc84c2d1acf6"
-  integrity sha512-Xxt0H2XgLSngVIP4d4/yqU1WOis4eefX1iWiXMM0iNYZkKLR6TLHlXRWo8Fs+zR9KbKyqTPhydlsDlSR/GpI1w==
+"@portkey/services@^0.0.1-alpha.2.1":
+  version "0.0.1-alpha.2.1"
+  resolved "https://registry.yarnpkg.com/@portkey/services/-/services-0.0.1-alpha.2.1.tgz#9af26105a23154e95b22bb2e4b23286d1385c8b2"
+  integrity sha512-W+vkyqc7IKMAkdmYh3rPDH3HZ4dvg0K5cNiyyEZcJ84XB//hrXZsi1S4bh+7cYweKF8btipdydnGHYz8YUj9vg==
   dependencies:
     "@portkey/graphql" "^0.0.1-alpha.1.6"
     "@portkey/request" "^0.0.1-alpha.1.6"
