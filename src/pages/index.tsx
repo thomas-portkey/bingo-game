@@ -20,7 +20,7 @@ ConfigProvider.setGlobalConfig({
   socialLogin: {
     Apple: {
       clientId: 'did.portkey',
-      redirectURI: 'https://did-portkey.portkey.finance/api/app/appleAuth/bingoReceive',
+      redirectURI: 'https://apple-bingo.portkey.finance/api/app/appleAuth/bingoReceive',
     },
     Google: {
       clientId: '176147744733-a2ks681uuqrmb8ajqrpu17te42gst6lq.apps.googleusercontent.com',
