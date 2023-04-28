@@ -8,11 +8,13 @@ import { clearMyInterval, randomNum, setMyInterval, shrinkSendQrData, transactio
 
 import { useDelay } from './useDelay';
 
-import { bingoAddress, CHAIN_ID } from '../constants/network';
+import { bingoAddress, CHAIN_ID, isTestNet } from '../constants/network';
 
 import useIntervalAsync from './useIntervalTool';
 import { INITIAL_INPUT_VALUE, MAX_BET_VALUE, MIN_BET_VALUE } from '../constants/global';
 import { ExtraDataMode } from '../page-components/Loading';
+
+const { sha256 } = AElf.utils;
 
 export enum StepStatus {
   INIT,
@@ -67,7 +69,6 @@ const useBingo = (Toast: any) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [caAddress, setCaAddress] = useState<string>('');
   const [time, setTime] = useState(COUNT);
-  const [isTest, setIsTest] = useState<boolean>(true);
   const [loadingExtraDataMode, setLoadingExtraDataMode] = useState<ExtraDataMode>(ExtraDataMode.NONE);
   const isMainChain = useRef<boolean>(false);
 
@@ -94,9 +95,9 @@ const useBingo = (Toast: any) => {
 
   const accountAddress = `ELF_${caAddress}_${chainInfoRef.current?.chainId}`;
 
-  useEffect(() => {
-    setIsTest(document.location.href?.lastIndexOf?.('bingogame.portkey.finance') === -1);
-  }, []);
+  // useEffect(() => {
+  //   setIsTest(document.location.href?.lastIndexOf?.('bingogame.portkey.finance') === -1);
+  // }, []);
   const options = {
     timer: null,
     callback: () => {
@@ -186,32 +187,45 @@ const useBingo = (Toast: any) => {
     const caContract = caContractRef.current;
     const multiTokenContract = multiTokenContractRef.current;
     if (!caContract || !wallet || !multiTokenContract) return;
-    const approve = await caContract.callSendMethod('ManagerForwardCall', wallet.walletInfo.wallet.address, {
-      caHash: wallet.caInfo.caHash,
-      contractAddress: multiTokenContract.address,
-      methodName: 'Approve',
-      args: {
-        symbol: 'ELF',
-        spender: bingoAddress,
-        amount: '100000000000000000000',
-      },
-    });
-    if (!approve.error) {
-      walletRef.current = {
-        ...wallet,
-        approved: true,
-      };
-      return true;
-    }
-    await delay();
 
-    getBalance();
+    try {
+      const result = await multiTokenContract.callViewMethod('GetAllowance', {
+        symbol: 'ELF',
+        owner: wallet.caInfo.caAddress,
+        spender: bingoAddress,
+      });
+
+      const { allowance } = result?.data || {};
+      if (allowance < 100) {
+        const approve = await caContract.callSendMethod('ManagerForwardCall', wallet.walletInfo.wallet.address, {
+          caHash: wallet.caInfo.caHash,
+          contractAddress: multiTokenContract.address,
+          methodName: 'Approve',
+          args: {
+            symbol: 'ELF',
+            spender: bingoAddress,
+            amount: '100000000000000000000',
+          },
+        });
+        if (!approve.error) {
+          walletRef.current = {
+            ...wallet,
+            approved: true,
+          };
+          return true;
+        }
+        await delay();
+        getBalance();
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const getQrInfo = () => {
     const info = shrinkSendQrData({
       type: 'send',
-      netWorkType: 'TESTNET',
+      netWorkType: isTestNet ? 'TESTNET' : 'MAIN',
       chainType: 'aelf',
       toInfo: {
         address: accountAddress,
@@ -258,6 +272,7 @@ const useBingo = (Toast: any) => {
       methodName: 'Register',
       args: null,
     });
+
     if (!registerResult.error || registerResult.error.message?.includes('already registered')) {
       walletRef.current = {
         ...wallet,
@@ -329,6 +344,8 @@ const useBingo = (Toast: any) => {
   const initCurrentChainContract = async () => {
     const chainInfo = chainInfoRef.current;
     const wallet = walletRef.current;
+    const aelf = aelfRef.current;
+
     if (!aelfRef.current || !chainInfo || !wallet) return;
     setLoading(true);
     setLoadingExtraDataMode(isMainChain.current ? ExtraDataMode.INIT_MAIN_CHAIN : ExtraDataMode.NONE);
@@ -338,6 +355,19 @@ const useBingo = (Toast: any) => {
         account: wallet.walletInfo.wallet,
         rpcUrl: chainInfo?.endPoint,
       });
+
+      const chainStatus = await aelf.chain.getChainStatus();
+      const zeroC = await getContractBasic({
+        contractAddress: chainStatus.GenesisContractAddress,
+        account: wallet.walletInfo.wallet,
+        rpcUrl: chainInfo?.endPoint,
+      });
+      const tokenContractAddress = await zeroC.callViewMethod(
+        'GetContractAddressByName',
+        sha256('AElf.ContractNames.Token'),
+      );
+      tokenContractAddressRef.current = tokenContractAddress.data;
+
       const multiTokenContract = await getContractBasic({
         contractAddress: chainInfo.defaultToken.address,
         account: wallet.walletInfo.wallet,
@@ -619,7 +649,6 @@ const useBingo = (Toast: any) => {
     result,
     hasFinishBet,
     time,
-    isTest,
     accountAddress,
     chainId: chainInfoRef.current?.chainId,
     tokenContractAddress: tokenContractAddressRef.current,

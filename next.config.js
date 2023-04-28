@@ -8,6 +8,7 @@ const nextConfig = {
   env: {
     APP_ENV: process.env.APP_ENV,
     NEXT_PUBLIC_APP_ENV: process.env.APP_ENV,
+    NEXT_PUBLIC_BINGO_ADDRESS: process.env.NEXT_PUBLIC_BINGO_ADDRESS,
   },
 
   async rewrites() {
