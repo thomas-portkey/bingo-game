@@ -15,7 +15,7 @@ ConfigProvider.setGlobalConfig({
   storageMethod: new Store(),
   graphQLUrl: '/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql',
   reCaptchaConfig: {
-    siteKey: process.env.RECAPTCHA_CONFIG,
+    siteKey: process.env.NEXT_PUBLIC_RECAPTCHA_CONFIG,
   },
   socialLogin: {
     Apple: {
