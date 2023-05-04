@@ -53,14 +53,15 @@ import { SignIn } from '@portkey/did-ui-react';
 import { useState, useEffect } from 'react';
 
 const App = () => {
-  const [open, setOpen] = useState<boolean>();
+  const signInRef = useRef<SignInInterface>();
 
   useEffect(() => {
-    setOpen(true);
+    signInRef.current?.setOpen(true);
   }, []);
+
   return (
     <>
-      <SignIn open={open} />
+      <SignIn ref={signInRef.current} />
     </>
   );
 };
