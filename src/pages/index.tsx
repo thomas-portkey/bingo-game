@@ -27,7 +27,7 @@ ConfigProvider.setGlobalConfig({
     },
     Portkey: {
       websiteName: 'Bingo Game',
-      websiteIcon: '​https://bingogame.portkey.finance/favicon.ico',
+      websiteIcon: 'https://bingogame.portkey.finance/favicon.ico',
     },
   },
   network: {
