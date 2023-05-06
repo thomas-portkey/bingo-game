@@ -8,6 +8,7 @@ const nextConfig = {
   env: {
     APP_ENV: process.env.APP_ENV,
     NEXT_PUBLIC_APP_ENV: process.env.APP_ENV,
+    NEXT_PUBLIC_BINGO_ADDRESS: process.env.NEXT_PUBLIC_BINGO_ADDRESS,
   },
 
   async rewrites() {
@@ -30,5 +31,5 @@ const sentryWebpackPluginOptions = {
   // For all available options, see:
   // https://github.com/getsentry/sentry-webpack-plugin#options.
 };
-
+// export
 module.exports = withTM(withSentryConfig(nextConfig, sentryWebpackPluginOptions));

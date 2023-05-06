@@ -7,7 +7,7 @@ import Loading from '../page-components/Loading';
 
 import { Button, ButtonType } from '../page-components/Button';
 import { QRCode } from 'react-qrcode-logo';
-import { CHAIN_ID } from '../constants/network';
+import { CHAIN_ID, isTestNet, currentNetworkType } from '../constants/network';
 import copy from 'copy-to-clipboard';
 import styles from '../styles/pc.module.css';
 
@@ -44,7 +44,6 @@ const PCBingoGame = () => {
     loading,
     time,
     getQrInfo,
-    isTest,
     accountAddress,
     loadingExtraDataMode,
   } = useBingo(message);
@@ -58,7 +57,7 @@ const PCBingoGame = () => {
       <div>
         <div className={styles.defaultWrapper}>
           <div className={styles.title__img__wrapper}>
-            {isTest && (
+            {isTestNet && (
               <div className={styles.test__tag__wrapper}>
                 <div className={styles.test__tag__wrapper__content}>TEST</div>
               </div>
@@ -86,7 +85,7 @@ const PCBingoGame = () => {
             </Button>
           )}
 
-          {isTest && (
+          {isTestNet && (
             <div className={styles.initTip}>
               <img src={require('../../public/warn.svg').default.src} />
               <span>This is a demo on the Testnet.</span>
@@ -315,8 +314,8 @@ const PCBingoGame = () => {
               <div className={styles.setting__account__content}>
                 <div>Account</div>
                 <div style={{ width: '40rem', overflow: 'hidden' }}>
-                  {accountAddress.length > 30
-                    ? `${accountAddress.slice(0, 13)}...${accountAddress.slice(
+                  {accountAddress.length > 18
+                    ? `${accountAddress.slice(0, 10)}...${accountAddress.slice(
                         accountAddress.length - 10,
                         accountAddress.length,
                       )}`
@@ -375,8 +374,8 @@ const PCBingoGame = () => {
                 <div className={styles.setting__account__content}>
                   <div>Account</div>
                   <div style={{ width: '42rem', overflow: 'hidden' }}>
-                    {accountAddress.length > 30
-                      ? `${accountAddress.slice(0, 15)}...${accountAddress.slice(
+                    {accountAddress.length > 18
+                      ? `${accountAddress.slice(0, 10)}...${accountAddress.slice(
                           accountAddress.length - 10,
                           accountAddress.length,
                         )}`
@@ -412,7 +411,7 @@ const PCBingoGame = () => {
                     <span>ELF</span>
                     <span>{decorateBalanceText(balanceValue)}</span>
                   </div>
-                  <span style={{ color: '#707070', fontSize: '1.2rem' }}>SideChain {CHAIN_ID} Testnet</span>
+                  <span style={{ color: '#707070', fontSize: '1.2rem' }}>{currentNetworkType}</span>
                 </div>
                 {/* <div className={styles.menuPop__tag}>Current</div> */}
               </div>

@@ -5,7 +5,7 @@ import { SignIn, did, Unlock, SignInInterface } from '@portkey/did-ui-react';
 import { message, InputNumber, Modal, Popover } from 'antd';
 import Loading from '../page-components/Loading';
 import { QRCode } from 'react-qrcode-logo';
-import { CHAIN_ID, currentNetworkType } from '../constants/network';
+import { CHAIN_ID, currentNetworkType, isTestNet } from '../constants/network';
 import styles from '../styles/mobile.module.css';
 import copy from 'copy-to-clipboard';
 import { decorateBalanceText } from '../utils/common';
@@ -63,7 +63,6 @@ const MBingoGame = () => {
     initContract,
     loading,
     time,
-    isTest,
     accountAddress,
     loadingExtraDataMode,
   } = useBingo(message);
@@ -96,7 +95,7 @@ const MBingoGame = () => {
     return (
       <div className={styles.defaultWrapper}>
         <div className={styles.title__img__wrapper}>
-          {isTest && (
+          {isTestNet && (
             <div className={styles.test__tag__wrapper}>
               <div className={styles.test__tag__wrapper__content}>TEST</div>
             </div>
@@ -128,7 +127,7 @@ const MBingoGame = () => {
             </Button>
           </>
         )}
-        {isTest && (
+        {isTestNet && (
           <div className={styles.initTip}>
             <img src={require('../../public/warn.svg').default.src} />
             <span>This is a demo on the Testnet.</span>

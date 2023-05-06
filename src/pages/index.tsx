@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { isMobile } from '../utils/common';
+import { isTestNet } from '../constants/network';
 import { SideProps } from '../type';
 
 import { ConfigProvider } from '@portkey/did-ui-react';
@@ -13,26 +14,29 @@ import ImgSourceMap from '../constants/sourceMap';
 ConfigProvider.setGlobalConfig({
   storageMethod: new Store(),
   graphQLUrl: '/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql',
+  reCaptchaConfig: {
+    siteKey: process.env.NEXT_PUBLIC_RECAPTCHA_CONFIG,
+  },
   socialLogin: {
     Apple: {
       clientId: 'did.portkey',
-      redirectURI: 'https://localtest-applesign.portkey.finance/api/app/appleAuth/bingoReceive',
+      redirectURI: 'https://apple-bingo.portkey.finance/api/app/appleAuth/bingoReceive',
     },
     Google: {
       clientId: '176147744733-a2ks681uuqrmb8ajqrpu17te42gst6lq.apps.googleusercontent.com',
     },
     Portkey: {
       websiteName: 'Bingo Game',
-      websiteIcon: '',
+      websiteIcon: 'https://bingogame.portkey.finance/favicon.ico',
     },
   },
   network: {
-    defaultNetwork: 'TESTNET',
+    defaultNetwork: isTestNet ? 'TESTNET' : 'MAIN',
     networkList: [
       {
-        name: 'aelf Testnet',
+        name: 'aelf MAIN',
         walletType: 'aelf',
-        networkType: 'TESTNET',
+        networkType: isTestNet ? 'TESTNET' : 'MAIN',
         isActive: true,
         apiUrl: '',
         graphQLUrl: '/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql',

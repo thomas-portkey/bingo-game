@@ -1,5 +1,6 @@
 import { IPhoneCountry } from '@portkey/did-ui-react';
 import data from './countryCodeList.json';
+import { CHAIN_ID } from './network';
 // you can determine the max and min bet value here
 export const MIN_BET_VALUE = 1;
 export const MAX_BET_VALUE = 100;
