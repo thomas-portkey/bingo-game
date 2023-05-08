@@ -5,10 +5,6 @@ const rewrites = require('./rewrites');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  env: {
-    APP_ENV: process.env.APP_ENV,
-    NEXT_PUBLIC_APP_ENV: process.env.APP_ENV,
-  },
 
   async rewrites() {
     return rewrites;
@@ -30,5 +26,5 @@ const sentryWebpackPluginOptions = {
   // For all available options, see:
   // https://github.com/getsentry/sentry-webpack-plugin#options.
 };
-
+// export
 module.exports = withTM(withSentryConfig(nextConfig, sentryWebpackPluginOptions));
