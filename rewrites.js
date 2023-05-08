@@ -1,4 +1,10 @@
-let rewrite = [];
+const rewrite = [
+  { source: '/api/:path*', destination: 'https://did-portkey.portkey.finance/api/:path*' },
+  {
+    source: '/AElfIndexer_DApp/PortKeyIndexerCASchema/:path*',
+    destination: 'https://dapp-portkey.portkey.finance/Portkey_DID/PortKeyIndexerCASchema/:path*',
+  },
+];
 
 if (process.env.NEXT_PUBLIC_APP_ENV === 'development') {
   rewrite = [
@@ -8,7 +14,8 @@ if (process.env.NEXT_PUBLIC_APP_ENV === 'development') {
       destination: 'http://192.168.67.172:8083/AElfIndexer_DApp/:path*',
     },
   ];
-} else {
+}
+if (process.env.NEXT_PUBLIC_APP_ENV === 'test') {
   rewrite = [
     { source: '/api/:path*', destination: 'https://did-portkey-test.portkey.finance/api/:path*' },
     {

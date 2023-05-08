@@ -19,11 +19,11 @@ ConfigProvider.setGlobalConfig({
   },
   socialLogin: {
     Apple: {
-      clientId: 'did.portkey',
-      redirectURI: 'https://apple-bingo.portkey.finance/api/app/appleAuth/bingoReceive',
+      clientId: process.env.NEXT_PUBLIC_APPLE_CLIENT_ID,
+      redirectURI: process.env.NEXT_PUBLIC_APPLE_REDIRECT_URI,
     },
     Google: {
-      clientId: '176147744733-a2ks681uuqrmb8ajqrpu17te42gst6lq.apps.googleusercontent.com',
+      clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
     },
     Portkey: {
       websiteName: 'Bingo Game',
