@@ -70,7 +70,6 @@ const useBingo = (Toast: any) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [caAddress, setCaAddress] = useState<string>('');
   const [time, setTime] = useState(COUNT);
-  // const [isTest, setIsTest] = useState<boolean>(true);
   const [loadingExtraDataMode, setLoadingExtraDataMode] = useState<ExtraDataMode>(ExtraDataMode.NONE);
   const isMainChain = useRef<boolean>(false);
 
