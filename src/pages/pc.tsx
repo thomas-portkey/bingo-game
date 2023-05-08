@@ -435,9 +435,8 @@ const PCBingoGame = () => {
           defaultChainId={CHAIN_ID}
           phoneCountry={defaultCountryCodeConfig}
           uiType="Modal"
-          isShowScan
+          isShowScan={process.env.NEXT_PUBLIC_APP_ENV === 'main' ? false : true}
           onFinish={async (wallet) => {
-            console.log('SignIn onFinish==', wallet);
             await login(wallet);
             setShowLogin(false);
             initContract();
@@ -465,7 +464,6 @@ const PCBingoGame = () => {
               setIsWrongPassword(true);
               return;
             }
-            console.log('Unlock onFinish==', localWallet);
             await unLock(localWallet);
             setIsWrongPassword(false);
             setPasswordValue('');
