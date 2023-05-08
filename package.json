@@ -5,8 +5,6 @@
   "scripts": {
     "dev": "NEXT_PUBLIC_APP_ENV=development next dev",
     "build": "next build",
-    "build-dev": "NEXT_PUBLIC_APP_ENV=development next build",
-    "build-test": "NEXT_PUBLIC_APP_ENV=test next build",
     "start": "APP_ENV=production next start",
     "lint": "next lint"
   },
