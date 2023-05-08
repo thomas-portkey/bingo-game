@@ -477,9 +477,8 @@ const MBingoGame = () => {
         phoneCountry={defaultCountryCodeConfig}
         sandboxId="portkey-ui-sandbox"
         defaultChainId={CHAIN_ID}
-        isShowScan
+        isShowScan={process.env.NEXT_PUBLIC_APP_ENV === 'main' ? false : true}
         onFinish={async (wallet) => {
-          console.log('SignIn onFinish==', wallet);
           await login(wallet);
           setShowLogin(false);
           initContract();
@@ -508,7 +507,6 @@ const MBingoGame = () => {
             setIsWrongPassword(true);
             return;
           }
-          console.log('Unlock onFinish==', localWallet);
           await unLock(localWallet);
           setIsWrongPassword(false);
           setPasswordValue('');

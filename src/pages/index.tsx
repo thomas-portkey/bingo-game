@@ -25,10 +25,13 @@ ConfigProvider.setGlobalConfig({
     Google: {
       clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
     },
-    Portkey: {
-      websiteName: 'Bingo Game',
-      websiteIcon: 'https://bingogame.portkey.finance/favicon.ico',
-    },
+    Portkey:
+      process.env.NEXT_PUBLIC_APP_ENV === 'main'
+        ? undefined
+        : {
+            websiteName: 'Bingo Game',
+            websiteIcon: 'https://bingogame.portkey.finance/favicon.ico',
+          },
   },
   network: {
     defaultNetwork: isTestNet ? 'TESTNET' : 'MAIN',
