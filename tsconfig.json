@@ -15,8 +15,13 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "preserve",
-    "incremental": true
+    "incremental": true,
+    "paths": {
+      "@/*": ["./src/*"],
+      "@source/*": ["./public/*"]
+    }
   },
+  "extensions": [".js", ".ts", ".tsx", ".jsx"],
   "include": ["src"],
   "exclude": ["node_modules"]
 }
