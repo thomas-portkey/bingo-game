@@ -130,7 +130,6 @@ const MBingoGame = () => {
         defaultChainId={CHAIN_ID}
         isShowScan={false}
         onFinish={async (wallet) => {
-          console.log('SignIn onFinish==', wallet);
           await login(wallet);
           setShowLogin(false);
           initContract();
@@ -169,7 +168,6 @@ const MBingoGame = () => {
             setIsWrongPassword(true);
             return;
           }
-          console.log('Unlock onFinish==', localWallet);
           await unLock(localWallet);
           setIsWrongPassword(false);
           setPasswordValue('');

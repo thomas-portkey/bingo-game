@@ -101,7 +101,6 @@ const useBingo = () => {
 
   const init = async () => {
     const chainsInfo = await did.services.getChainsInfo();
-    console.log('init chainsInfo', chainsInfo);
     chainsInfoRef.current = chainsInfo;
     const chainInfo = chainsInfo.find((chain) => chain.chainId === CHAIN_ID);
     const mainChainInfo = chainsInfo.find((chain) => chain.chainId === MAIN_CHAIN_ID);
@@ -419,10 +418,12 @@ const useBingo = () => {
         const { data } = await refetch();
         const tx = data?.caHolderBingoInfo?.data?.[0];
 
+        setFee(undefined);
         if (tx) {
-          const fee: number = tx?.playTransactionFee?.[0]?.amount;
-          if (fee) {
-            setFee(decodeAmount(new BigNumber(fee)));
+          const playAmount: number = tx?.playTransactionFee?.[0]?.amount;
+          const bingoAmount: number = tx?.bingoTransactionFee?.[0]?.amount;
+          if (!!playAmount && !!bingoAmount) {
+            setFee(decodeAmount(new BigNumber(playAmount).plus(new BigNumber(bingoAmount))));
           }
         }
 
