@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { SignIn, did, Unlock, SignInInterface } from '@portkey/did-ui-react';
 
 import useBingo, { StepStatus, KEY_NAME } from '@/hooks/useBingo';
-import { DEFAULT_COUNTRY_CODE_CONFIG } from '@/constants/global';
+import { DEFAULT_COUNTRY_CODE_CONFIG, SHOW_QR_LOGIN } from '@/constants/global';
 import Loading from '@/page-components/Loading';
 import { CHAIN_ID } from '@/constants/network';
 
@@ -128,7 +128,7 @@ const MBingoGame = () => {
         phoneCountry={DEFAULT_COUNTRY_CODE_CONFIG}
         sandboxId="portkey-ui-sandbox"
         defaultChainId={CHAIN_ID}
-        isShowScan={false}
+        isShowScan={SHOW_QR_LOGIN}
         onFinish={async (wallet) => {
           await login(wallet);
           setShowLogin(false);

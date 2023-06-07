@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { SignIn, did, Unlock, SignInInterface } from '@portkey/did-ui-react';
 
 import useBingo, { StepStatus, KEY_NAME } from '@/hooks/useBingo';
-import { DEFAULT_COUNTRY_CODE_CONFIG } from '@/constants/global';
+import { DEFAULT_COUNTRY_CODE_CONFIG, SHOW_QR_LOGIN } from '@/constants/global';
 import Loading from '@/page-components/Loading';
 import { CHAIN_ID } from '@/constants/network';
 import LoginAndUnlock from './components/LoginAndUnlock';
@@ -123,7 +123,7 @@ const PCBingoGame = () => {
           defaultChainId={CHAIN_ID}
           phoneCountry={DEFAULT_COUNTRY_CODE_CONFIG}
           uiType="Modal"
-          isShowScan={false}
+          isShowScan={SHOW_QR_LOGIN}
           onFinish={async (wallet) => {
             await login(wallet);
             setShowLogin(false);

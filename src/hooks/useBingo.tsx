@@ -422,7 +422,7 @@ const useBingo = () => {
         if (tx) {
           const playAmount: number = tx?.playTransactionFee?.[0]?.amount;
           const bingoAmount: number = tx?.bingoTransactionFee?.[0]?.amount;
-          if (!!playAmount && !!bingoAmount) {
+          if (typeof playAmount === 'number' && typeof bingoAmount === 'number') {
             setFee(decodeAmount(new BigNumber(playAmount).plus(new BigNumber(bingoAmount))));
           }
         }
