@@ -74,14 +74,6 @@
   transform-style: preserve-3d;
   transition: all 75ms cubic-bezier(0, 0, 1, 1);
 }
-.blueBtn {
-  background-image: url('../../public/btn_var2.png');
-  background-size: 100% 100%;
-}
-.oriangeBtn {
-  background-image: url('../../public/btn_var1.png');
-  background-size: 100% 100%;
-}
 
 .artWord {
   font-weight: 900;
@@ -137,6 +129,7 @@
   height: 100%;
   width: 100%;
 }
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -163,15 +156,13 @@
 }
 
 .settingHeader {
-  /* padding: 52px 161px 0 161px; */
-  padding-top: 52px;
   display: flex;
   justify-content: center;
   align-items: center;
-
-  @media screen and (min-width: 192rem) {
-    padding-top: 0px;
-  }
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .setting__menu {
@@ -183,12 +174,28 @@
 .setting__balance {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding-left: 12.3rem;
 
   width: 49.4rem;
   height: 10rem;
   background-image: url('../../public/balance_pc.png');
   background-size: 100% 100%;
+}
+.setting_balanceWrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.tokenIcon {
+  height: 3.5rem;
+  width: 3.5rem;
+  margin-left: 0.15rem;
+  margin-right: 0.5rem;
+  background-size: 100% 100%;
+  background-image: url('../../public/aelf_symbol.png');
+  flex-shrink: 0;
 }
 
 .setting__balance__content {
@@ -220,6 +227,7 @@
   cursor: pointer;
   background-image: url('../../public/reload.png');
   background-size: 100% 100%;
+  flex-shrink: 0;
 }
 
 .setting__account {
@@ -276,17 +284,24 @@
   background-size: 100% 100%;
 }
 
+.setting__account__redirect {
+  height: 5.4rem;
+  margin-left: 5px;
+  display: flex;
+  align-items: center;
+}
+
 .setting__logout {
   cursor: pointer;
-  width: 15.4rem;
-  height: 6rem;
+  padding: 1.4rem 2.9rem;
   background: #ffd812;
-  border: 3.5px solid #000000;
+  border: 0.35rem solid #000000;
   border-radius: 4.35rem;
-  font-weight: 900;
-  font-size: 3.2rem;
+  font-weight: 600;
+  font-size: 2.8rem;
+  line-height: 2.8rem;
   margin-left: 3.4rem;
-  /* margin-left: auto; */
+  white-space: nowrap;
 }
 
 .setting__lock {
@@ -301,6 +316,7 @@
   justify-content: center;
   align-items: center;
   margin-bottom: 10rem;
+  margin-top: 20rem;
 }
 
 .content__bg {
@@ -308,6 +324,10 @@
   height: 80.5rem;
   background-image: url('../../public/frame_pc.png');
   background-size: 100% 100%;
+}
+
+.content__bg_cutdown {
+  background-image: url('../../public/frame_pc_cutdown.png');
 }
 
 .content__wrapper {
@@ -344,6 +364,10 @@
   border-radius: 1.5rem;
 
   margin-right: 8.3rem;
+}
+
+.content__cutDown_img {
+  width: 25.4rem;
 }
 
 .content__right {
@@ -421,10 +445,11 @@
 }
 
 .playContent__btnGroups {
-  margin-top: 1.3rem;
+  margin-top: 2rem;
   display: flex;
-  justify-content: space-between;
+  gap: 20px;
 }
+
 .playContent__btn {
   background-image: url('../../public/rectangle_pc.png');
   background-size: 100% 100%;
@@ -434,8 +459,12 @@
   font-size: 2.4rem;
 }
 
+.playContent__btn_text {
+  font-size: 1.6rem;
+  padding-left: 0.4rem;
+}
+
 .playContent__betBtnGroups {
-  margin-top: 4rem;
   display: flex;
   flex-wrap: nowrap;
   justify-content: center;
@@ -453,13 +482,18 @@
 
 .bingoContent__betBtn {
   position: absolute;
-  bottom: 8.2rem;
+  bottom: 12.2rem;
   width: 22.4rem;
   height: 10rem;
   /* background-image: url('../../public/btn_pc_var1.png');
   background-size: 100% 100%; */
   font-weight: 900;
   font-size: 4.8rem;
+}
+
+.bingoContent__fee {
+  position: absolute;
+  bottom: 8rem;
 }
 
 .playContent__betBtnGroups button:first-child {
@@ -531,6 +565,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -604,7 +639,7 @@
   height: 67.1rem;
   width: 132.2rem;
   display: flex;
-  margin-top: 13.4rem;
+  margin-top: 23.4rem;
   margin-bottom: 10rem;
 }
 
@@ -616,11 +651,16 @@
   flex-direction: column;
 }
 
+.bingoContent__boardNumbers {
+  flex-grow: 1;
+  width: 50%;
+}
+
 .bingoContent__bg {
   margin-top: 7.45rem;
   width: 132.2rem;
   height: 59.2rem;
-  background-image: url('../../public/frame_pc_2.png');
+  background-image: url('../../public/frame_pc_bingo.png');
   background-size: 100% 100%;
   position: relative;
   display: flex;
@@ -683,13 +723,17 @@
   justify-content: space-between;
 }
 
-.bingoText span:first-child {
+.bingoText span:nth-child(odd) {
   font-weight: 500;
   font-size: 4rem;
   margin-right: 1.6rem;
 }
 
-.bingoText span:last-child {
+.bingoText span:nth-child(3) {
+  margin-left: 30px;
+}
+
+.bingoText span:nth-child(even) {
   font-weight: 500;
   font-size: 4rem;
   border-radius: 1.5rem;
@@ -810,23 +854,6 @@
   line-height: 100vh;
 }
 
-.menuPop {
-  width: 108.2rem !important;
-  height: 59.2rem;
-  background-image: url('../../public/frame_pc_1.png');
-  background-size: 100% 100%;
-}
-
-.menuPop :global .ant-modal-close {
-  margin-top: -2.4rem;
-}
-
-.menuPop :global .ant-modal-content {
-  background: transparent;
-  border: 0;
-  box-shadow: none;
-}
-
 .menuPop__tag {
   position: absolute;
   width: 7.3rem;
@@ -845,13 +872,13 @@
 }
 
 .menuPop__wrapper {
-  margin: 4rem 4.4rem 4rem 4.4rem;
+  margin: 2.5rem 4.4rem 3rem 4.4rem;
   overflow: hidden;
 }
 
 .menuPop__wrapper_content {
-  margin: 3rem 3rem;
-  width: 75rem;
+  margin: 3rem 8rem;
+  width: 100%;
   display: flex;
   justify-self: center;
   align-items: center;
@@ -860,34 +887,33 @@
 }
 
 .menuPop__wrapper_account {
-  width: 75rem;
+  width: 100%;
   margin-left: 0;
 }
 
-.menuPop__wrapper_content_textContent {
-  width: 75rem;
-  background: #f7ebb3;
-  border: 3px solid #000000;
-  border-radius: 1.6rem;
-  height: 8.8rem;
-  margin-top: 2.4rem;
-  padding: 1.5rem 3.2rem;
+.menuPop__buttonsWrapper {
   display: flex;
-  position: relative;
+  justify-content: space-between;
+  padding-top: 5rem;
+  width: 100%;
+}
+.menuPop__button {
+  display: flex;
+  align-items: center;
+  background-image: url('../../public/rectangle_pc.png');
+  background-size: 100% 100%;
+  padding: 1.2rem 4rem;
+  font-weight: 400;
+  font-size: 2.4rem;
+  line-height: 2.8rem;
+  color: white;
 }
 
-.menuPop__textContent_flex {
-  margin-left: 0.8rem;
+.content__bottom {
   display: flex;
-  flex-direction: column;
-  flex: 1;
+  margin-top: 10px;
 }
-.menuPop__textContent_flex_top {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 2rem;
-  font-weight: 500;
+
+.content__bottom > div {
+  flex-basis: 50%;
 }

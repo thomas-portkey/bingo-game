@@ -1,10 +1,14 @@
 const { withSentryConfig } = require('@sentry/nextjs');
+const path = require('path');
 
 const rewrites = require('./rewrites');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+   sassOptions: {
+    includePaths: [path.join(__dirname, 'styles')],
+  },
 
   async rewrites() {
     return rewrites;

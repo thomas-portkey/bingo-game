@@ -1,10 +1,10 @@
 import React, { MouseEventHandler } from 'react';
 
-import styles from '../styles/button.module.css';
+import styles from './button.module.css';
 
 export enum ButtonType {
   BLUE,
-  ORIANGE,
+  ORANGE,
 }
 
 export const Button = (props: {
@@ -16,7 +16,7 @@ export const Button = (props: {
   onClick?: MouseEventHandler<HTMLButtonElement>;
 }) => {
   const { children, type, className, onClick, enable = true, isMobile } = props;
-  let styleClass = type === ButtonType.BLUE ? 'blueBtn' : 'oriangeBtn';
+  let styleClass = type === ButtonType.BLUE ? 'blueBtn' : 'orangeBtn';
   if (!isMobile) {
     styleClass = `${styleClass}__pc`;
   }
