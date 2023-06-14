@@ -9,14 +9,6 @@
   color: #fff;
 }
 
-.ant__modal__body {
-  position: relative;
-}
-
-.ant__modal__body :global .ant-modal-content {
-  background-color: transparent;
-}
-
 .container {
   width: 100%;
   height: 100%;
@@ -85,19 +77,11 @@
   transform-style: preserve-3d;
   transition: all 75ms cubic-bezier(0, 0, 1, 1);
 }
-.blueBtn {
-  background-image: url('../../public/btn_var2.png');
-  background-size: 100% 100%;
-}
-.oriangeBtn {
-  background-image: url('../../public/btn_var1.png');
-  background-size: 100% 100%;
-}
 
 .artWord {
   font-weight: 900;
-  font-size: 32px;
-  line-height: 38px;
+  font-size: 3.2rem;
+  /* line-height: 38px; */
   text-align: center;
   font-family: Helvetica;
   color: #ffffff;
@@ -111,6 +95,8 @@
 
 .defaultBtn {
   margin-top: 15.4vw;
+  width: 22rem;
+  height: 6rem;
 }
 
 .wrapper {
@@ -152,6 +138,10 @@
   background-color: transparent;
   background-image: url('../../public/frame.png');
   background-size: 100% 100%;
+}
+
+.playWrapper_cutdown {
+  background-image: url('../../public/frame.png');
 }
 
 .background :global .adm-center-popup-wrap {
@@ -292,7 +282,7 @@
   width: 10vw;
   height: 10vw;
   margin-left: 2vw;
-  background-image: url('../../public/icon_menu.png');
+  background-image: url('../../public/menu_pc.png');
 }
 
 .accountBtn {
@@ -452,6 +442,11 @@
   width: 100%;
 }
 
+.loseBingo {
+  height: 3.8rem;
+  width: 20rem;
+}
+
 .bingoText {
   margin-top: 9px;
   width: 100%;
@@ -597,42 +592,18 @@
   line-height: 100vh;
 }
 
-.settingWrapper {
-  height: 100vw;
-  width: 80vw;
+.setting__wrapper {
+  height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
 }
 
-.settingBg {
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 0;
-}
-
-.modalClose {
-  height: 8vw;
-  width: 8vw;
-  position: absolute;
-  top: -2vw;
-  right: -2vw;
-  z-index: 100;
-}
-
-.closeIcon {
-  height: 8vw;
-  width: 8vw;
-}
-
 .setting__content {
   width: 100%;
-  margin-left: 5vw;
-  margin-top: 3vw;
+  padding: 1.4rem 1.4rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -641,10 +612,10 @@
 }
 
 .setting__account__module {
-  width: 92%;
+  width: 100%;
   height: 10vw;
   background-size: 100% 100%;
-  background-image: url('../../public/account.png');
+  background-image: url('../../public/account_mobile.png');
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -672,7 +643,7 @@
   background-image: url('../../public/copy_button.png');
   position: absolute;
   top: 0.85rem;
-  right: 3rem;
+  right: 4rem;
 }
 
 .setting__account__module__qrcode {
@@ -682,48 +653,13 @@
   background-image: url('../../public/qrcode.png');
   position: absolute;
   top: 0.8rem;
-  right: 0.8rem;
+  right: 2.2rem;
 }
 
-.setting__balance__module {
-  width: 100%;
-  margin-top: 5vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.setting__balance__row {
-  position: relative;
-  width: 92%;
-  height: 20vw;
-  margin-bottom: 5vw;
-  background-color: #f7ebb3;
-  border-width: 1.5px;
-  border-style: solid;
-  border-color: #000000;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.setting__balance__token__icon {
-  height: 9vw;
-  width: 9vw;
-  background-size: 100% 100%;
-  background-image: url('../../public/aelf_symbol.png');
-  margin-left: 3vw;
-  margin-right: 2vw;
-}
-
-.setting__balance__content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
+.setting__account__module__external {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.9rem;
 }
 
 .setting__balance__tag__wrapper {
@@ -750,31 +686,6 @@
   color: #000000;
 }
 
-.setting__balance__content__title {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 1.6rem;
-  line-height: 1.8rem;
-  color: #000000;
-  text-align: left;
-  margin-bottom: 1vw;
-  margin-top: 0.8rem;
-}
-
-.setting__balance__content__subtitle {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 1.2rem;
-  line-height: 1.4rem;
-  color: #707070;
-  text-align: left;
-  margin-bottom: 2vw;
-  white-space: nowrap;
-  display: block;
-}
-
 .setting__balance__current__wrapper {
   position: relative;
   height: 100%;
@@ -793,37 +704,38 @@
   top: 3vw;
 }
 
+.setting__footerButtonWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 1.6rem;
+}
+
 .setting__logout {
-  height: 12vw;
-  width: 35%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18rem;
+  height: 4.8rem;
   background-color: #ffd812;
   border-radius: 34.8px;
   border: 1.5px solid #000000;
-  position: absolute;
-  left: 20%;
-  bottom: 10%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .setting__logout__text {
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 700;
-  font-size: 6vw;
-  line-height: 7vw;
+  font-size: 2rem;
+  line-height: 2.3rem;
   text-align: center;
 }
 
 .setting__lock {
-  height: 12vw;
-  width: 12.5vw;
+  height: 4.8rem;
+  width: 4.8rem;
   background-size: 100% 100%;
   background-image: url('../../public/lock.png');
-  position: absolute;
-  right: 25%;
-  bottom: 10%;
 }
 
 .setting__qrcode__display {
@@ -843,4 +755,23 @@
   font-size: 0.8rem;
   line-height: 1.2rem;
   color: #000000;
+}
+
+.menuPop__buttonsWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-top: 1.6rem;
+}
+
+.menuPop__button {
+  background-image: url('../../public/rectangle.png');
+  background-size: 100% 100%;
+  height: 3rem;
+  padding: 0.6rem 0.5rem;
+  font-weight: 400;
+  font-size: 1.6rem;
+  line-height: 1.8rem;
+  color: white;
+  margin-bottom: 1.2rem;
 }

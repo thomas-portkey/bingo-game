@@ -2,12 +2,12 @@ import React, { useEffect, useState, useRef } from 'react';
 import { isMobile } from '../utils/common';
 import { isTestNet } from '../constants/network';
 import { SideProps } from '../type';
-
-import { ConfigProvider } from '@portkey/did-ui-react';
+import { ConfigProvider, did } from '@portkey/did-ui-react';
 import { Store } from '../utils/store';
 import InitLoading from '../page-components/Loading';
-import MBingoGame from './mobile';
-import PCBingoGame from './pc';
+import MBingoGame from '../page-components/mobile';
+import PCBingoGame from '../page-components/pc';
+import { ApolloProvider } from '@apollo/client';
 
 import ImgSourceMap from '../constants/sourceMap';
 
@@ -18,13 +18,6 @@ ConfigProvider.setGlobalConfig({
     siteKey: process.env.NEXT_PUBLIC_RECAPTCHA_CONFIG,
   },
   socialLogin: {
-    Apple: {
-      clientId: process.env.NEXT_PUBLIC_APPLE_CLIENT_ID,
-      redirectURI: process.env.NEXT_PUBLIC_APPLE_REDIRECT_URI,
-    },
-    Google: {
-      clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-    },
     Portkey:
       process.env.NEXT_PUBLIC_APP_ENV === 'main'
         ? undefined
@@ -129,7 +122,11 @@ const BingoGame = (props: SideProps) => {
     return <InitLoading isMobileMode={isMobileBrowser} isInit loading />;
   }
 
-  return isMobileBrowser ? <MBingoGame /> : <PCBingoGame />;
+  return (
+    <ApolloProvider client={did.config.graphQLClient}>
+      {isMobileBrowser ? <MBingoGame /> : <PCBingoGame />}
+    </ApolloProvider>
+  );
 };
 
 export function getServerSideProps(context: any): { props: SideProps } {

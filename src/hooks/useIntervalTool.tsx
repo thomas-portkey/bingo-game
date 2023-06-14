@@ -36,7 +36,7 @@ const useIntervalAsync = <R,>(fn: () => Promise<R>, ms: number) => {
 
   const flush = useCallback(() => {
     window.clearTimeout(timeout.current);
-    return run();
+    return run;
   }, [run]);
 
   return flush;
