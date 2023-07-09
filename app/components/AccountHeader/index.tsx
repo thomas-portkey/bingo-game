@@ -34,7 +34,7 @@ const AccountHeader = ({ className }: AccountHeaderProps) => {
       </div>
       <div className={styles.buttonsWrapper}>
         <div className={clsx(styles.accountCopyIcon, styles.btn)} onClick={onCopy}>
-          <AccountCopyIcon />
+          <AccountCopyIcon id="accountHeader" />
         </div>
         <Popover
           content={() => (

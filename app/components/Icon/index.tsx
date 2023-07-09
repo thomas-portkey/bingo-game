@@ -68,7 +68,7 @@ export const CopyIcon = () => {
   );
 };
 
-export const AccountCopyIcon = () => {
+export const AccountCopyIcon = ({ id }) => {
   return (
     <svg
       width="54"
@@ -77,9 +77,9 @@ export const AccountCopyIcon = () => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink">
-      <rect width="54" height="54" fill="url(#pattern0)" />
+      <rect width="54" height="54" fill={`url(#${id})`} />
       <defs>
-        <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
+        <pattern id={id} patternContentUnits="objectBoundingBox" width="1" height="1">
           <use xlinkHref="#image0_2499_13380" transform="scale(0.005)" />
         </pattern>
         <image

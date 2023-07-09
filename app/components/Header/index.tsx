@@ -27,7 +27,7 @@ const Header = () => {
           <div className={styles.accountWrapper}>
             <div className={styles.account}>{dealWithAccountAddressDisplay(accountAddress, 18)}</div>
             <div className={styles.copyIcon} onClick={onCopy}>
-              <AccountCopyIcon />
+              <AccountCopyIcon id="header" />
             </div>
           </div>
           <TokenCard />
