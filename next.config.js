@@ -6,7 +6,11 @@ const rewrites = require('./rewrites');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-   sassOptions: {
+  experimental: {
+    appDir: true,
+  },
+  transpilePackages: ['antd-mobile', 'aelf-web-login'],
+  sassOptions: {
     includePaths: [path.join(__dirname, 'styles')],
   },
 
@@ -16,8 +20,6 @@ const nextConfig = {
 
   sentry: {},
 };
-
-const withTM = require('next-transpile-modules')(['antd-mobile', '@portkey/did-ui-react']);
 
 const sentryWebpackPluginOptions = {
   // Additional config options for the Sentry Webpack plugin. Keep in mind that
@@ -31,4 +33,4 @@ const sentryWebpackPluginOptions = {
   // https://github.com/getsentry/sentry-webpack-plugin#options.
 };
 // export
-module.exports = withTM(withSentryConfig(nextConfig, sentryWebpackPluginOptions));
+module.exports = withSentryConfig(nextConfig, sentryWebpackPluginOptions);
