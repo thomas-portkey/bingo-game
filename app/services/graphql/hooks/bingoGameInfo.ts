@@ -31,8 +31,8 @@ export type BingoGameInfoQuery = {
       playTransactionFee?: { __typename?: 'TransactionFee'; symbol?: string | null; amount: number } | null;
       bingoTransactionFee?: { __typename?: 'TransactionFee'; symbol?: string | null; amount: number } | null;
     } | null> | null;
-    statics?: Array<{
-      __typename?: 'StaticsDto';
+    stats?: Array<{
+      __typename?: 'StatsDto';
       totalWins: number;
       totalPlays: number;
       award: number;
@@ -70,7 +70,7 @@ export const BingoGameInfoDocument = gql`
           amount
         }
       }
-      statics {
+      stats {
         totalWins
         totalPlays
         award

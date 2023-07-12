@@ -19,8 +19,8 @@ export type TransactionFee = {
   symbol?: Maybe<Scalars['String']>;
 };
 
-export type StaticsDto = {
-  __typename?: 'StaticsDto';
+export type StatsDto = {
+  __typename?: 'StatsDto';
   amount: Scalars['Long'];
   award: Scalars['Long'];
   playerAddress: Scalars['String'];
@@ -58,7 +58,7 @@ export type BingoGameInfoDto = {
 export type BingoResultDto = {
   __typename?: 'BingoResultDto';
   data?: Maybe<Array<Maybe<BingoGameInfoDto>>>;
-  statics?: Maybe<Array<Maybe<StaticsDto>>>;
+  stats?: Maybe<Array<Maybe<StatsDto>>>;
   totalRecordCount: Scalars['Long'];
 };
 

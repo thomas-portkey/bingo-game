@@ -5,7 +5,7 @@ import { useAppContext } from '../../hooks/useAppContext';
 import { Button, ButtonType } from '../Button';
 import { isTestNet } from '../../constants/network';
 import { useTranslation } from 'react-i18next';
-import { message } from 'antd';
+import { Spin } from 'antd';
 
 import styles from './LoginAndUnlock.module.scss';
 
@@ -15,14 +15,9 @@ const LoginAndUnlock = () => {
   const { isMobile } = useAppContext();
 
   const bingoLogin = async () => {
-    if (loginState === WebLoginState.logining) {
-      message.open({
-        content: t('account.logining.toast'),
-        duration: 5,
-        className: styles.message,
-      });
+    if (loginState !== WebLoginState.logining) {
+      await login();
     }
-    await login();
   };
 
   if (loginState === WebLoginState.logined) {
@@ -43,6 +38,7 @@ const LoginAndUnlock = () => {
         {(loginState === WebLoginState.initial || loginState === WebLoginState.logining) && (
           <Button isMobile className={styles.defaultBtn} type={ButtonType.ORANGE} onClick={bingoLogin}>
             <img src={require('@source/button_playnow.png').default.src} className={styles.buttonPlayImg} />
+            {loginState === WebLoginState.logining && <Spin spinning />}
           </Button>
         )}
         {loginState === WebLoginState.lock && (

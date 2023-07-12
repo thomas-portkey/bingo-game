@@ -1,20 +1,21 @@
-import { CHAIN_ID, MAIN_CHAIN_ID } from '@/constants/network';
 import { useAppContext } from './useAppContext';
-import { useBalance } from './useBalance';
 import { EGameState } from './useAppContext/type';
-import { useAccountOwner } from './useAccountOwner';
+
+import { useSWRConfig } from 'swr';
 
 export const useResetAccountState = () => {
   const { setIsRegistered, setGameState } = useAppContext();
-  const { mutate: mutateBalance } = useBalance(CHAIN_ID);
-  const { mutate: mutateMainBalance } = useBalance(MAIN_CHAIN_ID);
-  const { mutate: getAccountOwner } = useAccountOwner(CHAIN_ID);
+  const { mutate } = useSWRConfig();
 
   return {
     resetAccountState: async () => {
-      await getAccountOwner(undefined, { revalidate: false });
-      await mutateBalance(undefined, { revalidate: false });
-      await mutateMainBalance(undefined, { revalidate: false });
+      // docs: https://swr.vercel.app/docs/advanced/cache#modify-the-cache-data
+      mutate(
+        (key) => true, // which cache keys are updated
+        undefined, // update cache data to `undefined`
+        { revalidate: false }, // do not revalidate
+      );
+
       setIsRegistered(false);
       setGameState(EGameState.Playing);
     },

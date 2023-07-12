@@ -23,7 +23,6 @@ export const usePlay = (input: string) => {
     const value = Number(input);
 
     if (value <= 0) {
-      displayMessageOnce('Insufficient funds');
       return;
     }
 

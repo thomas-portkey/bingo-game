@@ -62,7 +62,6 @@ const AccountValidateWrapper = ({ children }: AccountValidateWrapperProps) => {
 
   //@ts-ignore
   useWebLoginEvent(WebLoginEvents.LOGINED, async (e) => {
-    await resetAccountState();
     await getAccountOwner();
   });
 

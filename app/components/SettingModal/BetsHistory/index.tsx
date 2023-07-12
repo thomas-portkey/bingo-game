@@ -90,7 +90,7 @@ const BetsHistory = ({ isMobile, caAddress, setWinRatio }: BetsHistoryProps) => 
       setPage(page + 1);
       setDataLength(dataLength + data.bingoGameInfo.data.length);
       setBetList(groupBetsByDate(data.bingoGameInfo.data, betList));
-      setWinRatio(`${data.bingoGameInfo.statics[0].totalWins}/${data.bingoGameInfo.statics[0].totalPlays}`);
+      setWinRatio(`${data.bingoGameInfo.stats[0].totalWins}/${data.bingoGameInfo.stats[0].totalPlays}`);
     },
   });
   const totalRecordCount = data?.bingoGameInfo?.totalRecordCount || 0;

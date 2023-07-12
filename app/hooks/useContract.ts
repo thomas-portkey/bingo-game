@@ -10,6 +10,7 @@ export const useContract = (chainId: ChainId = CHAIN_ID) => {
   const { callViewMethod, callSendMethod: baseCallSendMethod } = useCallContract({
     chainId,
     rpcUrl: chainInfo?.endPoint || '',
+    cache: false,
   });
   const { data: owner } = useAccountOwner(chainId);
   const multiTokenContractAddress = chainInfo?.defaultToken.address;
