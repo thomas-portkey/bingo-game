@@ -14,35 +14,55 @@ import styles from './Header.module.scss';
 
 const ACCOUNT_SYNC_MSG_KEY = 'accountSync';
 const TokenCard = () => {
-  const { loginState } = useWebLogin();
+  const { loginState, wallet } = useWebLogin();
+
   const isFetchingBalance = useRef(false);
   const { t } = useTranslation();
   const { isMobile, loadingService } = useAppContext();
   const { data, mutate } = useBalance(CHAIN_ID);
+
+  const openAccountSyncMsg = () => {
+    loadingService.send('LOADING');
+    message.open({
+      key: ACCOUNT_SYNC_MSG_KEY,
+      content: t('account.sync.info'),
+      duration: 0,
+      className: isMobile ? styles.mobileAccountSyncInfo : styles.pcAccountSyncInfo,
+    });
+  };
+
+  const closeAccountSyncMsg = () => {
+    loadingService.send('IDLE');
+    message.destroy(ACCOUNT_SYNC_MSG_KEY);
+  };
 
   useEffect(() => {
     mutate();
   }, []);
 
   useEffect(() => {
-    if (data === undefined && loginState === WebLoginState.logined) {
-      loadingService.send('LOADING');
-      message.open({
-        key: ACCOUNT_SYNC_MSG_KEY,
-        content: t('account.sync.info'),
-        duration: 0,
-        className: isMobile ? styles.mobileAccountSyncInfo : styles.pcAccountSyncInfo,
-      });
-      isFetchingBalance.current = true;
-    } else if (isFetchingBalance.current) {
-      loadingService.send('IDLE');
-      message.destroy(ACCOUNT_SYNC_MSG_KEY);
-      isFetchingBalance.current = false;
+    if (wallet.discoverInfo) {
+      if (data === undefined && loginState === WebLoginState.logined) {
+        loadingService.send('LOADING');
+        isFetchingBalance.current = true;
+      } else if (isFetchingBalance.current) {
+        loadingService.send('IDLE');
+        isFetchingBalance.current = false;
+      }
+    } else if (wallet.portkeyInfo) {
+      if (!wallet.accountInfoSync.syncCompleted) {
+        openAccountSyncMsg();
+        isFetchingBalance.current = true;
+      } else if (isFetchingBalance.current) {
+        closeAccountSyncMsg();
+        isFetchingBalance.current = false;
+      }
     }
+
     return () => {
       message.destroy(ACCOUNT_SYNC_MSG_KEY);
     };
-  }, [data, loginState]);
+  }, [data, loginState, wallet]);
 
   return (
     <div className={isMobile ? styles.mobileTokenCard : styles.pcTokenCard}>
