@@ -21,6 +21,13 @@ interface AccountValidateWrapperProps {
   children: React.ReactNode;
 }
 
+const MESSAGE_KEYS = {
+  accountEmpty: 'accountEmpty',
+  networkError: 'networkError',
+  modalCancel: 'modalCancel',
+  disconnected: 'disconnected',
+};
+
 const AccountValidateWrapper = ({ children }: AccountValidateWrapperProps) => {
   const isFirstTimeMounting = useRef(true);
   const { isUnlocking } = usePortkeyLock();
@@ -28,6 +35,16 @@ const AccountValidateWrapper = ({ children }: AccountValidateWrapperProps) => {
   const { loadingService } = useAppContext();
   const { mutate: getAccountOwner } = useAccountOwner(CHAIN_ID);
   const { resetAccountState } = useResetAccountState();
+
+  const displayMessage = (key: string, content: string) => {
+    message.destroy(key);
+    message.open({
+      key,
+      content,
+      duration: 5,
+      className: styles.message,
+    });
+  };
 
   // logout loader
   useLoginState((state) => {
@@ -45,11 +62,7 @@ const AccountValidateWrapper = ({ children }: AccountValidateWrapperProps) => {
 
     switch (e?.code) {
       case 4001: {
-        message.open({
-          content: t('disconnected.message'),
-          duration: 5,
-          className: styles.message,
-        });
+        displayMessage(MESSAGE_KEYS.disconnected, t('disconnected.message'));
         break;
       }
     }
@@ -68,28 +81,16 @@ const AccountValidateWrapper = ({ children }: AccountValidateWrapperProps) => {
   useWebLoginEvent(WebLoginEvents.LOGIN_ERROR, (e) => {
     switch (e?.code) {
       case ERR_CODE.NETWORK_TYPE_NOT_MATCH: {
-        message.open({
-          content: t('login.network.error'),
-          duration: 5,
-          className: styles.message,
-        });
+        displayMessage(MESSAGE_KEYS.networkError, t('login.network.error'));
         break;
       }
       case 4001:
       case ERR_CODE.DISCOVER_LOGIN_EAGERLY_FAIL: {
-        message.open({
-          content: t('modal.cancel.error'),
-          duration: 5,
-          className: styles.message,
-        });
+        displayMessage(MESSAGE_KEYS.modalCancel, t('modal.cancel.error'));
         break;
       }
       case ERR_CODE.ACCOUNTS_IS_EMPTY: {
-        message.open({
-          content: t('account.sync.info'),
-          duration: 5,
-          className: styles.message,
-        });
+        displayMessage(MESSAGE_KEYS.accountEmpty, t('account.sync.info'));
         break;
       }
     }

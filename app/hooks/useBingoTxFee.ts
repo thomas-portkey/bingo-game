@@ -32,7 +32,7 @@ export const useBingoTxFee = () => {
         const bingoAmount: number = tx?.bingoTransactionFee?.[0]?.amount;
 
         if (typeof playAmount === 'number' && typeof bingoAmount === 'number') {
-          txFee = decodeAmount(new BigNumber(playAmount).plus(new BigNumber(bingoAmount)));
+          txFee = decodeAmount(new BigNumber(playAmount).plus(new BigNumber(bingoAmount)), 5);
         }
       } else {
         throw new Error('tx fee not found');

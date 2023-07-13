@@ -63,8 +63,8 @@ export const shrinkSendQrData = (data: QRCodeDataObjType): QrCodeDataArrType => 
   ];
 };
 
-export const decodeAmount = (amount: BigNumber) => {
-  return amount.dividedBy(new BigNumber(100000000)).dp(2, BigNumber.ROUND_DOWN);
+export const decodeAmount = (amount: BigNumber, decimalPlaces: number) => {
+  return amount.dividedBy(new BigNumber(100000000)).dp(decimalPlaces, BigNumber.ROUND_DOWN);
 };
 
 export const convertTicks = (ticks: number) => {

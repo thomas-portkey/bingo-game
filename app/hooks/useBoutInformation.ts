@@ -43,7 +43,7 @@ export const useBoutInformation = () => {
         const { award, amount, dices } = data;
 
         if (!!amount && !!award) {
-          totalReturn = decodeAmount(new BigNumber(amount).plus(new BigNumber(award)));
+          totalReturn = decodeAmount(new BigNumber(amount).plus(new BigNumber(award)), 2);
         }
 
         const isWin = Number(award) > 0;

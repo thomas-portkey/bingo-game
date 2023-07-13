@@ -14,7 +14,7 @@ export const groupBetsByDate = (newBetList: BingoGameInfoDto[], oldBetList: BetL
     }
     const bingoTransactionFee = new BigNumber(bet.bingoTransactionFee?.[0]?.amount || 0);
     const playTransactionFee = new BigNumber(bet.playTransactionFee?.[0]?.amount || 0);
-    const totalTransactionFee = `${decodeAmount(bingoTransactionFee.plus(playTransactionFee)).toFixed(2)} ${
+    const totalTransactionFee = `${decodeAmount(bingoTransactionFee.plus(playTransactionFee), 5)} ${
       bet.bingoTransactionFee?.[0]?.symbol || TOKEN_UNIT
     }`;
 
@@ -22,24 +22,20 @@ export const groupBetsByDate = (newBetList: BingoGameInfoDto[], oldBetList: BetL
       id: bet.playId,
       isWin: bet.award > 0,
       bingoType: BET_TYPE_ENUMS[bet.bingoType],
-      totalReturn: decodeAmount(new BigNumber(bet.amount).plus(new BigNumber(bet.award))).toFixed(2),
-      betAmount: decodeAmount(new BigNumber(bet.amount)).toFixed(2),
+      totalReturn: decodeAmount(new BigNumber(bet.amount).plus(new BigNumber(bet.award)), 2).toFixed(2),
+      betAmount: decodeAmount(new BigNumber(bet.amount), 2).toFixed(2),
       totalTransactionFee: totalTransactionFee,
       play: {
         date: dayjs.unix(bet.playTime).format(BET_DETAIL_DATE_FORMAT),
-        amount: decodeAmount(new BigNumber(bet.amount)).toFixed(2),
-        transactionFee: `${decodeAmount(playTransactionFee).toFixed(2)} ${
-          bet.playTransactionFee?.[0]?.symbol || TOKEN_UNIT
-        }`,
+        amount: decodeAmount(new BigNumber(bet.amount), 2).toFixed(2),
+        transactionFee: `${decodeAmount(playTransactionFee, 5)} ${bet.playTransactionFee?.[0]?.symbol || TOKEN_UNIT}`,
         transactionId: bet.playId,
         transactionHash: bet.playBlockHash,
       },
       bingo: {
         date: dayjs.unix(bet.bingoTime).format(BET_DETAIL_DATE_FORMAT),
-        amount: decodeAmount(new BigNumber(bet.amount)).toFixed(2),
-        transactionFee: `${decodeAmount(bingoTransactionFee).toFixed(2)} ${
-          bet.bingoTransactionFee?.[0]?.symbol || TOKEN_UNIT
-        }`,
+        amount: decodeAmount(new BigNumber(bet.amount), 2).toFixed(2),
+        transactionFee: `${decodeAmount(bingoTransactionFee, 5)} ${bet.bingoTransactionFee?.[0]?.symbol || TOKEN_UNIT}`,
         transactionId: bet.bingoId,
         transactionHash: bet.bingoBlockHash,
       },

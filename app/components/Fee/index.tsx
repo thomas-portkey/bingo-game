@@ -8,5 +8,5 @@ export const Fee = () => {
 
   if (!fee) return null;
 
-  return <div className={isMobile ? styles.mobile : styles.pc}>Transaction Fee: {fee.toFixed(2)} ELF</div>;
+  return <div className={isMobile ? styles.mobile : styles.pc}>Transaction Fee: {fee.toString()} ELF</div>;
 };
