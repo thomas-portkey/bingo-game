@@ -11,6 +11,7 @@ export enum ViewMethods {
   GetAllowance = 'GetAllowance',
   GetBalance = 'GetBalance',
   GetBoutInformation = 'GetBoutInformation',
+  GetPlayerInformation = 'GetPlayerInformation',
 }
 
 export enum SendMethods {
