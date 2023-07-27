@@ -22,15 +22,18 @@ export const useApprove = (chainId: ChainId = CHAIN_ID) => {
       });
 
       if (allowance < 100) {
-        await callSendMethod({
-          methodName: SendMethods.Approve,
-          contractAddress: multiTokenContractAddress,
-          args: {
-            symbol: TOKEN_UNIT,
-            spender: bingoAddress,
-            amount: '100000000000000000000',
+        await callSendMethod(
+          {
+            methodName: SendMethods.Approve,
+            contractAddress: multiTokenContractAddress,
+            args: {
+              symbol: TOKEN_UNIT,
+              spender: bingoAddress,
+              amount: '100000000000000000000',
+            },
           },
-        });
+          undefined,
+        );
 
         return true;
       }

@@ -25,3 +25,7 @@ p {
 .aelf-web-login.aelf-extra-wallets .plugin-entry .name {
   font-family: Roboto !important;
 }
+
+.portkey-ui-base-modal .portkey-ant-modal-body {
+  height: unset !important;
+}

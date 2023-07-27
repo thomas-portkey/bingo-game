@@ -23,11 +23,14 @@ export const useRegister = () => {
 
     if (playerInfo) return true;
 
-    const registerResult = await callSendMethod<any, { error: { message: string } }>({
-      methodName: SendMethods.Register,
-      contractAddress: bingoAddress,
-      args: {},
-    });
+    const registerResult = await callSendMethod<any, { error: { message: string } }>(
+      {
+        methodName: SendMethods.Register,
+        contractAddress: bingoAddress,
+        args: {},
+      },
+      undefined,
+    );
     if (!registerResult.error || registerResult.error.message?.includes('already registered')) {
       await approve();
       setIsRegistered(true);

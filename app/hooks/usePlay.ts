@@ -44,14 +44,17 @@ export const usePlay = (input: string) => {
     try {
       send('LOADING');
       await register();
-      const playResult = await callSendMethod<any, { error?: Error; transactionId?: string }>({
-        contractAddress: bingoAddress,
-        methodName: SendMethods.Play,
-        args: {
-          amount: value * 10 ** 8,
-          type: betResult,
+      const playResult = await callSendMethod<any, { error?: Error; transactionId?: string }>(
+        {
+          contractAddress: bingoAddress,
+          methodName: SendMethods.Play,
+          args: {
+            amount: value * 10 ** 8,
+            type: betResult,
+          },
         },
-      });
+        undefined,
+      );
 
       if (playResult?.error) {
         send('IDLE');

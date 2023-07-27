@@ -12,11 +12,14 @@ export const useBingoInfo = () => {
 
   return useSWRMutation(txId ? [txId, 'bingoInfo'] : undefined, async ([txId]) => {
     try {
-      await callSendMethod({
-        contractAddress: bingoAddress,
-        methodName: SendMethods.Bingo,
-        args: txId,
-      });
+      await callSendMethod(
+        {
+          contractAddress: bingoAddress,
+          methodName: SendMethods.Bingo,
+          args: txId,
+        },
+        undefined,
+      );
 
       return true;
     } catch (err) {
