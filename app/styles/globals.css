@@ -26,8 +26,8 @@ p {
   font-family: Roboto !important;
 }
 
-.portkey-ui-base-modal .portkey-ant-modal-body {
-  height: unset !important;
+.portkey-ant-modal.portkey-ui-base-modal > .portkey-ant-modal-content > .portkey-ant-modal-body {
+  height: auto;
   min-height: 566px;
 }
 
