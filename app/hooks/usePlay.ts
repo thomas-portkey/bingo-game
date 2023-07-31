@@ -9,6 +9,7 @@ import { useContract } from './useContract';
 import { EGameState } from './useAppContext/type';
 import { useRegister } from './useRegister';
 import { displayMessageOnce } from '../utils/displayMessageOnce';
+import BigNumber from 'bignumber.js';
 
 export const usePlay = (input: string) => {
   const { setTxId, loadingService, setGameState } = useAppContext();
@@ -49,7 +50,7 @@ export const usePlay = (input: string) => {
           contractAddress: bingoAddress,
           methodName: SendMethods.Play,
           args: {
-            amount: value * 10 ** 8,
+            amount: new BigNumber(value).multipliedBy(10 ** 8).toString(),
             type: betResult,
           },
         },

@@ -52,7 +52,7 @@ export const useBoutInformation = () => {
           isWin,
           dices: dices.dices,
           hasFinishBet: true,
-          difference: Number(award) / 10 ** 8,
+          difference: decodeAmount(new BigNumber(amount), 2).toNumber(),
           totalReturn,
         };
       } catch (err) {
@@ -67,7 +67,7 @@ export const useBoutInformation = () => {
         dices: [0, 0, 0],
         hasFinishBet: false,
         difference: 0,
-        totalReturn: 0,
+        totalReturn: new BigNumber(0),
       },
     },
   );
