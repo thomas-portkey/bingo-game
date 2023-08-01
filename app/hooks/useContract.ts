@@ -33,7 +33,7 @@ export const useContract = (chainId: ChainId = CHAIN_ID) => {
           return { error };
         }
       } else {
-        return baseCallSendMethod(params);
+        return baseCallSendMethod(params, undefined);
       }
     },
     [baseCallSendMethod, chainId, wallet.discoverInfo, walletType],

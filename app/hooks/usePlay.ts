@@ -9,6 +9,7 @@ import { useContract } from './useContract';
 import { EGameState } from './useAppContext/type';
 import { useRegister } from './useRegister';
 import { displayMessageOnce } from '../utils/displayMessageOnce';
+import BigNumber from 'bignumber.js';
 
 export const usePlay = (input: string) => {
   const { setTxId, loadingService, setGameState } = useAppContext();
@@ -44,14 +45,17 @@ export const usePlay = (input: string) => {
     try {
       send('LOADING');
       await register();
-      const playResult = await callSendMethod<any, { error?: Error; transactionId?: string }>({
-        contractAddress: bingoAddress,
-        methodName: SendMethods.Play,
-        args: {
-          amount: value * 10 ** 8,
-          type: betResult,
+      const playResult = await callSendMethod<any, { error?: Error; transactionId?: string }>(
+        {
+          contractAddress: bingoAddress,
+          methodName: SendMethods.Play,
+          args: {
+            amount: new BigNumber(value).multipliedBy(10 ** 8).toString(),
+            type: betResult,
+          },
         },
-      });
+        undefined,
+      );
 
       if (playResult?.error) {
         send('IDLE');
