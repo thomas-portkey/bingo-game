@@ -7,6 +7,7 @@ import { PortkeyConfigProvider } from '@portkey/did-ui-react';
 import { getGraphQLClientProvider } from '@portkey/graphql';
 import { ApolloProvider } from '@apollo/client';
 import { detectBrowser } from './utils/common';
+import { SHOW_LOGIN_WITH_PORTKEY } from './constants/global';
 
 const APPNAME = 'bingogame.portkey.finance';
 export const NETWORK: string = isTestNet ? 'TESTNET' : 'MAIN';
@@ -25,18 +26,20 @@ setGlobalConfig({
     connectUrl: connectUrl,
     requestDefaults: {
       headers: {
-        version: 'v1.3.0',
+        version: 'v1.3.2',
       },
     },
-    socialLogin: {
-      Portkey:
-        process.env.NEXT_PUBLIC_APP_ENV === 'main'
-          ? undefined
-          : {
-              websiteName: 'Bingo Game',
-              websiteIcon: iconAddress,
-            },
-    },
+    ...(SHOW_LOGIN_WITH_PORTKEY && {
+      socialLogin: {
+        Portkey:
+          process.env.NEXT_PUBLIC_APP_ENV === 'main'
+            ? undefined
+            : {
+                websiteName: 'Bingo Game',
+                websiteIcon: iconAddress,
+              },
+      },
+    }),
     network: {
       defaultNetwork: NETWORK,
       networkList: [

@@ -25,3 +25,12 @@ p {
 .aelf-web-login.aelf-extra-wallets .plugin-entry .name {
   font-family: Roboto !important;
 }
+
+.portkey-ant-modal.portkey-ui-base-modal > .portkey-ant-modal-content > .portkey-ant-modal-body {
+  height: auto;
+  min-height: 566px;
+}
+
+.set-pin-wrapper .set-pin-content .portkey-ant-form-vertical .submit-btn-form-item {
+  position: unset !important;
+}
