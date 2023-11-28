@@ -31,6 +31,7 @@ export const useRegister = () => {
       },
       undefined,
     );
+
     if (!registerResult.error || registerResult.error.message?.includes('already registered')) {
       await approve();
       setIsRegistered(true);

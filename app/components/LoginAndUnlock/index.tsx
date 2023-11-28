@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Spin } from 'antd';
 
 import styles from './LoginAndUnlock.module.scss';
+import { getItem } from '@/utils/cache';
 
 const LoginAndUnlock = () => {
   const { loginState, login } = useWebLogin();
