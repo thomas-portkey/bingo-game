@@ -23,7 +23,7 @@
   align-items: center;
   flex-direction: column;
   position: absolute;
-  z-index: 100000000000000;
+  z-index: 100;
   top: 0;
 }
 

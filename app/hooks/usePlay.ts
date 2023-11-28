@@ -10,6 +10,8 @@ import { EGameState } from './useAppContext/type';
 import { useRegister } from './useRegister';
 import { displayMessageOnce } from '../utils/displayMessageOnce';
 import BigNumber from 'bignumber.js';
+import { useApprove } from './useApprove';
+import { setItem } from '@/utils/cache';
 
 export const usePlay = (input: string) => {
   const { setTxId, loadingService, setGameState } = useAppContext();
@@ -17,11 +19,13 @@ export const usePlay = (input: string) => {
   const { send } = loadingService;
   const { callSendMethod } = useContract();
   const { trigger: register } = useRegister();
+  const { trigger: approve } = useApprove();
 
   return useSWRMutation('play', async (_, { arg: betResult }: { arg: BetType }) => {
     if (!balanceValue) return;
 
     const value = Number(input);
+    setItem('betValue', input);
 
     if (value <= 0) {
       return;
@@ -45,6 +49,8 @@ export const usePlay = (input: string) => {
     try {
       send('LOADING');
       await register();
+      await approve();
+
       const playResult = await callSendMethod<any, { error?: Error; transactionId?: string }>(
         {
           contractAddress: bingoAddress,

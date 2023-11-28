@@ -146,3 +146,11 @@ export const detectBrowser = () => {
   else if (/Chrome/i.test(ua)) return 'chrome';
   else return 'other';
 };
+
+export const sleep = (time: number) => {
+  return new Promise<void>((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, time);
+  });
+};
