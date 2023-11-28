@@ -2,15 +2,16 @@
 
 import { CHAIN_ID, connectUrl, isTestNet } from './constants/network';
 import { AppContextProvider } from './hooks/useAppContext/Provider';
-import { WebLoginProvider, setGlobalConfig } from 'aelf-web-login';
-import { PortkeyConfigProvider } from '@portkey/did-ui-react';
+import { WebLoginProvider, setGlobalConfig, PortkeyProvider } from 'aelf-web-login';
+
 import { getGraphQLClientProvider } from '@portkey/graphql';
 import { ApolloProvider } from '@apollo/client';
 import { detectBrowser } from './utils/common';
 import { SHOW_LOGIN_WITH_PORTKEY } from './constants/global';
+import { NetworkType } from '@portkey/did-ui-react/dist/_types/';
 
 const APPNAME = 'bingogame.portkey.finance';
-export const NETWORK: string = isTestNet ? 'TESTNET' : 'MAIN';
+export const NETWORK: NetworkType = isTestNet ? 'TESTNET' : 'MAIN';
 
 const iconAddress = `${window.location}favicon.ico`;
 const portkeyScanUrl = '/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql';
@@ -64,7 +65,7 @@ setGlobalConfig({
 
 export default function Providers({ children }) {
   return (
-    <PortkeyConfigProvider>
+    <PortkeyProvider networkType={NETWORK}>
       <WebLoginProvider
         nightElf={{
           connectEagerly: false,
@@ -94,6 +95,6 @@ export default function Providers({ children }) {
           <AppContextProvider>{children}</AppContextProvider>
         </ApolloProvider>
       </WebLoginProvider>
-    </PortkeyConfigProvider>
+    </PortkeyProvider>
   );
 }

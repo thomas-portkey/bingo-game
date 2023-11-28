@@ -20,3 +20,5 @@ export enum SendMethods {
   Play = 'Play',
   Register = 'Register',
 }
+
+export type Chain = 'AELF' | 'tDVV' | 'tDVW';

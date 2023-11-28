@@ -16,6 +16,7 @@ import { useEffect, useRef } from 'react';
 import { useAccountOwner } from '@/hooks/useAccountOwner';
 import { CHAIN_ID } from '@/constants/network';
 import { useResetAccountState } from '@/hooks/useResetAccountState';
+import { setItem } from '@/utils/cache';
 
 interface AccountValidateWrapperProps {
   children: React.ReactNode;
